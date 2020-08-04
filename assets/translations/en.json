@@ -23,6 +23,28 @@
   "home": "Main Subjects",
   "main": "Main Subjects",
   "common": "Common Articles",
-  "guidance": "guidance"
+  "guidance": "guidance",
+  "explore": "Explore",
+  "math": "Math",
+  "biology": "Biology",
+  "chemistry": "Chemistry",
+  "physics": "Physics",
+  "history": "History",
+  "sci": "Scientific Culture",
+  "geo": "Geographic",
+  "arabic": "Arabic",
+  "english": "English",
+  "articles": "Articles",
+  "islamic": "Islamic Education",
+  "tech": "Technology",
+  "videos": "Videos",
+
+
+  "school_exams": "School Exams",
+  "work_papers": "Work Papers",
+  "previous_exams": "Previous Years Exams",
+  "questions_topics":"Questions And Topics",
+  "start": "Start Test",
+  "qustions_answers": "Questions And Answers"
 
 }
