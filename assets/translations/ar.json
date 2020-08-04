@@ -1,0 +1,31 @@
+{
+  "app_title": "توجيهي",
+  "login": "تسجيل الدخول",
+  "hint_email_login": "البريد الالكتروني",
+  "hint_password_login": "الرقم السري",
+  "sign_in": "تسجيل الدخول",
+  "dont_have_account": "ليس لديك حساب ؟",
+  "already_have_acount": "هل لديك حساب ؟",
+
+  "register_new_user": "تسجيل حساب جديد",
+  "full_name": "الاسم رباعي",
+  "region_name": "اسم المنطقه",
+  "school_name": "اسم المدرسه",
+  "phone": "رقم الهاتف",
+  "parent_phone": "رقم هاتف الوالد",
+  "next": "التالي",
+  "hint_password_confirm": "تأكيد رقم المرور",
+  "literary": "أدبي",
+  "scientific": "علمي",
+  "Subscribe": "اشترك",
+  "previous":"السابق",
+
+
+  "home": "المواد الرئيسية",
+  "main": "المواد الاساسيه",
+  "common": "المواد المشتركه",
+  "guidance": "الارشاد النفسي"
+
+
+
+}

@@ -1,0 +1,28 @@
+{
+  "app_title": "tawjihi",
+  "login":"Login",
+  "hint_email_login": "Email",
+  "hint_password_login": "Password",
+  "sign_in": "Sign in",
+  "dont_have_account": "Don't Have Account",
+  "already_have_acount": "Already Have Account",
+
+  "register_new_user": "Register New User",
+  "full_name": "Full Name",
+  "region_name": "Region Name",
+  "school_name": "School Name",
+  "phone": "Phone",
+  "parent_phone": "Parent Phone",
+  "next": "Next",
+  "hint_password_confirm": "Confirm Password",
+  "literary": "literary",
+  "scientific": "scientific",
+  "Subscribe": "subscribe",
+  "previous":"previous",
+
+  "home": "Main Subjects",
+  "main": "Main Subjects",
+  "common": "Common Articles",
+  "guidance": "guidance"
+
+}
