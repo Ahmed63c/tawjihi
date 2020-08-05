@@ -45,6 +45,27 @@
   "previous_exams": "Previous Years Exams",
   "questions_topics":"Questions And Topics",
   "start": "Start Test",
-  "qustions_answers": "Questions And Answers"
+  "qustions_answers": "Questions And Answers",
+
+  "first_term": "First Term",
+  "first_unit": "First Unit",
+  "second_unit": "Second Unit",
+  "third_unit": "Third Unit",
+  "second_term": "Second Term",
+  "fourth_unit": "Fourth Unit",
+  "fifth_unit": "Fifth Unit",
+  "sixth_unit":"Sixth Unit",
+  "definitions_laws": "Definitions And Laws",
+  "reason": "Reason",
+  "mention_number": "Mention and number",
+  "explain": "Explain",
+  "clear_up": "Clear Up",
+  "interpret": "Interpret",
+  "units": "Units",
+
+
+  "multi_choice": "Multiple Choice",
+  "question_number": "Question",
+  "choose": "Choose Correct Answer"
 
 }

@@ -204,8 +204,7 @@ class _SignUpState extends State<SignUpFirst> {
   }
 
   Widget nextButton() {
-    return
-      Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
       Padding(

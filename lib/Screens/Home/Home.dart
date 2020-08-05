@@ -182,49 +182,52 @@ class Home extends StatelessWidget {
   }
 
   Widget tile(BuildContext context, String courseName, Image image) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (_)=>CourseList()));
-      },
-      child: Stack(children: <Widget>[
-        Container(
-          height: 400,
-            child: image),
-        Positioned(
-          bottom: 30,
-          right: 20,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: 80,
-                margin: EdgeInsets.only(bottom: 4, right: 8, left: 8),
-                child: MyText(courseName,
-                  style: TextStyle(
-                      fontFamily: "Cairo",
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                      color: Colors.white),
+    return Container(
+      child: GestureDetector(
+        onTap: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (_)=>CourseList(courseName)));
+        },
+        child: Stack(children: <Widget>[
+          Container(
+              height: double.infinity,
+
+              child: image),
+          Positioned(
+            bottom: 30,
+            right: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 80,
+                  margin: EdgeInsets.only(bottom: 4, right: 8, left: 8),
+                  child: MyText(courseName,
+                    style: TextStyle(
+                        fontFamily: "Cairo",
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                        color: Colors.white),
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8), color: Colors.white),
-                child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                    child: MyText(
-                      "explore",
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: "Cairo"),
-                    )),
-              )
-            ],
-          ),
-        )
-      ]),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8), color: Colors.white),
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                      child: MyText(
+                        "explore",
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: "Cairo"),
+                      )),
+                )
+              ],
+            ),
+          )
+        ]),
+      ),
     );
   }
 }

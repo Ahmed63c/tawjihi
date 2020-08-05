@@ -46,7 +46,28 @@
   "previous_exams": "امتحانات سنوات سابقة",
   "questions_topics":"اسئلة ومواضيع هامة",
   "start": "ابدء الاختبار ",
-  "qustions_answers": "اسئلة واجوبه"
+  "qustions_answers": "اسئلة واجوبه",
+
+  "first_term": "الفصل الدراسي الاول",
+  "first_unit": "الوحدة الاولي",
+  "second_unit": "اوحدة الثانية",
+  "third_unit": "الوحدة الثالثة",
+  "second_term": "الفصل الدراسي الثاني",
+  "fourth_unit": "الوحدة الرابعة",
+  "fifth_unit": "الوحدة الخامسة",
+  "sixth_unit":"الوحدة السادسة",
+  "definitions_laws": "التعريفات والقوانين",
+  "reason": "علل",
+  "mention_number": "اذكر وعدد",
+  "explain": "اشرح",
+  "clear_up": "فسر",
+  "interpret": "وضح",
+  "units": "الوحدات",
+
+
+  "multi_choice": "اختيار من متعدد",
+  "question_number": "السؤال",
+  "choose": "اختر الاجابه الصحيحة"
 
 
 

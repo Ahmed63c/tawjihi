@@ -1,16 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/QuestionsAndAnswersScreen.dart';
+import 'package:tawjihi/Screens/Course/TestScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 class CourseList extends StatelessWidget{
+  String appBarheader="";
+  CourseList(this.appBarheader);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+      Scaffold(
       appBar: AppBar(
         backgroundColor: ColorProperties.AppColor,
-        title: Text(
-          'الرياضيات',
+        title: MyText(
+          "$appBarheader",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -96,6 +101,7 @@ class CourseList extends StatelessWidget{
             color: ColorProperties.AppColorHex,
             textColor: Colors.white,
             onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>TestScreen()));
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
@@ -120,6 +126,8 @@ class CourseList extends StatelessWidget{
           color: Colors.white,
           textColor: ColorProperties.AppColor,
           onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>QAndAnswres()));
+
           },
           shape: RoundedRectangleBorder(
             side: BorderSide(color: ColorProperties.AppColor),
