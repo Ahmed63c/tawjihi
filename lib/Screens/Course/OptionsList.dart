@@ -1,63 +1,97 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tawjihi/Models/DataList.dart';
+import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/OptionsListViewModel.dart';
+import 'package:tawjihi/Screens/Course/WebView.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:tawjihi/Utils/Constant.dart';
 
-class OptionsList extends StatelessWidget {
+import '../BaseScreen.dart';
+
+class OptionsList extends StatefulWidget {
   String header = "";
+  String courseName = "";
 
-  OptionsList(this.header);
+  OptionsList(this.header,this.courseName);
 
   @override
+  _OptionsListState createState() => _OptionsListState(header,courseName);
+}
+
+class _OptionsListState extends State<OptionsList> with BaseScreen {
+  String header;
+  String courseName;
+
+  _OptionsListState(this.header,this.courseName);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+
+    getData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorProperties.AppColor,
         title: MyText(
-          header,
+          widget.header,
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: body(context),
+      body: body(),
     );
   }
 
-  Widget body(BuildContext context) {
-    return ListView.builder(
-      itemCount: 4,
-      itemBuilder: (BuildContext c, int index) {
-        return viewCard(index, c);
+  Widget body() {
+    return Stack(
+      children: <Widget>[
+        Consumer<OptionsListViewModel>(
+            builder: (context, model, child){
+              return  switchWidgets(model,context);
+            })
+
+      ],
+    );
+
+  }
+
+  Widget viewCard(int index, BuildContext context,DataList data) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(builder:(_)=> WebViewPage(data.details[index].description)));
       },
-    );
-  }
-
-  Widget viewCard(int index, BuildContext context) {
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          viewImage(context),
-          title(context),
-          subTitle(context),
-        ],
+      child: Card(
+        elevation: 4,
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            viewImage(context,data,index),
+            title(context,data,index),
+            subTitle(context,data,index),
+          ],
+        ),
       ),
     );
   }
 
-  Widget viewImage(BuildContext context) {
+  Widget viewImage(BuildContext context,DataList dataList,int index) {
     return
       Stack(children: <Widget>[
         Container(
             height: 100,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-            child: Image.asset(
-              "assets/images/logo.jpg",
-              fit: BoxFit.fill,
-            )),
+            child: Image(image: CachedNetworkImageProvider(dataList.details[index].pics==null
+                ? "" : Constant.BASE_URL+dataList.details[index].pics),),
+        ),
         Visibility(
           visible: false,
           child: Container(
@@ -70,11 +104,11 @@ class OptionsList extends StatelessWidget {
       ],);
   }
 
-  Widget title(BuildContext context) {
+  Widget title(BuildContext context,DataList dataList,int index) {
     return Container(
       margin: EdgeInsets.only(left: 16, right: 16, top: 8),
       child: Text(
-        "عنوان الموضوع",
+        dataList.details[index].title,
         style: TextStyle(
             fontFamily: "Cairo",
             fontWeight: FontWeight.w500,
@@ -84,7 +118,7 @@ class OptionsList extends StatelessWidget {
     );
   }
 
-  Widget subTitle(BuildContext context) {
+  Widget subTitle(BuildContext context,DataList dataList,int index) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
@@ -93,7 +127,7 @@ class OptionsList extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(left: 16, right: 16, top: 8),
           child: Text(
-            "12/7/2020 - 02:30 pm",
+            dataList.details[index].created_at,
             style: TextStyle(
                 fontFamily: "Cairo",
                 fontWeight: FontWeight.w500,
@@ -117,5 +151,43 @@ class OptionsList extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget switchWidgets(OptionsListViewModel model,BuildContext context) {
+    switch (model.materials.status){
+      case Status.LOADING:
+        return super.loadingIndicator(model.materials.status==Status.LOADING, context);
+            break;
+      case Status.empty:
+        return super.loadingIndicator(model.materials.status==Status.empty, context);
+
+      case Status.ERROR:
+        return
+          Visibility(
+                  visible: model.materials.status==Status.ERROR,
+                  child:Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(model.error,
+                        style:
+                        TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)),
+                );
+        break;
+      case Status.COMPLETED:
+    return
+      ListView.builder(
+        itemCount: model.materialList.details.length,
+        itemBuilder: (BuildContext context, int index) {
+          return viewCard(index, context,model.materialList);
+        },
+      );
+    break;
+    }
+  }
+
+  void getData() {
+    Map<String,dynamic> paramaters=new Map();
+    paramaters.putIfAbsent("materialId", () =>4);
+    paramaters.putIfAbsent("type", () => 5);
+    Provider.of<OptionsListViewModel>(context,listen: false).get(paramaters);
   }
 }

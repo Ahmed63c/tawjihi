@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
-import 'package:tawjihi/Screens/Course/ChooseQuestionsCat.dart';
+import 'package:tawjihi/Screens/Course/Units.dart';
+import 'package:tawjihi/Screens/Course/OptionsListViewModel.dart';
 import 'package:tawjihi/Screens/Course/TestScreen.dart';
+import 'package:tawjihi/Screens/Course/UnitsViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 import 'OptionsList.dart';
 
 class CourseList extends StatelessWidget{
-  String appBarheader="";
-  CourseList(this.appBarheader);
+  String courseName="";
+  CourseList(this.courseName);
   @override
   Widget build(BuildContext context) {
     return
@@ -17,7 +20,7 @@ class CourseList extends StatelessWidget{
       appBar: AppBar(
         backgroundColor: ColorProperties.AppColor,
         title: MyText(
-          "$appBarheader",
+          "$courseName",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -61,7 +64,11 @@ class CourseList extends StatelessWidget{
         elevation: 4,
         child: GestureDetector(
           onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>OptionsList(title)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+            ChangeNotifierProvider(
+              create: (context)=>OptionsListViewModel(),
+              child: OptionsList(title,courseName),
+            )));
           },
           child: ListTile(
             title: MyText(title,style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
@@ -82,7 +89,11 @@ class CourseList extends StatelessWidget{
             color: ColorProperties.AppColorHex,
             textColor: Colors.white,
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>TestScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                  ChangeNotifierProvider(
+                    create: (context)=>UnitsViewModel(),
+                    child: Units(),
+                  )));
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
@@ -107,7 +118,7 @@ class CourseList extends StatelessWidget{
           color: Colors.white,
           textColor: ColorProperties.AppColor,
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>QAndAnswresCat()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Units()));
 
           },
           shape: RoundedRectangleBorder(

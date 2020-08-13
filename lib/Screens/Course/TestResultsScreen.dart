@@ -3,17 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
-import 'ChooseQuestionsCat.dart';
+import 'Units.dart';
 import 'TestScreen.dart';
 
 class TestResultsScreen extends StatefulWidget{
+  int correctResult;
+  int wrongResult;
+
+
+  TestResultsScreen(this.correctResult,this.wrongResult);
   @override
-  _TestResultsScreenState createState() => _TestResultsScreenState();
+  _TestResultsScreenState createState() => _TestResultsScreenState(correctResult,wrongResult);
 }
 
 class _TestResultsScreenState extends State<TestResultsScreen> {
+  int correctResult;
+  int wrongResult;
+  _TestResultsScreenState(this.correctResult,this.wrongResult);
   @override
   Widget build(BuildContext context) {
+    print(correctResult);
+    print(wrongResult);
     return Material(
         color: ColorProperties.AppColor,
         child: Stack(
@@ -131,7 +141,7 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
           color: Colors.white,
           textColor: ColorProperties.AppColor,
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>QAndAnswresCat()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Units()));
 
           },
           shape: RoundedRectangleBorder(
@@ -171,7 +181,7 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
             ),
             SizedBox(height: 32,),
             Text(
-              "25",
+              color=="green"?"$correctResult":"$wrongResult",
               style: TextStyle(
                   color:Colors.white,
                   fontSize: 18,

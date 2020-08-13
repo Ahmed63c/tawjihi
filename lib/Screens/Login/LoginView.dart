@@ -248,13 +248,15 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
     return
       Consumer<LoginViewModel>(
           builder: (context, model, child){
-            return    Visibility(
+            return Visibility(
               visible: model.user.status==Status.ERROR,
-              child:Container(
+              child:
+              Container(
                   margin: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(model.error,
                     style:
-                    TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)),
+                    TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)
+              ),
             );
           });
 

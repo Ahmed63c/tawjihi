@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:tawjihi/Models/UserModel.dart';
 import 'package:tawjihi/Network/ApiBaseHelper.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
+import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 
 class LoginViewModel with ChangeNotifier{
 
@@ -23,6 +25,9 @@ void postData(Map<String,dynamic> data) async{
     var parsedResponse=json.decode(response.data);
     userModel=UserModel.fromJson(parsedResponse);
     if(userModel.status=="01"){
+      StorageUtil.getInstance().then((storage){
+        StorageUtil.putString(Constant.TOKEN, userModel.details.access_token);
+      });
       user=ApiResponse.completed(userModel);
       notifyListeners();
 

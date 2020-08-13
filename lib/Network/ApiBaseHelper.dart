@@ -11,11 +11,11 @@ import 'dart:convert';
 class ApiBaseHelper {
 
 
-  Future<dynamic> get(String url) async {
+  Future<dynamic> get(String url,Map<String,dynamic>parameters) async {
     var responseJson;
     try {
       final response = await DioProvider.instance().get(
-          Constant.BASE_URL + url);
+          Constant.BASE_URL + url,queryParameters:parameters);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');

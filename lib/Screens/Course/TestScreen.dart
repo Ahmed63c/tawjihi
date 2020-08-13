@@ -1,172 +1,257 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tawjihi/Network/BaseApiResponse.dart';
+import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/TestResultsScreen.dart';
+import 'package:tawjihi/Screens/Course/TestViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
-class TestScreen extends StatefulWidget{
+class TestScreen extends StatefulWidget {
   @override
   _TestScreenState createState() => _TestScreenState();
 }
 
-class _TestScreenState extends State<TestScreen> {
+class _TestScreenState extends State<TestScreen> with BaseScreen {
+
+  int questionNum=0;
+  int corrctResult=0;
+  int wrongResult=0;
+  int questionLenght=0;
+  Color rightAnswer=Colors.green;
+  Color wrongAnswer=Colors.red;
+  Color emptyAnswer=Colors.white;
+  Color selectedAnswer=ColorProperties.AppColor;
+  bool clicked=false;
+  String choose="";
+
+
   @override
   Widget build(BuildContext context) {
+    var model=Provider.of<TestViewModel>(context,listen: false);
+    getData();
+
     return Material(
         color: ColorProperties.AppColor,
         child: Stack(
-          children: <Widget>[header()],
-        ));
+          children: <Widget>[
 
+            Consumer<TestViewModel>(builder: (context, model, child) {
+              return switchWidgets(model,context);
+            }
+            ),
+          ],
+        ));
   }
 
- Widget header() {
+  Widget header(TestViewModel model) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(height: 40,),
-        Row(mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(margin: EdgeInsets.only(left: 16,right: 16),
-              child: Icon(Icons.arrow_back,color: Colors.white,)),
-          Container(
-            margin: EdgeInsets.only(left: 16,right: 16),
-              child: MyText("multi_choice",style:
-          TextStyle(fontSize: 20,fontWeight: FontWeight.w700,fontFamily: "Cairo"
-          ,color: Colors.white),))
-
-        ],),
-        SizedBox(height: 32,),
-        Row(mainAxisSize: MainAxisSize.max,
+        SizedBox(
+          height: 40,
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            GestureDetector(
+              onTap:(){
+                Navigator.pop(context);
+              },
+              child: Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  )),
+            ),
+            Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                child: MyText(
+                  "multi_choice",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: "Cairo",
+                      color: Colors.white),
+                ))
+          ],
+        ),
+        SizedBox(
+          height: 32,
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
-                margin: EdgeInsets.only(left: 16,right: 16),
-                child: MyText("question_number",style:
-                TextStyle(fontSize: 18,fontWeight: FontWeight.w700,fontFamily: "Cairo"
-                    ,color: Colors.white),)),
+                margin: EdgeInsets.only(left: 16, right: 16),
+                child: MyText(
+                  "question_number",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: "Cairo",
+                      color: Colors.white),
+                )),
             Container(
-                child: Text("49/50",style:
-                TextStyle(fontSize: 18,fontWeight: FontWeight.w700,fontFamily: "Cairo"
-                    ,color: Colors.white),))
-
-
-          ],),
-        SizedBox(height: 24,),
+                child: Text(
+              "${questionNum+1}/50",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Cairo",
+                  color: Colors.white),
+            ))
+          ],
+        ),
+        SizedBox(
+          height: 24,
+        ),
         Container(
-          margin: EdgeInsets.only(left: 16,right: 16),
-           child: LinearProgressIndicator(
-                  backgroundColor: Colors.white,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xff2397FC),),
-                  value: 0.9,
-              ),
-         ),
-        testCard()
+          margin: EdgeInsets.only(left: 16, right: 16),
+          child: LinearProgressIndicator(
+            backgroundColor: Colors.white,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Color(0xff2397FC),
+            ),
+            value: ((questionNum+1))/50,
+          ),
+        ),
+        testCard(model)
       ],
     );
+  }
 
- }
- Widget testCard() {
+  Widget testCard(TestViewModel model) {
     return Flexible(
       child: Stack(
         children: <Widget>[
-         backGround(),
-          ListView(children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-              child: MyText("choose",style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w400,
-                  fontSize: 14,color: Colors.grey),),
-            ),
-            questionImage(),
-            questionText(),
-            questionAnswers(),
-            SizedBox(height: 100,)
-
-          ],),
+          backGround(),
+          ListView(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+                child: MyText(
+                  "choose",
+                  style: TextStyle(
+                      fontFamily: "Cairo",
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: Colors.grey),
+                ),
+              ),
+              questionImage(model),
+              questionText(model),
+              questionAnswers(model),
+              SizedBox(
+                height: 100,
+              )
+            ],
+          ),
           bottomActions()
         ],
       ),
     );
- }
+  }
 
   Widget nextButton() {
     return Container(
-            height: 40,
-              width: 110,
-              margin: EdgeInsets.symmetric(horizontal: 16),
-              child: RaisedButton(
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (_)=>TestResultsScreen()));
-                },
-                  color: ColorProperties.AppColorHex,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
+        height: 40,
+        width: 110,
+        margin: EdgeInsets.symmetric(horizontal: 16),
+        child: RaisedButton(
+            onPressed: () {
+              print(corrctResult);
+              print(wrongResult);
+
+
+              Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult)));
+
+
+            },
+            color: ColorProperties.AppColorHex,
+            textColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(left: 4, right: 4, bottom: 4),
+                  child: MyText(
+                    "next",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: "Cairo",
+                        fontWeight: FontWeight.w700),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(left: 4,right: 4,bottom: 4),
-                        child: MyText(
-                          "next",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontFamily: "Cairo",
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(left: 4,right: 4),
-                          child: Icon(Icons.arrow_forward_ios,size: 14,))
-                    ],)
-              ));
+                ),
+                Container(
+                    margin: EdgeInsets.only(left: 4, right: 4),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 14,
+                    ))
+              ],
+            )));
   }
 
   Widget previousButton() {
     return Container(
-              height: 40,
-              width: 110,
-              margin: EdgeInsets.symmetric(horizontal: 16),
-              child: RaisedButton(
-                  onPressed: (){},
-                  color: ColorProperties.AppColorHex,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
+        height: 40,
+        width: 110,
+        margin: EdgeInsets.symmetric(horizontal: 16),
+        child: RaisedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              //decrase conunter if it is not 0
+            },
+            color: ColorProperties.AppColorHex,
+            textColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(left: 4, right: 4),
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      size: 14,
+                    )),
+                Container(
+                  margin: EdgeInsets.only(left: 4, right: 4, bottom: 4),
+                  child: MyText(
+                    "previous",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: "Cairo",
+                        fontWeight: FontWeight.w700),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.only(left: 4,right: 4),
-                          child: Icon(Icons.arrow_back_ios,size: 14,)),
-                      Container(
-                        margin: EdgeInsets.only(left: 4,right: 4,bottom: 4),
-                        child: MyText(
-                          "previous",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontFamily: "Cairo",
-                              fontWeight: FontWeight.w700),
-                        ),
-                      )
-                    ],)
-              ));
+                )
+              ],
+            )));
   }
 
   Widget backGround() {
-    return  Container(
+    return Container(
       margin: EdgeInsets.only(top: 24),
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
     );
   }
 
@@ -183,72 +268,144 @@ class _TestScreenState extends State<TestScreen> {
           children: <Widget>[
             previousButton(),
             nextButton(),
-
           ],
         ),
       ),
-
     );
   }
 
-  Widget questionImage() {
-    return Container(
-        margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-        height: 80,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-        child: Image.asset("assets/images/logo.jpg",fit: BoxFit.fill,));
-  }
-
-  Widget questionText() {
-    String test="(أ ب ج د) شبه منحرف فيه (اد)توازي(ب ج) وقياس زاوية (ب)=90 درجه فاذا كان  (اب)=3سم, (اد)= 6سم, (ب ج)="
-        "(أ ب ج د) شبه منحرف فيه (اد)توازي(ب ج) وقياس زاوية (ب)=90 درجه فاذا كان  (اب)=3سم, (اد)= 6سم, (ب ج)=";
-    return Container(
-      margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-      child: Text(test,
-        style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
-            fontSize: 16,color: Colors.black),),
+  Widget questionImage(TestViewModel model) {
+    return Visibility(
+      visible: false,
+      child: Container(
+          margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+          height: 80,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+          child: Image(image: CachedNetworkImageProvider(model.test.details[questionNum].pics==null
+              ? "" : model.test.details[questionNum].pics),)
+      ),
     );
   }
 
-  Widget  questionAnswers() {
+  Widget questionText(TestViewModel model) {
+    String test ="";
+    return Container(
+      margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+      child: Text(
+        model.test.details[questionNum].title,
+        style: TextStyle(
+            fontFamily: "Cairo",
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            color: Colors.black),
+      ),
+    );
+  }
+
+  Widget questionAnswers(TestViewModel model) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        questionCell("answer"),questionCell("answer"),
-        questionCell("answer"),questionCell("answer"),
+        questionCell(model.test.details[questionNum].answer1,model),
+        questionCell(model.test.details[questionNum].answer2,model),
+        questionCell(model.test.details[questionNum].answer3,model),
+        questionCell(model.test.details[questionNum].answer4,model),
       ],
     );
   }
 
-
-  Widget questionCell(String answer){
+  Widget questionCell(String answer,TestViewModel model) {
     return GestureDetector(
+      onTap: (){
+        setState(() {
+          clicked=true;
+         choose=answer;
+        });
+
+      },
       child: Container(
-        margin: EdgeInsets.only(left: 16,right: 16,top: 8),
+        margin: EdgeInsets.only(left: 16, right: 16, top: 8),
         height: 40,
         decoration: BoxDecoration(
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(8))
-
-        ),
-        child: Row(mainAxisSize: MainAxisSize.max,mainAxisAlignment: MainAxisAlignment.start,
+            color:clicked?answerColor(answer,model.test.details[questionNum].correct_answer):Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(left: 16,right: 16),
-              width: 12,height: 12,decoration:
-            BoxDecoration(shape: BoxShape.circle,color: Colors.grey),),
-            Container(
-              margin: EdgeInsets.only(left: 16,right: 16),
-              child: Text("25 سم",style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w400,
-                  fontSize: 18,color: Colors.grey),),
+              margin: EdgeInsets.only(left: 16, right: 16),
+              width: 12,
+              height: 12,
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
             ),
-          ],),
+            Container(
+              margin: EdgeInsets.only(left: 16, right: 16),
+              child: Text(
+              answer,
+                style: TextStyle(
+                    fontFamily: "Cairo",
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
+                    color: Colors.grey),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  void getData() {
+    Map<String, dynamic> paramaters = new Map();
+    paramaters.putIfAbsent("materialId", () => 3);
+    paramaters.putIfAbsent("unitId", () => 2);
+    Provider.of<TestViewModel>(context, listen: false).get(paramaters);
+  }
+
+   answerColor(String answer,String correctAnswer) {
+    correctAnswer="اجابه1";
+    print(choose);
+    if(choose==correctAnswer&&answer==choose){
+      corrctResult++;
+      print(choose+"          $corrctResult");
+
+      return rightAnswer;
+    }
+    else if(answer!=correctAnswer&&answer==choose){
+      if(questionLenght!=questionNum){
+        questionNum++;
+      }
+      wrongResult++;
+      return wrongAnswer;
+    }
+    else if (answer==correctAnswer&&answer!=choose){
+      if(questionLenght!=questionNum){
+        questionNum++;
+      }
+      return rightAnswer;
+    }
+    }
+
+  Widget switchWidgets(TestViewModel model,BuildContext context) {
+    switch (model.testResponseWraper.status){
+      case Status.LOADING:
+        return super.loadingIndicator(model.testResponseWraper.status==Status.LOADING, context);
+        break;
+      case Status.empty:
+        return super.loadingIndicator(model.testResponseWraper.status==Status.empty, context);
+      case Status.ERROR:
+        return super.errorScreen(model.testResponseWraper.status==Status.ERROR, context);
+        break;
+      case Status.COMPLETED:
+        return header(model);
+        break;
+    }
+  }
 
 }

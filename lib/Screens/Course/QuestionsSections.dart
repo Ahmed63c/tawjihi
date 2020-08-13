@@ -4,9 +4,9 @@ import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/QuestionAndAnswersScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
-class QuestionsSubCat extends StatelessWidget{
+class QuestionsSections extends StatelessWidget{
   String appBarHeader="";
-  QuestionsSubCat(this.appBarHeader);
+  QuestionsSections(this.appBarHeader);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
