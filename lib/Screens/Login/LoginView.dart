@@ -1,18 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:tawjihi/Network/BaseApiResponse.dart';
+import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
-import 'package:tawjihi/Screens/SignUpScreens/SignUpFirst.dart';
+import 'package:tawjihi/Screens/SignUp/SignUpFirst.dart';
+import 'package:tawjihi/Screens/SignUp/SignUpViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
-class LoginView extends StatefulWidget {
+import 'LoginViewModel.dart';
+
+class LoginView extends StatefulWidget{
   @override
   _LoginViewState createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginViewState extends State<LoginView> with BaseScreen{
+  bool obSecureText=true;
+  IconData iconOn=Icons.visibility;
+  IconData iconOff=Icons.visibility_off;
+  TextEditingController emailController=TextEditingController();
+  TextEditingController passController=TextEditingController();
+  bool _validate=false;
+
+
   @override
   void initState() {
     super.initState();
@@ -21,22 +35,46 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: ColorProperties.AppColor,
-        child: Stack(
-          children: <Widget>[headerLogo(), loginCard(), bottomSignUp()],
-        ));
+          color: ColorProperties.AppColor,
+          child: Stack(
+            children: <Widget>[
+              headerLogo(),
+              loginCard(),
+              bottomSignUp(),
+             Consumer<LoginViewModel>(
+                 builder: (context, model, child){
+                   WidgetsBinding.instance.addPostFrameCallback((_){
+                     if(model.user.status==Status.COMPLETED){
+                         Navigator.pushReplacement(
+                           context,
+                           MaterialPageRoute(builder: (context) =>
+                               Home(model.userModel.details.user.major=="scientific"?false:true)),
+                         );
+                     }
+                   });
+                return  super.loadingIndicator(model.user.status==Status.LOADING, context);
+            })
+
+                ],
+          ));
   }
 
   Widget headerLogo() {
-    return Center();
+    return Container(
+      margin: EdgeInsets.only(top: 32),
+      child: Align(
+        alignment: Alignment.topCenter,
+            child: Image.asset("assets/images/tawjihi_logo.png")),
+    )
+    ;
   }
 
   Widget loginCard() {
     return Center(
       child: Container(
-        margin: EdgeInsets.only(top: 64),
+        margin: EdgeInsets.only(top: 80),
         width: MediaQuery.of(context).size.width - 28,
-        height: 356,
+        height: 380,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(4)),
         child: ListView(
@@ -44,7 +82,9 @@ class _LoginViewState extends State<LoginView> {
             cardHeader(),
             emailField(),
             passwordField(),
-            signInButton()
+            errorView(),
+            signInButton(),
+
           ],
         ),
       ),
@@ -69,7 +109,9 @@ class _LoginViewState extends State<LoginView> {
       padding: EdgeInsets.only(left: 16, right: 16, top: 30),
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
+        controller: emailController,
         decoration: InputDecoration(
+          errorText: _validate ? AppLocalizations.of(context).translate("error_field") : null,
           labelText: AppLocalizations.of(context).translate("hint_email_login"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -92,7 +134,10 @@ class _LoginViewState extends State<LoginView> {
       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: TextFormField(
         keyboardType: TextInputType.number,
+        obscureText: obSecureText,
+        controller: passController,
         decoration: InputDecoration(
+            errorText: _validate ? AppLocalizations.of(context).translate("error_field") : null,
             labelText:
                 AppLocalizations.of(context).translate("hint_password_login"),
             labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -106,9 +151,15 @@ class _LoginViewState extends State<LoginView> {
                   const BorderSide(color: ColorProperties.AppColor, width: 1.0),
               borderRadius: BorderRadius.circular(4.0),
             ),
-            suffixIcon: Icon(
-              Icons.visibility_off,
+            suffixIcon:
+            IconButton(
+              icon:Icon(obSecureText?iconOff:iconOn),
               color: Colors.black,
+              onPressed: (){
+                setState(() {
+                  obSecureText=obSecureText?false:true;
+                });
+              },
             )),
       ),
     );
@@ -120,8 +171,20 @@ class _LoginViewState extends State<LoginView> {
         child: RaisedButton(
           color: ColorProperties.AppColorHex,
           textColor: Colors.white,
-          onPressed: () {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home()));
+          onPressed: (){
+            setState(() {
+              emailController.text.isEmpty ? _validate = true : _validate = false;
+              passController.text.isEmpty ? _validate = true : _validate = false;
+
+            });
+            if(!_validate){
+              Map<String,dynamic> paramaters=new Map();
+              paramaters.putIfAbsent("email", () => emailController.text);
+              paramaters.putIfAbsent("password", () => passController.text);
+              Provider.of<LoginViewModel>(context,listen: false).postData(paramaters);
+            }
+
+            // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home()));
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
@@ -168,10 +231,32 @@ class _LoginViewState extends State<LoginView> {
                       decoration: TextDecoration.underline),
                 ),
               ),
-              onTap: (){            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SignUpFirst()));
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                    ChangeNotifierProvider(
+                      create: (context)=>SignUpViewModel(),
+                    child: SignUpFirst()
+                    )
+                ));
               },
             )
           ],
         ));
+  }
+
+  errorView() {
+    return
+      Consumer<LoginViewModel>(
+          builder: (context, model, child){
+            return    Visibility(
+              visible: model.user.status==Status.ERROR,
+              child:Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(model.error,
+                    style:
+                    TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)),
+            );
+          });
+
   }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/QuestionAndAnswersScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
-class UnitQuestions extends StatelessWidget{
+class QuestionsSubCat extends StatelessWidget{
   String appBarHeader="";
-  UnitQuestions(this.appBarHeader);
+  QuestionsSubCat(this.appBarHeader);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +38,7 @@ class UnitQuestions extends StatelessWidget{
   Widget viewCard(BuildContext context,String title){
     return GestureDetector(
       onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(builder: (_)=>QAndAnswers(title)));
       },
       child: Card(
         elevation: 4,

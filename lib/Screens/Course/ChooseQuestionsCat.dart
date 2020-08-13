@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
-import 'package:tawjihi/Screens/Course/UnitQuestionDetailsScreen.dart';
+import 'package:tawjihi/Screens/Course/ChooseQuestionsSubCat.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
-class QAndAnswres extends StatelessWidget {
+class QAndAnswresCat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +15,8 @@ class QAndAnswres extends StatelessWidget {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        body: Column(
+        body:
+        Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -62,13 +63,14 @@ class QAndAnswres extends StatelessWidget {
               ],
             ),
           ],
-        ));
+        )
+    );
   }
 
   Widget viewCard(BuildContext context,String title){
     return GestureDetector(
       onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (_)=>UnitQuestions(title)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_)=>QuestionsSubCat(title)));
       },
       child: Card(
         elevation: 4,

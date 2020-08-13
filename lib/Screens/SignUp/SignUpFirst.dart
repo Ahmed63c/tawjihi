@@ -1,10 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
-import 'package:tawjihi/Screens/SignUpScreens/SignUpSecond.dart';
+import 'package:tawjihi/Screens/SignUp/SignUpViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+
+import 'SignUpSecond.dart';
 
 class SignUpFirst extends StatefulWidget {
   @override
@@ -12,6 +16,14 @@ class SignUpFirst extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUpFirst> {
+  var formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController regionController = TextEditingController();
+  TextEditingController schoolController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController parentPhoneController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -36,17 +48,20 @@ class _SignUpState extends State<SignUpFirst> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(4)),
-        child: ListView(
-          children: <Widget>[
-            cardHeader(),
-            emailField(),
-            fullNameField(),
-            regionNameField(),
-            schoolNameField(),
-            phoneField(),
-            parentPhoneField(),
-            nextButton()
-          ],
+        child: Form(
+          key: formKey,
+          child: ListView(
+            children: <Widget>[
+              cardHeader(),
+              emailField(),
+              fullNameField(),
+              regionNameField(),
+              schoolNameField(),
+              phoneField(),
+              parentPhoneField(),
+              nextButton()
+            ],
+          ),
         ),
       ),
     );
@@ -70,6 +85,12 @@ class _SignUpState extends State<SignUpFirst> {
       padding: EdgeInsets.only(left: 16, right: 16, top: 28),
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
+        controller: emailController,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return "من فضلك إملأ كل الحقول";
+            }
+          },
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("hint_email_login"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -93,6 +114,12 @@ class _SignUpState extends State<SignUpFirst> {
       padding: EdgeInsets.only(left: 16, right: 16, top: 8),
       child: TextFormField(
         keyboardType: TextInputType.text,
+        controller: nameController,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return "من فضلك إملأ كل الحقول";
+          }
+        },
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("full_name"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -116,6 +143,12 @@ class _SignUpState extends State<SignUpFirst> {
       padding: EdgeInsets.only(left: 16, right: 16, top: 8),
       child: TextFormField(
         keyboardType: TextInputType.text,
+        controller: regionController,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return "من فضلك إملأ كل الحقول";
+          }
+        },
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("region_name"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -139,6 +172,12 @@ class _SignUpState extends State<SignUpFirst> {
       padding: EdgeInsets.only(left: 16, right: 16, top: 8),
       child: TextFormField(
         keyboardType: TextInputType.text,
+        controller: schoolController,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return "من فضلك إملأ كل الحقول";
+          }
+        },
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("school_name"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -162,6 +201,12 @@ class _SignUpState extends State<SignUpFirst> {
       padding: EdgeInsets.only(left: 16, right: 16, top: 8),
       child: TextFormField(
         keyboardType: TextInputType.number,
+        controller: phoneController,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return "من فضلك إملأ كل الحقول";
+          }
+        },
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("phone"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -185,6 +230,12 @@ class _SignUpState extends State<SignUpFirst> {
       padding: EdgeInsets.only(left: 16, right: 16, top: 8),
       child: TextFormField(
         keyboardType: TextInputType.number,
+        controller: parentPhoneController,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return "من فضلك إملأ كل الحقول";
+          }
+        },
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("parent_phone"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -215,7 +266,21 @@ class _SignUpState extends State<SignUpFirst> {
             color: ColorProperties.AppColorHex,
             textColor: Colors.white,
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder:(_)=>SignUpSecond()));},
+              if (formKey.currentState.validate()) {
+                print("passed validation");
+                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                    ChangeNotifierProvider(
+                    create: (context)=>SignUpViewModel(),
+                    child: SignUpSecond(emailController.text,nameController.text,
+                    regionController.text,schoolController.text,phoneController.text,
+                    parentPhoneController.text)
+                )
+                )
+                );
+                }
+
+              },
+
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
             ),

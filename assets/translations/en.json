@@ -66,6 +66,27 @@
 
   "multi_choice": "Multiple Choice",
   "question_number": "Question",
-  "choose": "Choose Correct Answer"
+  "choose": "Choose Correct Answer",
 
+  "test_results": "Test Result",
+  "correct_answers": "Correct Answers",
+  "wrong_answers": "wrong Answers",
+  "start_new": "Start New Test",
+
+
+  "settings": "Settings",
+  "language": "Language",
+  "change_language": "Change language",
+  "security": "Security",
+  "change_password": "Change Password",
+  "more": "More",
+  "about": "About Tawjihi",
+  "current_password": "Current Password",
+  "new_password": "New Password",
+  "confirm_password": "Confirm new Password",
+  "update": "Update",
+
+
+  "loading": "Loading...",
+  "error_field": "this field cant be empty"
 }

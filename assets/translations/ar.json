@@ -67,8 +67,29 @@
 
   "multi_choice": "اختيار من متعدد",
   "question_number": "السؤال",
-  "choose": "اختر الاجابه الصحيحة"
+  "choose": "اختر الاجابه الصحيحة",
 
 
+  "test_results": "نتائج الاختبار",
+  "correct_answers": "الإجابات الصحيحة",
+  "wrong_answers": "الإجابات الخاطئة",
+  "start_new": "ابدء اختبار جديد",
+
+
+
+  "settings": "الاعدادات",
+  "language": "اللغة",
+  "change_language": "تغيير اللغة",
+  "security": "الحماية",
+  "change_password": "تغيير رقم المرور",
+  "more": "المزيد",
+  "about": "عن توجيهي",
+  "current_password": "الرقم السري الحالي",
+  "new_password": "الرقم السري الجديد",
+  "confirm_password": "تأكيد الرقم السري",
+  "update": "تحديث",
+
+  "loading": "تحميل...",
+  "error_field": "لايمكن أن يكون الحقل فارغا"
 
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:tawjihi/Screens/LoginScreen/LoginView.dart';
+import 'package:provider/provider.dart';
+import 'package:tawjihi/Screens/Login/LoginViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
+import 'Screens/Login/LoginView.dart';
 import 'Utils/AppLocalization.dart';
 void main() {
   runApp(MyApp());
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       supportedLocales: [
 //        Locale('en', 'US'),
-        Locale('ar', ''),
+         Locale('ar', ''),
       ],
       localizationsDelegates: [
         AppLocalizations.delegate,
@@ -22,12 +24,14 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      title: 'Tawjihi ',
+      title:"Tawjihi",
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginView(),
-
+      home:ChangeNotifierProvider(
+        create: (context)=>LoginViewModel(),
+        child: LoginView(),
+      )
     );
   }
 }

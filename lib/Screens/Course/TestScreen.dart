@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/TestResultsScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 class TestScreen extends StatefulWidget{
@@ -76,7 +77,7 @@ class _TestScreenState extends State<TestScreen> {
           ListView(children: <Widget>[
             Container(
               margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-              child: Text("اختر الاجابة الصحيه",style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w400,
+              child: MyText("choose",style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w400,
                   fontSize: 14,color: Colors.grey),),
             ),
             questionImage(),
@@ -97,7 +98,9 @@ class _TestScreenState extends State<TestScreen> {
               width: 110,
               margin: EdgeInsets.symmetric(horizontal: 16),
               child: RaisedButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_)=>TestResultsScreen()));
+                },
                   color: ColorProperties.AppColorHex,
                   textColor: Colors.white,
                   shape: RoundedRectangleBorder(

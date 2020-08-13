@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
-import 'package:tawjihi/Screens/Course/QuestionsAndAnswersScreen.dart';
+import 'package:tawjihi/Screens/Course/ChooseQuestionsCat.dart';
 import 'package:tawjihi/Screens/Course/TestScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+
+import 'OptionsList.dart';
 
 class CourseList extends StatelessWidget{
   String appBarheader="";
@@ -19,77 +21,56 @@ class CourseList extends StatelessWidget{
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Stack(children: <Widget>[
-        ListView(
-          children: <Widget>[
-            Card(
-              elevation: 4,
-              child: ListTile(
-                title: MyText('videos',style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
-                leading: Container(height:double.infinity,child: Icon(Icons.video_library,color: Colors.blue,size: 18,)),
-                trailing: Icon(Icons.arrow_forward_ios,color: Colors.black,size: 14,),
-              ),
-            ),
-            Card(
-              elevation: 4,
-              child: ListTile(
-                title: MyText('articles',style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
-                leading: Container(height:double.infinity,child: Icon(Icons.assignment,color: Colors.blue,size: 18,)),
-                trailing: Icon(Icons.arrow_forward_ios,color: Colors.black,size: 14,),
-              ),
-            ),
-            Card(
-              elevation: 4,
-              child: ListTile(
-                title: MyText('school_exams',style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
-                leading: Container(height:double.infinity,child: Icon(Icons.content_paste,color: Colors.blue,size: 18,)),
-                trailing: Icon(Icons.arrow_forward_ios,color: Colors.black,size: 14,),
-              ),
-            ),
-            Card(
-              elevation: 4,
-              child: ListTile(
-                title: MyText('work_papers',style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
-                leading: Container(height:double.infinity,child: Icon(Icons.assignment_ind,color: Colors.blue,size: 18,)),
-                trailing: Icon(Icons.arrow_forward_ios,color: Colors.black,size: 14,),
-              ),
-            ),
-            Card(
-              elevation: 4,
-              child: ListTile(
-                title: MyText('previous_exams',style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
-                leading: Container(height:double.infinity,child: Icon(Icons.question_answer,color: Colors.blue,size: 18,)),
-                trailing: Icon(Icons.arrow_forward_ios,color: Colors.black,size: 14,),
-              ),
-            ),
-            Card(
-              elevation: 4,
-              child: ListTile(
-                title: MyText('questions_topics',style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
-                leading: Container(height:double.infinity,child: Icon(Icons.polymer,color: Colors.blue,size: 18,)),
-                trailing: Icon(Icons.arrow_forward_ios,color: Colors.black,size: 14,),
-              ),
-            ),
+      body: body(context)
 
+    );
+  }
+
+  Widget body(BuildContext context){
+    return  Stack(children: <Widget>[
+      ListView(
+        children: <Widget>[
+          viewCard(context, 'videos', Icons.video_library),
+          viewCard(context, 'articles', Icons.assignment),
+          viewCard(context, 'school_exams', Icons.content_paste),
+          viewCard(context, 'work_papers', Icons.assignment_ind),
+          viewCard(context, 'previous_exams', Icons.question_answer),
+          viewCard(context, 'questions_topics', Icons.help),
+        ],
+
+      ),
+      Positioned(
+        bottom: 8,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            startTestButton(context),
+            SizedBox(height: 8,),
+            questionsAndAnswrsButton(context)
 
           ],
-
         ),
-        Positioned(
-          bottom: 8,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-               startTestButton(context),
-              SizedBox(height: 8,),
-              questionsAndAnswrsButton(context)
+      )
 
-            ],
+    ],);
+  }
+
+  Widget viewCard(BuildContext context,String title,IconData icon){
+    return
+      Card(
+        elevation: 4,
+        child: GestureDetector(
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>OptionsList(title)));
+          },
+          child: ListTile(
+            title: MyText(title,style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
+            leading: Container(height:double.infinity,child: Icon(icon,color: Colors.blue,size: 18,)),
+            trailing: Icon(Icons.arrow_forward_ios,color: Colors.black,size: 14,),
           ),
-        )
+        ),
+      );
 
-      ],)
-    );
   }
 
   Widget startTestButton(BuildContext context) {
@@ -126,7 +107,7 @@ class CourseList extends StatelessWidget{
           color: Colors.white,
           textColor: ColorProperties.AppColor,
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>QAndAnswres()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>QAndAnswresCat()));
 
           },
           shape: RoundedRectangleBorder(
