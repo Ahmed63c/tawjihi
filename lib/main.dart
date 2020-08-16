@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/Login/LoginViewModel.dart';
+import 'package:tawjihi/SplashScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 import 'Screens/Login/LoginView.dart';
@@ -28,10 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:ChangeNotifierProvider(
-        create: (context)=>LoginViewModel(),
-        child: LoginView(),
-      )
+      home:SplashScreen()
     );
   }
 }

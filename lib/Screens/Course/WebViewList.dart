@@ -5,28 +5,32 @@ import 'package:provider/provider.dart';
 import 'package:tawjihi/Models/DataList.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
-import 'package:tawjihi/Screens/Course/OptionsListViewModel.dart';
+import 'package:tawjihi/Screens/Course/WebViewListViewModel.dart';
 import 'package:tawjihi/Screens/Course/WebView.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
 
 import '../BaseScreen.dart';
 
-class OptionsList extends StatefulWidget {
+class WebViewList extends StatefulWidget {
   String header = "";
   String courseName = "";
+  int materialId;
+  int type;
 
-  OptionsList(this.header,this.courseName);
+  WebViewList(this.header,this.courseName,this.materialId,this.type);
 
   @override
-  _OptionsListState createState() => _OptionsListState(header,courseName);
+  _WebViewListState createState() => _WebViewListState(header,courseName,materialId,type);
 }
 
-class _OptionsListState extends State<OptionsList> with BaseScreen {
+class _WebViewListState extends State<WebViewList> with BaseScreen {
   String header;
   String courseName;
+  int materialId;
+  int type;
 
-  _OptionsListState(this.header,this.courseName);
+  _WebViewListState(this.header,this.courseName,this.materialId,this.type);
 
   @override
   void initState() {
@@ -34,8 +38,6 @@ class _OptionsListState extends State<OptionsList> with BaseScreen {
   }
   @override
   Widget build(BuildContext context) {
-
-    getData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorProperties.AppColor,
@@ -49,9 +51,10 @@ class _OptionsListState extends State<OptionsList> with BaseScreen {
   }
 
   Widget body() {
+    getData(materialId,type);
     return Stack(
       children: <Widget>[
-        Consumer<OptionsListViewModel>(
+        Consumer<WebViewListViewModel>(
             builder: (context, model, child){
               return  switchWidgets(model,context);
             })
@@ -89,8 +92,9 @@ class _OptionsListState extends State<OptionsList> with BaseScreen {
             height: 100,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-            child: Image(image: CachedNetworkImageProvider(dataList.details[index].pics==null
-                ? "" : Constant.BASE_URL+dataList.details[index].pics),),
+//            child: Image(image: CachedNetworkImageProvider(dataList.details[index].pics==null
+//                ? "" : dataList.details[index].pics),),
+        child: Image.asset("assets/images/logo.jpg",fit: BoxFit.cover,),
         ),
         Visibility(
           visible: false,
@@ -135,25 +139,11 @@ class _OptionsListState extends State<OptionsList> with BaseScreen {
                 color: Colors.grey),
           ),
         ),
-        Visibility(
-          visible: false,
-          child: Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-            child: Text(
-              "مدة الفيديو  15 دقيقة",
-              style: TextStyle(
-                  fontFamily: "Cairo",
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: Colors.grey),
-            ),
-          ),
-        ),
       ],
     );
   }
 
-  Widget switchWidgets(OptionsListViewModel model,BuildContext context) {
+  Widget switchWidgets(WebViewListViewModel model,BuildContext context) {
     switch (model.materials.status){
       case Status.LOADING:
         return super.loadingIndicator(model.materials.status==Status.LOADING, context);
@@ -174,20 +164,26 @@ class _OptionsListState extends State<OptionsList> with BaseScreen {
         break;
       case Status.COMPLETED:
     return
+      model.materialList.details.length>0?
       ListView.builder(
         itemCount: model.materialList.details.length,
         itemBuilder: (BuildContext context, int index) {
           return viewCard(index, context,model.materialList);
         },
+      ):Container(
+        child: Center(
+          child: MyText("error_empty",style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w700
+          ,fontSize: 18),),
+        ),
       );
     break;
     }
   }
 
-  void getData() {
+  void getData(int materialId,int type) {
     Map<String,dynamic> paramaters=new Map();
-    paramaters.putIfAbsent("materialId", () =>4);
-    paramaters.putIfAbsent("type", () => 5);
-    Provider.of<OptionsListViewModel>(context,listen: false).get(paramaters);
+    paramaters.putIfAbsent("materialId", () =>materialId);
+    paramaters.putIfAbsent("type", () => type);
+    Provider.of<WebViewListViewModel>(context,listen: false).get(paramaters);
   }
 }

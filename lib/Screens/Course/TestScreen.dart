@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
@@ -10,8 +11,12 @@ import 'package:tawjihi/Screens/Course/TestViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 class TestScreen extends StatefulWidget {
+  int materialId;
+  int unitId;
+
+  TestScreen(this.materialId,this.unitId);
   @override
-  _TestScreenState createState() => _TestScreenState();
+  _TestScreenState createState() => _TestScreenState(materialId,unitId);
 }
 
 class _TestScreenState extends State<TestScreen> with BaseScreen {
@@ -26,20 +31,27 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   Color selectedAnswer=ColorProperties.AppColor;
   bool clicked=false;
   String choose="";
-
+  int materialId;
+  int unitId;
+  _TestScreenState(this.materialId,this.unitId);
 
   @override
   Widget build(BuildContext context) {
     var model=Provider.of<TestViewModel>(context,listen: false);
-    getData();
+    getData(materialId,unitId);
 
     return Material(
         color: ColorProperties.AppColor,
         child: Stack(
           children: <Widget>[
-
+            header(model),
             Consumer<TestViewModel>(builder: (context, model, child) {
-              return switchWidgets(model,context);
+              return super.loadingIndicator(model.testResponseWraper.status==Status.LOADING, context);
+            }
+            ),
+            Consumer<TestViewModel>(builder: (context, model, child) {
+              return super.errorScreen(model.testResponseWraper.status==Status.ERROR, context);
+
             }
             ),
           ],
@@ -48,83 +60,83 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
 
   Widget header(TestViewModel model) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(
-          height: 40,
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            GestureDetector(
-              onTap:(){
-                Navigator.pop(context);
-              },
-              child: Container(
-                  margin: EdgeInsets.only(left: 16, right: 16),
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                  )),
-            ),
-            Container(
-                margin: EdgeInsets.only(left: 16, right: 16),
-                child: MyText(
-                  "multi_choice",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: "Cairo",
-                      color: Colors.white),
-                ))
-          ],
-        ),
-        SizedBox(
-          height: 32,
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-                margin: EdgeInsets.only(left: 16, right: 16),
-                child: MyText(
-                  "question_number",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: "Cairo",
-                      color: Colors.white),
-                )),
-            Container(
-                child: Text(
-              "${questionNum+1}/50",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: "Cairo",
-                  color: Colors.white),
-            ))
-          ],
-        ),
-        SizedBox(
-          height: 24,
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 16, right: 16),
-          child: LinearProgressIndicator(
-            backgroundColor: Colors.white,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Color(0xff2397FC),
-            ),
-            value: ((questionNum+1))/50,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            height: 40,
           ),
-        ),
-        testCard(model)
-      ],
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              GestureDetector(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    margin: EdgeInsets.only(left: 16, right: 16),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    )),
+              ),
+              Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  child: MyText(
+                    "multi_choice",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: "Cairo",
+                        color: Colors.white),
+                  ))
+            ],
+          ),
+          SizedBox(
+            height: 32,
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  child: MyText(
+                    "question_number",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: "Cairo",
+                        color: Colors.white),
+                  )),
+              Container(
+                  child: Text(
+                "${questionNum+1}/${questionLenght+1}",
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: "Cairo",
+                    color: Colors.white),
+              ))
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
+            child: LinearProgressIndicator(
+              backgroundColor: Colors.white,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Color(0xff2397FC),
+              ),
+              value:questionLenght==0? 0.0:((questionNum+1))/questionLenght+1,
+            ),
+          ),
+          testCard(model)
+        ],
     );
   }
 
@@ -133,7 +145,11 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
       child: Stack(
         children: <Widget>[
           backGround(),
-          ListView(
+          Consumer<TestViewModel>(builder: (context, model, child) {
+        return Visibility(
+          visible: model.testResponseWraper.status==Status.COMPLETED,
+          child: ListView(
+            shrinkWrap: true,
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(left: 16, right: 16, top: 8),
@@ -154,26 +170,28 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
               )
             ],
           ),
-          bottomActions()
+        );
+      }),
+          bottomActions(model)
         ],
       ),
     );
   }
 
-  Widget nextButton() {
+  Widget nextButton(TestViewModel model) {
     return Container(
         height: 40,
         width: 110,
         margin: EdgeInsets.symmetric(horizontal: 16),
         child: RaisedButton(
             onPressed: () {
-              print(corrctResult);
-              print(wrongResult);
-
-
-              Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult)));
-
+           if((questionNum+1)==(questionLenght)){
+             Navigator.of(context)
+                 .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
+           else{
+             questionNum++;
+             model.notifyListeners();
+           }
 
             },
             color: ColorProperties.AppColorHex,
@@ -206,42 +224,45 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
   Widget previousButton() {
-    return Container(
-        height: 40,
-        width: 110,
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        child: RaisedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              //decrase conunter if it is not 0
-            },
-            color: ColorProperties.AppColorHex,
-            textColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                    margin: EdgeInsets.only(left: 4, right: 4),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 14,
-                    )),
-                Container(
-                  margin: EdgeInsets.only(left: 4, right: 4, bottom: 4),
-                  child: MyText(
-                    "previous",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontFamily: "Cairo",
-                        fontWeight: FontWeight.w700),
-                  ),
-                )
-              ],
-            )));
+    return Visibility(
+      visible: false,
+      child: Container(
+          height: 40,
+          width: 110,
+          margin: EdgeInsets.symmetric(horizontal: 16),
+          child: RaisedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                //decrase conunter if it is not 0
+              },
+              color: ColorProperties.AppColorHex,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                      margin: EdgeInsets.only(left: 4, right: 4),
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        size: 14,
+                      )),
+                  Container(
+                    margin: EdgeInsets.only(left: 4, right: 4, bottom: 4),
+                    child: MyText(
+                      "previous",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: "Cairo",
+                          fontWeight: FontWeight.w700),
+                    ),
+                  )
+                ],
+              ))),
+    );
   }
 
   Widget backGround() {
@@ -255,7 +276,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
     );
   }
 
-  Widget bottomActions() {
+  Widget bottomActions(TestViewModel model) {
     return Positioned(
       bottom: 16,
       child: Container(
@@ -267,7 +288,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             previousButton(),
-            nextButton(),
+            nextButton(model),
           ],
         ),
       ),
@@ -275,20 +296,27 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
   Widget questionImage(TestViewModel model) {
-    return Visibility(
-      visible: false,
-      child: Container(
+    if(model.test.details==null||model.test.details.isEmpty){
+      return Container();
+    }
+    else
+    return
+       Container(
           margin: EdgeInsets.only(left: 16, right: 16, top: 8),
           height: 80,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           child: Image(image: CachedNetworkImageProvider(model.test.details[questionNum].pics==null
-              ? "" : model.test.details[questionNum].pics),)
-      ),
-    );
+              ? "" : model.test.details[questionNum].pics),fit: BoxFit.contain,)
+    )
+    ;
   }
 
   Widget questionText(TestViewModel model) {
     String test ="";
+    if(model.test.details==null||model.test.details.isEmpty){
+      return Container();
+    }
+    else
     return Container(
       margin: EdgeInsets.only(left: 16, right: 16, top: 8),
       child: Text(
@@ -303,109 +331,120 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
   Widget questionAnswers(TestViewModel model) {
+    if(model.test.details==null||model.test.details.isEmpty){
+      return Container();
+    }
+    else
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        questionCell(model.test.details[questionNum].answer1,model),
-        questionCell(model.test.details[questionNum].answer2,model),
-        questionCell(model.test.details[questionNum].answer3,model),
-        questionCell(model.test.details[questionNum].answer4,model),
-      ],
+    StatefulBuilder(
+    builder: (BuildContext context, StateSetter setState) {
+      return Column(
+        children: <Widget>[
+          questionCell(model.test.details[questionNum].answer1,model),
+          questionCell(model.test.details[questionNum].answer2,model),
+          questionCell(model.test.details[questionNum].answer3,model),
+          questionCell(model.test.details[questionNum].answer4,model),
+
+        ],
+      );
+    }
+    ),
+            ],
     );
   }
 
   Widget questionCell(String answer,TestViewModel model) {
-    return GestureDetector(
-      onTap: (){
-        setState(() {
-          clicked=true;
-         choose=answer;
-        });
-
-      },
-      child: Container(
-        margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-        height: 40,
-        decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey,
-            ),
-            color:clicked?answerColor(answer,model.test.details[questionNum].correct_answer):Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(8))),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 16, right: 16),
-              width: 12,
-              height: 12,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 16, right: 16),
-              child: Text(
-              answer,
-                style: TextStyle(
-                    fontFamily: "Cairo",
-                    fontWeight: FontWeight.w400,
-                    fontSize: 18,
-                    color: Colors.grey),
+    return IgnorePointer(
+      ignoring: clicked,
+      child: GestureDetector(
+        onTap: (){
+            clicked=true;
+           choose=answer;
+            print("onclice"+"$corrctResult");
+            print("onclick""$wrongResult");
+            model.notifyListeners();
+        },
+        child: Container(
+          margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+          height: 40,
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey,
               ),
-            ),
-          ],
+              color:clicked?answerColor(answer,model.test.details[questionNum].correct_answer):Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                width: 12,
+                height: 12,
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                child: Text(
+                answer,
+                  style: TextStyle(
+                      fontFamily: "Cairo",
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                      color: clicked?answerTextColor(answer,
+                          model.test.details[questionNum].correct_answer):Colors.grey),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void getData() {
+  void getData(int materialId,int unitId){
     Map<String, dynamic> paramaters = new Map();
-    paramaters.putIfAbsent("materialId", () => 3);
-    paramaters.putIfAbsent("unitId", () => 2);
+    paramaters.putIfAbsent("materialId", () => materialId);
+    paramaters.putIfAbsent("unitId", () => unitId);
     Provider.of<TestViewModel>(context, listen: false).get(paramaters);
   }
 
    answerColor(String answer,String correctAnswer) {
+     print(corrctResult);
+     print(wrongResult);
     correctAnswer="اجابه1";
-    print(choose);
     if(choose==correctAnswer&&answer==choose){
       corrctResult++;
-      print(choose+"          $corrctResult");
-
       return rightAnswer;
     }
     else if(answer!=correctAnswer&&answer==choose){
-      if(questionLenght!=questionNum){
-        questionNum++;
-      }
       wrongResult++;
       return wrongAnswer;
     }
     else if (answer==correctAnswer&&answer!=choose){
-      if(questionLenght!=questionNum){
-        questionNum++;
-      }
       return rightAnswer;
     }
     }
 
-  Widget switchWidgets(TestViewModel model,BuildContext context) {
-    switch (model.testResponseWraper.status){
-      case Status.LOADING:
-        return super.loadingIndicator(model.testResponseWraper.status==Status.LOADING, context);
-        break;
-      case Status.empty:
-        return super.loadingIndicator(model.testResponseWraper.status==Status.empty, context);
-      case Status.ERROR:
-        return super.errorScreen(model.testResponseWraper.status==Status.ERROR, context);
-        break;
-      case Status.COMPLETED:
-        return header(model);
-        break;
+  answerTextColor(String answer,String correctAnswer) {
+    Color color=Colors.grey;
+    if(choose==correctAnswer&&answer==choose){
+      color=Colors.white;
+      return color;
+    }
+    else if(answer!=correctAnswer&&answer==choose){
+      color=Colors.white;
+      return color;
+    }
+    else if (answer==correctAnswer&&answer!=choose){
+      color=Colors.white;
+      return color;
     }
   }
+
 
 }

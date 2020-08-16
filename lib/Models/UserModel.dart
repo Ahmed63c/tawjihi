@@ -14,7 +14,7 @@ class UserModel {
 
 class User {
     String area;
-    int contact_number;
+    String contact_number;
     String created_at;
     String email;
     String email_verified_at;
@@ -22,7 +22,7 @@ class User {
     String lang;
     String major;
     String name;
-    int parent_contact_number;
+    String parent_contact_number;
     String school;
     String status;
     String type;

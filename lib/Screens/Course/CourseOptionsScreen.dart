@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/Units.dart';
-import 'package:tawjihi/Screens/Course/OptionsListViewModel.dart';
+import 'package:tawjihi/Screens/Course/VidesViewModel.dart';
+import 'package:tawjihi/Screens/Course/WebViewListViewModel.dart';
 import 'package:tawjihi/Screens/Course/TestScreen.dart';
 import 'package:tawjihi/Screens/Course/UnitsViewModel.dart';
+import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:tawjihi/Utils/Constant.dart';
 
-import 'OptionsList.dart';
+import 'VideosScreen.dart';
+import 'WebViewList.dart';
 
 class CourseList extends StatelessWidget{
   String courseName="";
-  CourseList(this.courseName);
+  bool fromTest=true;
+  bool fromQA=false;
+  int materialId;
+  CourseList(this.courseName,this.materialId);
   @override
   Widget build(BuildContext context) {
     return
@@ -33,12 +40,12 @@ class CourseList extends StatelessWidget{
     return  Stack(children: <Widget>[
       ListView(
         children: <Widget>[
-          viewCard(context, 'videos', Icons.video_library),
-          viewCard(context, 'articles', Icons.assignment),
-          viewCard(context, 'school_exams', Icons.content_paste),
-          viewCard(context, 'work_papers', Icons.assignment_ind),
-          viewCard(context, 'previous_exams', Icons.question_answer),
-          viewCard(context, 'questions_topics', Icons.help),
+          viewCard(context, 'videos', Icons.video_library,0),
+          viewCard(context, 'articles', Icons.assignment,Constant.ARTICLES_ID),
+          viewCard(context, 'school_exams', Icons.content_paste,Constant.SCHOOL_EXAMS_ID),
+          viewCard(context, 'work_papers', Icons.assignment_ind,Constant.PAPERS_ID),
+          viewCard(context, 'previous_exams', Icons.question_answer,Constant.PREVIOUS_EXAMS_ID),
+          viewCard(context, 'questions_topics', Icons.help,Constant.QUESTION_TOPICS_ID),
         ],
 
       ),
@@ -58,17 +65,32 @@ class CourseList extends StatelessWidget{
     ],);
   }
 
-  Widget viewCard(BuildContext context,String title,IconData icon){
+  Widget viewCard(BuildContext context,String title,IconData icon,int type){
     return
       Card(
         elevation: 4,
         child: GestureDetector(
           onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
-            ChangeNotifierProvider(
-              create: (context)=>OptionsListViewModel(),
-              child: OptionsList(title,courseName),
-            )));
+            if(type==0){
+              print('in videos');
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                  ChangeNotifierProvider(
+                    create: (context)=>VideosViewModel(),
+                    child: Videos(title,courseName,materialId,type),
+                  )
+              )
+              );
+            }
+            else{
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                  ChangeNotifierProvider(
+                    create: (context)=>WebViewListViewModel(),
+                    child: WebViewList(title,courseName,materialId,type),
+                  )
+              )
+              );
+            }
+
           },
           child: ListTile(
             title: MyText(title,style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
@@ -92,7 +114,7 @@ class CourseList extends StatelessWidget{
               Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
                   ChangeNotifierProvider(
                     create: (context)=>UnitsViewModel(),
-                    child: Units(),
+                    child: Units(fromTest,materialId),
                   )));
             },
             shape: RoundedRectangleBorder(
@@ -118,7 +140,12 @@ class CourseList extends StatelessWidget{
           color: Colors.white,
           textColor: ColorProperties.AppColor,
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Units()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+             ChangeNotifierProvider(
+               create: (context)=>UnitsViewModel(),
+               child: Units(fromQA,materialId),
+             )
+            ));
 
           },
           shape: RoundedRectangleBorder(

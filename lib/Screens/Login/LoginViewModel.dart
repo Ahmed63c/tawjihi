@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Models/UserModel.dart';
@@ -27,6 +26,8 @@ void postData(Map<String,dynamic> data) async{
     if(userModel.status=="01"){
       StorageUtil.getInstance().then((storage){
         StorageUtil.putString(Constant.TOKEN, userModel.details.access_token);
+        StorageUtil.putString(Constant.MAJOR, userModel.details.user.major);
+        StorageUtil.putBool(Constant.LOGGED_IN,true);
       });
       user=ApiResponse.completed(userModel);
       notifyListeners();

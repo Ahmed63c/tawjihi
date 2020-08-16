@@ -27,4 +27,15 @@ class StorageUtil {
     return _preferences.setString(key, value);
   }
 
+  // get bool
+  static bool getBool(String key, {bool defValue = false}) {
+    if (_preferences == null) return defValue;
+    return _preferences.getBool(key) ?? defValue;
+  }
+  // put bool
+  static Future putBool(String key, bool value) {
+    if (_preferences == null) return null;
+    return _preferences.setBool(key, value);
+  }
+
 }

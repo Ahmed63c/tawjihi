@@ -10,6 +10,8 @@ import 'package:tawjihi/Screens/SignUp/SignUpFirst.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 
 import 'LoginViewModel.dart';
 
@@ -25,11 +27,13 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
   TextEditingController emailController=TextEditingController();
   TextEditingController passController=TextEditingController();
   bool _validate=false;
+  bool _validateEmail=false;
 
 
   @override
   void initState() {
     super.initState();
+  //  checkLoggedIn();
   }
 
   @override
@@ -111,7 +115,7 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
         keyboardType: TextInputType.emailAddress,
         controller: emailController,
         decoration: InputDecoration(
-          errorText: _validate ? AppLocalizations.of(context).translate("error_field") : null,
+          errorText: _validateEmail ? AppLocalizations.of(context).translate("error_field") : null,
           labelText: AppLocalizations.of(context).translate("hint_email_login"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -173,11 +177,11 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
           textColor: Colors.white,
           onPressed: (){
             setState(() {
-              emailController.text.isEmpty ? _validate = true : _validate = false;
+              emailController.text.isEmpty ? _validateEmail = true : _validateEmail = false;
               passController.text.isEmpty ? _validate = true : _validate = false;
 
             });
-            if(!_validate){
+            if(!_validate&&!_validateEmail){
               Map<String,dynamic> paramaters=new Map();
               paramaters.putIfAbsent("email", () => emailController.text);
               paramaters.putIfAbsent("password", () => passController.text);
@@ -260,5 +264,18 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
             );
           });
 
+  }
+
+  void checkLoggedIn() {
+    StorageUtil.getInstance().then((storage){
+      String major=StorageUtil.getString(Constant.MAJOR);
+      if(StorageUtil.getBool(Constant.LOGGED_IN)){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) =>
+              Home(major=="scientific"?false:true)),
+        );
+      }
+    });
   }
 }

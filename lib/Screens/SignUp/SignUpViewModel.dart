@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:tawjihi/Models/UserModel.dart';
 import 'package:tawjihi/Network/ApiBaseHelper.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
+import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 
 class SignUpViewModel with ChangeNotifier{
 
@@ -25,6 +27,10 @@ class SignUpViewModel with ChangeNotifier{
       userModel=UserModel.fromJson(parsedResponse);
       if(userModel.status=="01"){
         user=ApiResponse.completed(userModel);
+        StorageUtil.getInstance().then((storage){
+          StorageUtil.putString(Constant.TOKEN, userModel.details.access_token);
+          StorageUtil.putString(Constant.MAJOR, userModel.details.user.major);
+        });
         notifyListeners();
       }
       else{

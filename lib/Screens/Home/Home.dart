@@ -1,11 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/CourseOptionsScreen.dart';
+import 'package:tawjihi/Screens/Course/VideosScreen.dart';
+import 'package:tawjihi/Screens/Course/VidesViewModel.dart';
+import 'package:tawjihi/Screens/Course/WebViewList.dart';
+import 'package:tawjihi/Screens/Course/WebViewListViewModel.dart';
 import 'file:///D:/crossProjects/tawjihi/lib/Screens/Settings/Settings.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:tawjihi/Utils/Constant.dart';
 
 class Home extends StatelessWidget {
   bool isLitery=false;
@@ -18,6 +24,7 @@ class Home extends StatelessWidget {
       Scaffold(
           appBar: AppBar(
             backgroundColor: ColorProperties.AppColor,
+            automaticallyImplyLeading: false,
             title: Text(
               AppLocalizations.of(context).translate("home"),
               style: TextStyle(
@@ -96,19 +103,19 @@ class Home extends StatelessWidget {
         crossAxisCount: 2,
         childAspectRatio: itemWidth / itemHeight,
         children: <Widget>[
-          tile(context, "math", Image.asset(
+          tile(context, "math",Constant.MATH_ID, Image.asset(
             'assets/images/math.png',
             fit: BoxFit.fill,
           ),),
-          tile(context, "biology", Image.asset(
+          tile(context, "biology", Constant.BIOLOGY_ID,Image.asset(
             'assets/images/biology.png',
             fit: BoxFit.fill,
           ),),
-          tile(context, "chemistry", Image.asset(
+          tile(context, "chemistry", Constant.CHEMISTRY_ID,Image.asset(
             'assets/images/chemistry.png',
             fit: BoxFit.fill,
           ),),
-          tile(context, "physics", Image.asset(
+          tile(context, "physics",Constant.PHYSICS_ID, Image.asset(
             'assets/images/physics.png',
             fit: BoxFit.fill,
           ),),
@@ -126,19 +133,19 @@ class Home extends StatelessWidget {
       crossAxisCount: 2,
       childAspectRatio: itemWidth / itemHeight,
       children: <Widget>[
-        tile(context, "math", Image.asset(
+        tile(context, "math",Constant.MATH_ID, Image.asset(
           'assets/images/math.png',
           fit: BoxFit.fill,
         ),),
-        tile(context, "sci", Image.asset(
+        tile(context, "sci",Constant.SCIENTIFIC_CALTURE_ID, Image.asset(
           'assets/images/scientific_culture.png',
           fit: BoxFit.fill,
         ),),
-        tile(context, "history", Image.asset(
+        tile(context, "history", Constant.HISTORY_ID,Image.asset(
           'assets/images/history.png',
           fit: BoxFit.fill,
         ),),
-        tile(context, "geo", Image.asset(
+        tile(context, "geo", Constant.GEOGRAPHIC_ID,Image.asset(
           'assets/images/geography.png',
           fit: BoxFit.fill,
         ),),
@@ -156,19 +163,19 @@ class Home extends StatelessWidget {
       crossAxisCount: 2,
       childAspectRatio: itemWidth / itemHeight,
       children: <Widget>[
-        tile(context, "english", Image.asset(
+        tile(context, "english",Constant.ENGLISH_ID,Image.asset(
           'assets/images/english.png',
           fit: BoxFit.fill,
         ),),
-        tile(context, "arabic", Image.asset(
+        tile(context, "arabic",Constant.ARABIC_ID,Image.asset(
           'assets/images/arabic.png',
           fit: BoxFit.fill,
         ),),
-        tile(context, "islamic", Image.asset(
+        tile(context, "islamic", Constant.ISLAMIC_ID,Image.asset(
           'assets/images/islamic.png',
           fit: BoxFit.fill,
         ),),
-        tile(context, "tech", Image.asset(
+        tile(context, "tech", Constant.TECH_ID,Image.asset(
           'assets/images/technology.png',
           fit: BoxFit.fill,
         ),),
@@ -186,11 +193,11 @@ class Home extends StatelessWidget {
       crossAxisCount: 2,
       childAspectRatio: itemWidth / itemHeight,
       children: <Widget>[
-        tile(context, "articles", Image.asset(
+        tile(context, "articles", Constant.ARTICLES_ID,Image.asset(
           'assets/images/articles.png',
           fit: BoxFit.fill,
         ),),
-        tile(context, "videos", Image.asset(
+        tile(context, "videos", 0,Image.asset(
           'assets/images/videos.png',
           fit: BoxFit.fill,
         ),),
@@ -198,12 +205,35 @@ class Home extends StatelessWidget {
     );
   }
 
-  Widget tile(BuildContext context, String courseName, Image image) {
+  Widget tile(BuildContext context, String courseName,int materialId, Image image) {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => CourseList(courseName)));
+          if(materialId==Constant.ARTICLES_ID&&courseName=="articles"){
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                ChangeNotifierProvider(
+                  create: (context)=>WebViewListViewModel(),
+                  child: WebViewList("articles",courseName,materialId,0),
+                )
+            )
+            );
+
+          }
+          else if(materialId==0){
+            print('in videos');
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                ChangeNotifierProvider(
+                  create: (context)=>VideosViewModel(),
+                  child: Videos("videos",courseName,materialId,0),
+                )
+            )
+            );
+          }
+          else{
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => CourseList(courseName,materialId)));
+          }
+
         },
         child: Stack(children: <Widget>[
           Container(

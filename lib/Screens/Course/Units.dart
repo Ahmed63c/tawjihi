@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/QuestionSectionsViewModel.dart';
 import 'package:tawjihi/Screens/Course/QuestionsSections.dart';
 import 'package:tawjihi/Screens/Course/TestScreen.dart';
 import 'package:tawjihi/Screens/Course/TestViewModel.dart';
@@ -11,17 +12,25 @@ import 'package:tawjihi/Screens/Course/UnitsViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 class Units extends StatefulWidget {
+
+  bool fromTest;
+  int materialId;
+  Units(this.fromTest,this.materialId);
+
   @override
-  _UnitsState createState() => _UnitsState();
+  _UnitsState createState() => _UnitsState(fromTest,materialId);
 }
 
 class _UnitsState extends State<Units> with BaseScreen {
+
+  bool fromTest;
+  int materialId;
+
+  _UnitsState(this.fromTest,this.materialId);
   @override
   Widget build(BuildContext context) {
 
-    Map<String,dynamic> paramaters=new Map();
-    paramaters.putIfAbsent("materialId", () =>3);
-    Provider.of<UnitsViewModel>(context,listen: false).get(paramaters);
+  getData();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: ColorProperties.AppColor,
@@ -36,20 +45,31 @@ class _UnitsState extends State<Units> with BaseScreen {
               return switchWidgets(model, context);
             })
           ],
-        ));
+        )
+    );
   }
 
   Widget viewCard(BuildContext context,int index, UnitsViewModel model,String term) {
     return GestureDetector(
       onTap: () {
-//        Navigator.of(context)
-//            .push(MaterialPageRoute(builder: (_) => QuestionsSections(title)));
+           if(fromTest){
+             Navigator.of(context)
+                 .push(MaterialPageRoute(builder: (_) => ChangeNotifierProvider(
+               create: (context)=>TestViewModel(),
+               child: TestScreen(materialId,model.units.details[index].id),
+             )));
+           }
+           else{
+                     Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) =>
+                      ChangeNotifierProvider(
+                        create: (context)=>QuestionsSectionsViewModel(),
+                        child:QuestionsSections(model.units.details[index].name
+                            ,materialId,model.units.details[index].id)),
+                      )
+                     );
 
-                Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => ChangeNotifierProvider(
-                  create: (context)=>TestViewModel(),
-                  child: TestScreen(),
-                )));
+           }
 
 
 
@@ -158,5 +178,11 @@ class _UnitsState extends State<Units> with BaseScreen {
         return viewCard(context,index,model,term);
       },
     );
+  }
+
+  void getData() {
+    Map<String,dynamic> paramaters=new Map();
+    paramaters.putIfAbsent("materialId", () =>materialId);
+    Provider.of<UnitsViewModel>(context,listen: false).get(paramaters);
   }
 }

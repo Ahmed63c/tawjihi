@@ -91,4 +91,9 @@
   "error_field": "this field cant be empty",
   "error": "Something went wrong check internet and try again",
   "error_title": "error",
+  "error_empty": "no data available",
+
+
+  "show_answer": "Show Answer",
+  "hide_answer": "Hide Answer"
 }

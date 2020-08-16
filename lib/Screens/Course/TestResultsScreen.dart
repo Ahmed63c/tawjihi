@@ -1,7 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/TestViewModel.dart';
+import 'package:tawjihi/Screens/Course/UnitsViewModel.dart';
+import 'package:tawjihi/Screens/Home/Home.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 
 import 'Units.dart';
 import 'TestScreen.dart';
@@ -9,17 +15,22 @@ import 'TestScreen.dart';
 class TestResultsScreen extends StatefulWidget{
   int correctResult;
   int wrongResult;
+  int materialId;
+  int unitId;
 
 
-  TestResultsScreen(this.correctResult,this.wrongResult);
+  TestResultsScreen(this.correctResult,this.wrongResult,this.materialId,this.unitId);
   @override
-  _TestResultsScreenState createState() => _TestResultsScreenState(correctResult,wrongResult);
+  _TestResultsScreenState createState() => _TestResultsScreenState(correctResult,wrongResult,materialId,unitId);
 }
 
 class _TestResultsScreenState extends State<TestResultsScreen> {
   int correctResult;
   int wrongResult;
-  _TestResultsScreenState(this.correctResult,this.wrongResult);
+  int materialId;
+  int unitId;
+
+  _TestResultsScreenState(this.correctResult,this.wrongResult,this.materialId,this.unitId);
   @override
   Widget build(BuildContext context) {
     print(correctResult);
@@ -43,7 +54,16 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(margin: EdgeInsets.only(left: 16,right: 16),
-                child: Icon(Icons.arrow_back,color: Colors.white,)),
+                child: GestureDetector(
+                  onTap: (){
+                    StorageUtil.getInstance().then((storage){
+                     String major= StorageUtil.getString(Constant.MAJOR);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>
+                          Home(major=="literature"?true:false)));
+                    });
+
+                  },
+                    child: Icon(Icons.arrow_back,color: Colors.white,))),
             Container(
                 margin: EdgeInsets.only(left: 16,right: 16),
                 child: MyText("test_results",style:
@@ -116,7 +136,11 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
           color: ColorProperties.AppColorHex,
           textColor: Colors.white,
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>TestScreen()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                ChangeNotifierProvider(
+                  create: (context)=>TestViewModel(),
+                  child: TestScreen(materialId,unitId),
+                )));
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
@@ -141,7 +165,11 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
           color: Colors.white,
           textColor: ColorProperties.AppColor,
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Units()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                ChangeNotifierProvider(
+                  create: (context)=>UnitsViewModel(),
+                  child: Units(false,materialId),
+                )));
 
           },
           shape: RoundedRectangleBorder(
