@@ -6,6 +6,7 @@ import 'package:tawjihi/Models/DataList.dart';
 import 'package:tawjihi/Models/VideosModel.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/VideoPlayer.dart';
 import 'package:tawjihi/Screens/Course/VidesViewModel.dart';
 import 'package:tawjihi/Screens/Course/WebViewListViewModel.dart';
 import 'package:tawjihi/Screens/Course/WebView.dart';
@@ -70,7 +71,7 @@ class _VideosState extends State<Videos> with BaseScreen {
     return GestureDetector(
       onTap: (){
         //play video
-      //  Navigator.of(context).push(MaterialPageRoute(builder:(_)=> WebViewPage(data.details[index].description)));
+        Navigator.of(context).push(MaterialPageRoute(builder:(_)=> VideoApp(data.details[index].video)));
       },
       child: Card(
         elevation: 4,
@@ -95,8 +96,7 @@ class _VideosState extends State<Videos> with BaseScreen {
           height: 100,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-          child: Image(image: CachedNetworkImageProvider(dataList.details[index].video==null
-              ? "" : dataList.details[index].video),),
+          child: Image.asset("assets/images/logo.jpg",fit: BoxFit.cover,),
         ),
         Visibility(
           visible: true,

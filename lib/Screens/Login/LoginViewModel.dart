@@ -10,7 +10,7 @@ import 'package:tawjihi/Utils/LocalStorage.dart';
 class LoginViewModel with ChangeNotifier{
 
 
-ApiBaseHelper helper=ApiBaseHelper();
+ ApiBaseHelper helper=ApiBaseHelper();
 UserModel userModel= new UserModel();
 ApiResponse<UserModel> user=ApiResponse.empty("");
 String error="حدث خطأ ما تحقق منن الانترنت وحاول مره أخري";

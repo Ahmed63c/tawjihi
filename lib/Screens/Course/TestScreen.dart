@@ -62,7 +62,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
     return Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           SizedBox(
             height: 40,
@@ -98,7 +98,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
             height: 32,
           ),
           Row(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
@@ -111,30 +111,40 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
                         fontFamily: "Cairo",
                         color: Colors.white),
                   )),
-              Container(
-                  child: Text(
-                "${questionNum+1}/${questionLenght+1}",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: "Cairo",
-                    color: Colors.white),
-              ))
+           Container(
+             constraints: BoxConstraints(maxHeight: 32,maxWidth: 64),
+             child: Consumer<TestViewModel>(builder: (context,model,child){
+               return model.testResponseWraper.status==Status.COMPLETED? Container(
+                   child: Text(
+                     "${questionNum+1}/${model.test.details.length}",
+                     style: TextStyle(
+                         fontSize: 18,
+                         fontWeight: FontWeight.w700,
+                         fontFamily: "Cairo",
+                         color: Colors.white),
+                   )):Container();
+             },),
+           )
             ],
           ),
           SizedBox(
             height: 24,
           ),
-          Container(
-            margin: EdgeInsets.only(left: 16, right: 16),
-            child: LinearProgressIndicator(
-              backgroundColor: Colors.white,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Color(0xff2397FC),
-              ),
-              value:questionLenght==0? 0.0:((questionNum+1))/questionLenght+1,
-            ),
-          ),
+         Container(
+           constraints: BoxConstraints(maxHeight:32,maxWidth: 200 ),
+           child: Consumer<TestViewModel>(builder: (context,model,child){
+             return model.testResponseWraper.status==Status.COMPLETED?Container(
+               margin: EdgeInsets.only(left: 16, right: 16),
+               child: LinearProgressIndicator(
+                 backgroundColor: Colors.white,
+                 valueColor: AlwaysStoppedAnimation<Color>(
+                   Color(0xff2397FC),
+                 ),
+                 value:model.test.details.length==0? 0.0:((questionNum+1))/model.test.details.length,
+               ),
+             ):Container();
+           },),
+         ),
           testCard(model)
         ],
     );
@@ -185,13 +195,19 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
         margin: EdgeInsets.symmetric(horizontal: 16),
         child: RaisedButton(
             onPressed: () {
-           if((questionNum+1)==(questionLenght)){
-             Navigator.of(context)
-                 .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
-           else{
-             questionNum++;
-             model.notifyListeners();
-           }
+              if(clicked){
+                if((questionNum+1)==model.test.details.length){
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
+                else{
+                  questionNum++;
+                  model.notifyListeners();
+                }
+                clicked=false;
+              }
+              else{
+
+              }
 
             },
             color: ColorProperties.AppColorHex,
@@ -306,7 +322,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
           height: 80,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           child: Image(image: CachedNetworkImageProvider(model.test.details[questionNum].pics==null
-              ? "" : model.test.details[questionNum].pics),fit: BoxFit.contain,)
+              ? "" : model.test.details[questionNum].pics),fit: BoxFit.cover,)
     )
     ;
   }
@@ -362,7 +378,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
       child: GestureDetector(
         onTap: (){
             clicked=true;
-           choose=answer;
+            choose=answer;
             print("onclice"+"$corrctResult");
             print("onclick""$wrongResult");
             model.notifyListeners();
@@ -414,9 +430,6 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
    answerColor(String answer,String correctAnswer) {
-     print(corrctResult);
-     print(wrongResult);
-    correctAnswer="اجابه1";
     if(choose==correctAnswer&&answer==choose){
       corrctResult++;
       return rightAnswer;
