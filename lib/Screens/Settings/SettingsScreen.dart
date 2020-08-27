@@ -8,7 +8,7 @@ import 'package:tawjihi/Screens/Settings/ChangeLanguage.dart';
 import 'package:tawjihi/Screens/Settings/ChangePasswordViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
-class Settings extends StatelessWidget{
+class SettingsScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 

@@ -8,7 +8,7 @@ import 'package:tawjihi/Screens/Course/VideosScreen.dart';
 import 'package:tawjihi/Screens/Course/VidesViewModel.dart';
 import 'package:tawjihi/Screens/Course/WebViewList.dart';
 import 'package:tawjihi/Screens/Course/WebViewListViewModel.dart';
-import 'file:///D:/crossProjects/tawjihi/lib/Screens/Settings/Settings.dart';
+import 'package:tawjihi/Screens/Settings/SettingsScreen.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
@@ -42,7 +42,7 @@ class Home extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => Settings()));
+                      context, MaterialPageRoute(builder: (_) => SettingsScreen()));
                 },
               )
             ],
