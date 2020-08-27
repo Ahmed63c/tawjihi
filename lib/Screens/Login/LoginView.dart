@@ -6,6 +6,7 @@ import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
+import 'package:tawjihi/Screens/Login/VerfiyScreen.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpFirst.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
@@ -37,23 +38,28 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Material(
           color: ColorProperties.AppColor,
           child: Stack(
             children: <Widget>[
-              headerLogo(),
               loginCard(),
               bottomSignUp(),
              Consumer<LoginViewModel>(
                  builder: (context, model, child){
                    WidgetsBinding.instance.addPostFrameCallback((_){
                      if(model.user.status==Status.COMPLETED){
-                         Navigator.pushReplacement(
-                           context,
-                           MaterialPageRoute(builder: (context) =>
-                               Home(model.userModel.details.user.major=="scientific"?false:true)),
-                         );
+                       model.user.status=Status.empty;
+                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>VerifyScreen(
+                         model.userModel.details.user.major=="scientific"?false:true
+                       )));
                      }
                    });
                 return  super.loadingIndicator(model.user.status==Status.LOADING, context);
@@ -88,7 +94,6 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
             passwordField(),
             errorView(),
             signInButton(),
-
           ],
         ),
       ),
@@ -264,18 +269,5 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
             );
           });
 
-  }
-
-  void checkLoggedIn() {
-    StorageUtil.getInstance().then((storage){
-      String major=StorageUtil.getString(Constant.MAJOR);
-      if(StorageUtil.getBool(Constant.LOGGED_IN)){
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) =>
-              Home(major=="scientific"?false:true)),
-        );
-      }
-    });
   }
 }

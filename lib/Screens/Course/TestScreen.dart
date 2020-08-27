@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
+import 'package:tawjihi/Screens/ComonWidget/ImageDialoge.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/TestResultsScreen.dart';
 import 'package:tawjihi/Screens/Course/TestViewModel.dart';
@@ -30,6 +31,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   Color emptyAnswer=Colors.white;
   Color selectedAnswer=ColorProperties.AppColor;
   bool clicked=false;
+  bool verifyAnswer=false;
   String choose="";
   int materialId;
   int unitId;
@@ -196,18 +198,26 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
         child: RaisedButton(
             onPressed: () {
               if(clicked){
-                if((questionNum+1)==model.test.details.length){
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
-                else{
-                  questionNum++;
-                  model.notifyListeners();
-                }
+                verifyAnswer=true;
                 clicked=false;
+                model.notifyListeners();
               }
+
               else{
+                if(verifyAnswer){
+                  if((questionNum+1)==model.test.details.length){
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
+                  else{
+                    questionNum++;
+                    model.notifyListeners();
+                  }
+                  verifyAnswer=false;
+                }
 
               }
+
+
 
             },
             color: ColorProperties.AppColorHex,
@@ -221,7 +231,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
                 Container(
                   margin: EdgeInsets.only(left: 4, right: 4, bottom: 4),
                   child: MyText(
-                    "next",
+                    verifyAnswer?"next":"verify_answer",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -317,13 +327,19 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
     }
     else
     return
-       Container(
-          margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-          height: 80,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-          child: Image(image: CachedNetworkImageProvider(model.test.details[questionNum].pics==null
-              ? "" : model.test.details[questionNum].pics),fit: BoxFit.cover,)
-    )
+       GestureDetector(
+         onTap: (){
+           Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ImageDialog(model.test.details[questionNum].pics==null
+               ? "" : model.test.details[questionNum].pics)));
+         },
+         child: Container(
+            margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+            height: 80,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            child: Image(image: CachedNetworkImageProvider(model.test.details[questionNum].pics==null
+                ? "" : model.test.details[questionNum].pics),fit: BoxFit.cover,)
+    ),
+       )
     ;
   }
 
@@ -373,14 +389,11 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
   Widget questionCell(String answer,TestViewModel model) {
-    return IgnorePointer(
-      ignoring: clicked,
-      child: GestureDetector(
+    return
+      GestureDetector(
         onTap: (){
             clicked=true;
             choose=answer;
-            print("onclice"+"$corrctResult");
-            print("onclick""$wrongResult");
             model.notifyListeners();
         },
         child: Container(
@@ -390,7 +403,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
               border: Border.all(
                 color: Colors.grey,
               ),
-              color:clicked?answerColor(answer,model.test.details[questionNum].correct_answer):Colors.white,
+              color:answerColor(answer, model.test.details[questionNum].correct_answer),
               borderRadius: BorderRadius.all(Radius.circular(8))),
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -411,15 +424,13 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
                       fontFamily: "Cairo",
                       fontWeight: FontWeight.w400,
                       fontSize: 18,
-                      color: clicked?answerTextColor(answer,
-                          model.test.details[questionNum].correct_answer):Colors.grey),
+                      color: answerTextColor(answer, model.test.details[questionNum].correct_answer),
                 ),
               ),
-            ],
+              )],
           ),
         ),
-      ),
-    );
+      );
   }
 
   void getData(int materialId,int unitId){
@@ -430,33 +441,58 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
    answerColor(String answer,String correctAnswer) {
-    if(choose==correctAnswer&&answer==choose){
-      corrctResult++;
-      return rightAnswer;
+    if(!clicked&&verifyAnswer){
+        if(choose==correctAnswer&&answer==choose){
+          corrctResult++;
+          return rightAnswer;
+        }
+        else if(answer!=correctAnswer&&answer==choose){
+          wrongResult++;
+          return wrongAnswer;
+        }
+        else if (answer==correctAnswer&&answer!=choose){
+          return rightAnswer;
+        }
     }
-    else if(answer!=correctAnswer&&answer==choose){
-      wrongResult++;
-      return wrongAnswer;
+
+    else{
+      if(answer==choose){
+        return ColorProperties.AppColor;
+      }
+      else{
+        return Colors.white;
+      }
+
     }
-    else if (answer==correctAnswer&&answer!=choose){
-      return rightAnswer;
-    }
+
+
+
     }
 
   answerTextColor(String answer,String correctAnswer) {
     Color color=Colors.grey;
-    if(choose==correctAnswer&&answer==choose){
-      color=Colors.white;
-      return color;
+    if(!clicked&&verifyAnswer){
+      if(choose==correctAnswer&&answer==choose){
+        color=Colors.white;
+        return color;
+      }
+      else if(answer!=correctAnswer&&answer==choose){
+        color=Colors.white;
+        return color;
+      }
+      else if (answer==correctAnswer&&answer!=choose){
+        color=Colors.white;
+        return color;
+      }
     }
-    else if(answer!=correctAnswer&&answer==choose){
-      color=Colors.white;
-      return color;
-    }
-    else if (answer==correctAnswer&&answer!=choose){
-      color=Colors.white;
-      return color;
-    }
+    else{
+      if(answer==choose){
+        return Colors.white;
+      }
+      else{
+        return Colors.grey;
+      }    }
+
   }
 
 

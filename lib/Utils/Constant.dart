@@ -1,5 +1,5 @@
 class Constant{
-  static const String BASE_URL="https://shieldwb.com/demo/tawgehy/api/";
+  static const String BASE_URL="http://tawjihiapp.com/api/";
   static const String TOKEN="token";
   static const String MAJOR="scientific";
   static const String LOGGED_IN="logged";
@@ -17,6 +17,8 @@ class Constant{
   static const int TECH_ID=9;
   static const int BIOLOGY_ID=10;
   static const int PHYSICS_ID=11;
+  static const int GENRAL_VIDEOS_ARTICLES=12;
+
 
   static const int ARTICLES_ID=1;
   static const int SCHOOL_EXAMS_ID=2;

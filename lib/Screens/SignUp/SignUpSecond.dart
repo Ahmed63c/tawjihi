@@ -67,11 +67,11 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
                   WidgetsBinding.instance.addPostFrameCallback((_){
                     if(model.user.status==Status.COMPLETED){
                       Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) =>
-                            Home(isLiterary)),
-                      );
-                    }
+                          context,
+                          MaterialPageRoute(builder: (context) =>ChangeNotifierProvider(
+                            create: (context)=>LoginViewModel(),
+                            child: LoginView(),))
+                      );                    }
                   });
                   return  super.loadingIndicator(model.user.status==Status.LOADING, context);
                 })
@@ -80,6 +80,7 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
   }
 
   Widget signUpSecondCard() {
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
     return Center(
       child: Container(
         margin: EdgeInsets.only(top: 64),

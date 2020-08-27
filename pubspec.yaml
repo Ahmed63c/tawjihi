@@ -36,7 +36,8 @@ dependencies:
       sdk: flutter
   flutter_speed_dial: ^1.2.5
   webview_flutter: ^0.3.22+1
-  video_player: ^0.10.11+2
+  chewie: ^0.9.10
+
 
 
 

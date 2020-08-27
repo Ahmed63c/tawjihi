@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tawjihi/Network/BaseApiResponse.dart';
+import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Settings/ChangePasswordViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
@@ -9,9 +13,27 @@ class ChangePassword extends StatefulWidget{
   _ChangePasswordState createState() => _ChangePasswordState();
 }
 
-class _ChangePasswordState extends State<ChangePassword> {
+class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
+
+
+  bool obSecureText=true;
+  IconData iconOn=Icons.visibility;
+  IconData iconOff=Icons.visibility_off;
+  TextEditingController newPasswordController=TextEditingController();
+  TextEditingController confirmPasswordController=TextEditingController();
+  bool _validate=false;
+  bool _validateConfirm=false;
+  ChangePasswordViewModel vm;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    vm=Provider.of<ChangePasswordViewModel>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -28,42 +50,60 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget body(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      child: ListView(
-        children: <Widget>[
-          currentPassword(),
-          newPassword(),
-          confirmNewPassword(),
-          confirmButton()
-        ],
+      child: Stack(
+        children:[
+           ListView(
+          children: <Widget>[
+            currentPassword(),
+            newPassword(),
+            confirmNewPassword(),
+            errorView(),
+            confirmButton(),
+          ],
+        ),
+           Consumer<ChangePasswordViewModel>(
+              builder: (context, model, child){
+                WidgetsBinding.instance.addPostFrameCallback((_){
+                  if(model.baseResponseWraper.status==Status.COMPLETED){
+                    model.baseResponseWraper.status=Status.empty;
+                    Navigator.pop(context);
+                  }
+                });
+                return  super.loadingIndicator(model.baseResponseWraper.status==Status.LOADING, context);
+              })
+          ]
       ),
     );
   }
 
 
   Widget currentPassword() {
-    return Padding(
-      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        obscureText: true,
-        decoration: InputDecoration(
-            labelText:
-            AppLocalizations.of(context).translate("current_password"),
-            labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
-            contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-            border: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide:
-              const BorderSide(color: ColorProperties.AppColor, width: 1.0),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            suffixIcon: Icon(
-              Icons.visibility_off,
-              color: Colors.black,
-            )),
+    return Visibility(
+      visible: false,
+      child: Padding(
+        padding: EdgeInsets.only(left: 16, right: 16, top: 16),
+        child: TextFormField(
+          keyboardType: TextInputType.number,
+          obscureText: true,
+          decoration: InputDecoration(
+              labelText:
+              AppLocalizations.of(context).translate("current_password"),
+              labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
+              contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                const BorderSide(color: ColorProperties.AppColor, width: 1.0),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              suffixIcon: Icon(
+                Icons.visibility_off,
+                color: Colors.black,
+              )),
+        ),
       ),
     );
   }
@@ -74,10 +114,12 @@ class _ChangePasswordState extends State<ChangePassword> {
       child: TextFormField(
         keyboardType: TextInputType.number,
         obscureText: true,
+        controller: newPasswordController,
         decoration: InputDecoration(
             labelText:
             AppLocalizations.of(context).translate("new_password"),
             labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
+            errorText: _validate ? AppLocalizations.of(context).translate("error_field") : null,
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.grey, width: 1.0),
@@ -88,9 +130,12 @@ class _ChangePasswordState extends State<ChangePassword> {
               const BorderSide(color: ColorProperties.AppColor, width: 1.0),
               borderRadius: BorderRadius.circular(4.0),
             ),
-            suffixIcon: Icon(
-              Icons.visibility_off,
-              color: Colors.black,
+            suffixIcon: Visibility(
+              visible: false,
+              child: Icon(
+                Icons.visibility_off,
+                color: Colors.black,
+              ),
             )),
       ),
     );
@@ -102,7 +147,9 @@ class _ChangePasswordState extends State<ChangePassword> {
       child: TextFormField(
         keyboardType: TextInputType.number,
         obscureText: true,
+        controller: confirmPasswordController,
         decoration: InputDecoration(
+            errorText: _validateConfirm ? AppLocalizations.of(context).translate("error_field") : null,
             labelText:
             AppLocalizations.of(context).translate("confirm_password"),
             labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -116,9 +163,12 @@ class _ChangePasswordState extends State<ChangePassword> {
               const BorderSide(color: ColorProperties.AppColor, width: 1.0),
               borderRadius: BorderRadius.circular(4.0),
             ),
-            suffixIcon: Icon(
-              Icons.visibility_off,
-              color: Colors.black,
+            suffixIcon: Visibility(
+              visible: false,
+              child: Icon(
+                Icons.visibility_off,
+                color: Colors.black,
+              ),
             )),
       ),
     );
@@ -131,6 +181,26 @@ class _ChangePasswordState extends State<ChangePassword> {
           color: ColorProperties.AppColorHex,
           textColor: Colors.white,
           onPressed: () {
+            setState(() {
+              confirmPasswordController.text.isEmpty ? _validateConfirm = true : _validateConfirm = false;
+              newPasswordController.text.isEmpty ? _validate = true : _validate = false;
+
+            });
+            if(!_validate&&!_validateConfirm){
+
+              if(confirmPasswordController.text==newPasswordController.text){
+                Map<String,dynamic> paramaters=new Map();
+                paramaters.putIfAbsent("new_password", () => newPasswordController.text);
+                Provider.of<ChangePasswordViewModel>(context,listen: false).postData(paramaters);
+              }
+              else{
+                print("error");
+                vm.baseResponseWraper=ApiResponse.error(AppLocalizations.of(context).translate("error_match"));
+                vm.error=AppLocalizations.of(context).translate("error_match");
+                vm.notifyListeners();
+              }
+            }
+
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
@@ -144,6 +214,24 @@ class _ChangePasswordState extends State<ChangePassword> {
                 fontWeight: FontWeight.w700),
           ),
         ));
+  }
+
+  errorView() {
+    return
+      Consumer<ChangePasswordViewModel>(
+          builder: (context, model, child){
+            return Visibility(
+              visible: model.baseResponseWraper.status==Status.ERROR,
+              child:
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(model.error,
+                    style:
+                    TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)
+              ),
+            );
+          });
+
   }
 
 

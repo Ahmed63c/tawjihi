@@ -6,6 +6,10 @@
   "sign_in": "Sign in",
   "dont_have_account": "Don't Have Account",
   "already_have_acount": "Already Have Account",
+  "verify": "Verify Account",
+  "verify_code": "Verify Code",
+  "verify_button": "Verify",
+
 
   "register_new_user": "Register New User",
   "full_name": "Full Name",
@@ -92,8 +96,14 @@
   "error": "Something went wrong check internet and try again",
   "error_title": "error",
   "error_empty": "no data available",
+  "error_match": "password did not match",
+
 
 
   "show_answer": "Show Answer",
-  "hide_answer": "Hide Answer"
+  "hide_answer": "Hide Answer",
+
+
+  "verify_answer":"verify"
+
 }

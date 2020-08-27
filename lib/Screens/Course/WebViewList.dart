@@ -157,9 +157,11 @@ class _WebViewListState extends State<WebViewList> with BaseScreen {
                   visible: model.materials.status==Status.ERROR,
                   child:Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(model.error,
-                        style:
-                        TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)),
+                      child: Center(
+                        child: Text(model.error,
+                          style:
+                          TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),),
+                      )),
                 );
         break;
       case Status.COMPLETED:

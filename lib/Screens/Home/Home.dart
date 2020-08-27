@@ -64,7 +64,7 @@ class Home extends StatelessWidget {
       indicatorColor: Colors.blueAccent,
       labelColor: Colors.white,
       isScrollable: true,
-      labelPadding: EdgeInsets.only(right: 20, left: 20),
+      labelPadding: EdgeInsets.only(right: 14, left: 14),
       unselectedLabelColor: Colors.grey,
       tabs: [
         Tab(
@@ -193,11 +193,11 @@ class Home extends StatelessWidget {
       crossAxisCount: 2,
       childAspectRatio: itemWidth / itemHeight,
       children: <Widget>[
-        tile(context, "articles", Constant.ARTICLES_ID,Image.asset(
+        tile(context, "articles", Constant.GENRAL_VIDEOS_ARTICLES,Image.asset(
           'assets/images/articles.png',
           fit: BoxFit.fill,
         ),),
-        tile(context, "videos", 0,Image.asset(
+        tile(context, "videos", Constant.GENRAL_VIDEOS_ARTICLES,Image.asset(
           'assets/images/videos.png',
           fit: BoxFit.fill,
         ),),
@@ -209,17 +209,17 @@ class Home extends StatelessWidget {
     return Container(
       child: GestureDetector(
         onTap: () {
-          if(materialId==Constant.ARTICLES_ID&&courseName=="articles"){
+          if(materialId==Constant.GENRAL_VIDEOS_ARTICLES&&courseName=="articles"){
             Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
                 ChangeNotifierProvider(
                   create: (context)=>WebViewListViewModel(),
-                  child: WebViewList("articles",courseName,materialId,0),
+                  child: WebViewList("articles",courseName,materialId,1),
                 )
             )
             );
 
           }
-          else if(materialId==0){
+          else if(materialId==Constant.GENRAL_VIDEOS_ARTICLES){
             print('in videos');
             Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
                 ChangeNotifierProvider(

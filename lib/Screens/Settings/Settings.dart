@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Settings/About.dart';
 import 'package:tawjihi/Screens/Settings/ChangPassword.dart';
 import 'package:tawjihi/Screens/Settings/ChangeLanguage.dart';
+import 'package:tawjihi/Screens/Settings/ChangePasswordViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 class Settings extends StatelessWidget{
@@ -25,8 +27,8 @@ class Settings extends StatelessWidget{
  Widget body(BuildContext context) {
     return ListView(
       children: <Widget>[
-        title("language"),
-        settingsCard(context, "change_language", Icons.language),
+        Visibility(visible:false,child: title("language")),
+        Visibility(visible:false,child: settingsCard(context, "change_language", Icons.language)),
         title("security"),
         settingsCard(context, "change_password", Icons.lock),
         title("more"),
@@ -63,7 +65,11 @@ class Settings extends StatelessWidget{
                 Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ChangeLanguage()));
                 break;
               case "change_password":
-                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ChangePassword()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+                    ChangeNotifierProvider(
+                      create:(context)=> ChangePasswordViewModel(),
+                      child: ChangePassword(),
+                    )));
 
                 break;
               case "about":

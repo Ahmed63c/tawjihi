@@ -24,6 +24,8 @@ class _SignUpState extends State<SignUpFirst> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController parentPhoneController = TextEditingController();
 
+
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +33,7 @@ class _SignUpState extends State<SignUpFirst> {
 
   @override
   Widget build(BuildContext context) {
+
     return Material(
         color: ColorProperties.AppColor,
         child: Stack(
@@ -41,6 +44,7 @@ class _SignUpState extends State<SignUpFirst> {
   }
 
   Widget signUpFirstCard() {
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
     return Center(
       child: Container(
         margin: EdgeInsets.only(top: 80,bottom: 24),
@@ -48,21 +52,27 @@ class _SignUpState extends State<SignUpFirst> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(4)),
-        child: Form(
-          key: formKey,
-          child: ListView(
-            children: <Widget>[
-              cardHeader(),
-              emailField(),
-              fullNameField(),
-              regionNameField(),
-              schoolNameField(),
-              phoneField(),
-              parentPhoneField(),
-              nextButton()
-            ],
-          ),
-        ),
+        child:
+       ListView(
+         children: [
+           Padding(
+             padding: EdgeInsets.only(bottom: bottom),
+             child: Form(
+         key: formKey,
+         child: Column(
+             children: <Widget>[
+               cardHeader(),
+               emailField(),
+               fullNameField(),
+               regionNameField(),
+               schoolNameField(),
+               phoneField(),
+               parentPhoneField(),
+               nextButton()
+             ],
+         ),
+       ),
+           )],),
       ),
     );
   }
