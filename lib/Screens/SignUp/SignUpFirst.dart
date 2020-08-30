@@ -99,7 +99,10 @@ class _SignUpState extends State<SignUpFirst> {
         controller: emailController,
           validator: Validators.compose([
             Validators.required(AppLocalizations.of(context).translate("error_field")),
-            Validators.email(AppLocalizations.of(context).translate("error_email_validate"))
+            Validators.patternRegExp(
+                RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)"
+                r"*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"),
+                AppLocalizations.of(context).translate("error_email_validate")),
           ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("hint_email_login"),
@@ -125,8 +128,15 @@ class _SignUpState extends State<SignUpFirst> {
       child: TextFormField(
         keyboardType: TextInputType.text,
         controller: nameController,
-        validator:   Validators.compose([
+        validator:
+        Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
+          Validators.patternRegExp(
+              RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
+          Validators.minLength(
+              3,
+              AppLocalizations.of(context)
+                  .translate("error_less_character")),
         ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("full_name"),
@@ -154,6 +164,12 @@ class _SignUpState extends State<SignUpFirst> {
         controller: regionController,
         validator:  Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
+          Validators.patternRegExp(
+              RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
+          Validators.minLength(
+              3,
+              AppLocalizations.of(context)
+                  .translate("error_less_character")),
         ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("region_name"),
@@ -181,6 +197,12 @@ class _SignUpState extends State<SignUpFirst> {
         controller: schoolController,
         validator:   Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
+          Validators.patternRegExp(
+              RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
+          Validators.minLength(
+              3,
+              AppLocalizations.of(context)
+                  .translate("error_less_character")),
         ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("school_name"),
@@ -208,6 +230,10 @@ class _SignUpState extends State<SignUpFirst> {
         controller: phoneController,
         validator: Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
+          Validators.minLength(
+              11,
+              AppLocalizations.of(context)
+                  .translate("error_phone_less")),
 //           Validators.patternRegExp(
 //              RegExp(r"^(?:[+0]9)?[0-9]{10}$"), AppLocalizations.of(context).translate("error_phone_validate")),
         ]),
@@ -237,6 +263,11 @@ class _SignUpState extends State<SignUpFirst> {
         controller: parentPhoneController,
         validator: Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
+          Validators.minLength(
+              11,
+              AppLocalizations.of(context)
+                  .translate("error_phone_less")),
+
 //          Validators.patternRegExp(
 //              RegExp(r"^(?:[+0]10)?[0-9]{11}$"), AppLocalizations.of(context).translate("error_phone_validate")),
         ]),

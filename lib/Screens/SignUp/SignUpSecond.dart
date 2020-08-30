@@ -44,6 +44,8 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
   bool isLiterary = true;
   bool obSecureText = true;
   bool _validate = false;
+  SignUpViewModel vm;
+
 
   IconData iconOn = Icons.visibility;
   IconData iconOff = Icons.visibility_off;
@@ -63,6 +65,9 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
 
   @override
   Widget build(BuildContext context) {
+
+    vm=Provider.of<SignUpViewModel>(context);
+
     return Material(
         color: ColorProperties.AppColor,
         child: Stack(
@@ -343,18 +348,30 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
           onPressed: () {
 
             if (formKey.currentState.validate()) {
-              FormData formData = FormData.fromMap({
-                "email": email,
-                "name": name,
-                "area": area,
-                "school": school,
-                "contact_number": phone,
-                "parent_contact_number": parentPhone,
-                "password":passController.text,
-                "password_confirmation":confirmController.text,
-                "major":isLiterary?"literature":"scientific"
-              });
-              Provider.of<SignUpViewModel>(context,listen: false).postData(formData);
+
+              if(passController.text==confirmController.text){
+                vm.user=ApiResponse.empty("");
+                vm.error="";
+                FormData formData = FormData.fromMap({
+                  "email": email,
+                  "name": name,
+                  "area": area,
+                  "school": school,
+                  "contact_number": phone,
+                  "parent_contact_number": parentPhone,
+                  "password":passController.text,
+                  "password_confirmation":confirmController.text,
+                  "major":isLiterary?"literature":"scientific"
+                });
+                Provider.of<SignUpViewModel>(context,listen: false).postData(formData);
+              }
+              else{
+                vm.user=ApiResponse.error(AppLocalizations.of(context).translate("error_match"));
+                vm.error=AppLocalizations.of(context).translate("error_match");
+                vm.notifyListeners();
+              }
+
+
             }
           },
           shape: RoundedRectangleBorder(
@@ -386,5 +403,4 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
           });
 
   }
-
 }

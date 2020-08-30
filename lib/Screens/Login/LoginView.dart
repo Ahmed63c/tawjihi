@@ -141,8 +141,10 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
         validator: Validators.compose([
           Validators.required(
               AppLocalizations.of(context).translate("error_field")),
-          Validators.email(
-              AppLocalizations.of(context).translate("error_email_validate"))
+        Validators.patternRegExp(
+        RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)"
+        r"*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"),
+            AppLocalizations.of(context).translate("error_email_validate")),
         ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("hint_email_login"),
@@ -288,7 +290,7 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
         child: Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              AppLocalizations.of(context).translate("error_code"),
+              model.error,
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

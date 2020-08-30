@@ -110,11 +110,15 @@
   "error_pass_validate_less": "password cannot be less than 9 numbers",
   "error_pass_validate_more": "password cannot be more than 15 numbers",
   "error_phone_validate": "phone number is invalid",
+  "error_phone_less": "phone number is less than 11 number",
+  "error_alphapet": "Only alphabets are allowed",
+  "error_less_character": "name is less than 3 characters",
 
   "logout": "Logout",
 
   "error_code": "code is not valid",
-  "danger": "danger area"
+  "danger": "danger area",
+
 
 
 

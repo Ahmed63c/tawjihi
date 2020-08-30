@@ -35,12 +35,14 @@ class SignUpViewModel with ChangeNotifier{
       }
       else{
         user=ApiResponse.error(userModel.message);
+        error=userModel.message;
         notifyListeners();
       }
     }
     on Exception catch (e) {
       print("here"+"error"+e.toString());
       user=ApiResponse.error(e.toString());
+      error=e.toString();
       notifyListeners();
     }
   }

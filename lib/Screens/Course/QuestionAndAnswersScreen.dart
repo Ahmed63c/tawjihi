@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
+import 'package:tawjihi/Screens/ComonWidget/ImageDialoge.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/QuestionsAndAnswersViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
@@ -95,16 +96,22 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
   }
 
   Widget questionImage(QuestionsAndAnswersViewModel model,int index) {
-    return Visibility(
-      visible: model.QAndAnswers.details[index].pics!=null,
-      child: Card(
-        child: Container(
-            margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-            height: 80,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-            child:  Image(image: CachedNetworkImageProvider(model.QAndAnswers.details[index].pics==null?"":
-            model.QAndAnswers.details[index].pics),fit: BoxFit.contain,),
+    return GestureDetector(
+      onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ImageDialog(model.QAndAnswers.details[index].pics==null
+            ? "" : model.QAndAnswers.details[index].pics)));
+      },
+      child: Visibility(
+        visible: model.QAndAnswers.details[index].pics!=null,
+        child: Card(
+          child: Container(
+              margin: EdgeInsets.only(left: 16,right: 16,top: 8),
+              height: 80,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+              child:  Image(image: CachedNetworkImageProvider(model.QAndAnswers.details[index].pics==null?"":
+              model.QAndAnswers.details[index].pics),fit: BoxFit.contain,),
+          ),
         ),
       ),
     );
@@ -253,16 +260,22 @@ class ChildState extends State<Child> {
   }
 
   Widget answerImage(QuestionsAndAnswersViewModel model,int index) {
-    return Visibility(
-      visible: model.QAndAnswers.details[index].answer_pic!=null,
-      child: Card(
-        child: Container(
-          margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-          height: 80,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-          child:  Image(image: CachedNetworkImageProvider(model.QAndAnswers.details[index].answer_pic==null?
-          "":model.QAndAnswers.details[index].answer_pic,),fit: BoxFit.contain,),
+    return GestureDetector(
+      onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ImageDialog(model.QAndAnswers.details[index].answer_pic==null
+            ? "" : model.QAndAnswers.details[index].answer_pic)));
+      },
+      child: Visibility(
+        visible: isVisble&&model.QAndAnswers.details[index].answer_pic!=null,
+        child: Card(
+          child: Container(
+            margin: EdgeInsets.only(left: 16,right: 16,top: 8),
+            height: 80,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            child:  Image(image: CachedNetworkImageProvider(model.QAndAnswers.details[index].answer_pic==null?
+            "":model.QAndAnswers.details[index].answer_pic,),fit: BoxFit.contain,),
+          ),
         ),
       ),
     );

@@ -55,7 +55,6 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
             ),
             Consumer<TestViewModel>(builder: (context, model, child) {
               return super.errorScreen(model.testResponseWraper.status==Status.ERROR, context);
-
             }
             ),
           ],
@@ -165,15 +164,18 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-                child: MyText(
-                  "choose",
-                  style: TextStyle(
-                      fontFamily: "Cairo",
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: Colors.grey),
+              Visibility(
+                visible: model.testResponseWraper.status==Status.COMPLETED&&model.test.details.length>0,
+                child: Container(
+                  margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+                  child: MyText(
+                    "choose",
+                    style: TextStyle(
+                        fontFamily: "Cairo",
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Colors.grey),
+                  ),
                 ),
               ),
               questionImage(model),
@@ -313,19 +315,22 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
   Widget bottomActions(TestViewModel model) {
-    return Positioned(
-      bottom: 16,
-      child: Container(
-        height: 60,
-        width: MediaQuery.of(context).size.width,
-        color: Colors.white60,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            previousButton(),
-            nextButton(model),
-          ],
+    return Visibility(
+      visible: model.testResponseWraper.status==Status.COMPLETED&&model.test.details.length>0,
+      child: Positioned(
+        bottom: 16,
+        child: Container(
+          height: 60,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.white60,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              previousButton(),
+              nextButton(model),
+            ],
+          ),
         ),
       ),
     );
@@ -339,15 +344,17 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
     return
        GestureDetector(
          onTap: (){
+
            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ImageDialog(model.test.details[questionNum].pics==null
-               ? "" : model.test.details[questionNum].pics)));
+               ? "" : model.test.details[questionNum].pics)
+           ));
          },
          child: Container(
             margin: EdgeInsets.only(left: 16, right: 16, top: 8),
             height: 80,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
             child: Image(image: CachedNetworkImageProvider(model.test.details[questionNum].pics==null
-                ? "" : model.test.details[questionNum].pics),fit: BoxFit.cover,)
+                ? "" : model.test.details[questionNum].pics),fit: BoxFit.contain,)
     ),
        )
     ;
@@ -504,6 +511,43 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
       }    }
 
   }
+
+//  void showDialogeImage(String image) {
+//
+//    showGeneralDialog(
+//      context: context,
+//      barrierColor: Colors.black12.withOpacity(0.6), // background color
+//      barrierDismissible: false, // should dialog be dismissed when tapped outside
+//      transitionDuration: Duration(milliseconds: 400), // how long it takes to popup dialog after button click
+//      pageBuilder: (_, __, ___) { // your widget implementation
+//        return
+//          SizedBox.expand( // makes widget fullscreen
+//          child:
+//          Stack(
+//            children: [
+//              Container(
+//                    margin: EdgeInsets.only(top: 32,right: 32),
+//                    child:  IconButton(
+//                      icon: Icon(Icons.clear,color: Colors.red,size: 32,),
+//                      onPressed: (){
+//                        Navigator.pop(context);
+//                      },
+//                    )),
+//              Container(
+//                width: MediaQuery.of(context).size.width,
+//                height: MediaQuery.of(context).size.height,
+//                decoration: BoxDecoration(
+//                    image: DecorationImage(
+//                      image: CachedNetworkImageProvider(image),fit: BoxFit.contain,
+//                    )
+//                ),
+//              )
+//            ],
+//          ),
+//        );
+//      },
+//    );
+//  }
 
 
 }

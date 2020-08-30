@@ -12,7 +12,7 @@
 
 
   "register_new_user": "تسجيل حساب جديد",
-  "full_name": "الاسم رباعي",
+  "full_name": "الاسم ",
   "region_name": "اسم المنطقه",
   "school_name": "اسم المدرسه",
   "phone": "رقم الهاتف",
@@ -110,6 +110,14 @@
   "error_pass_validate_less": "رقم المرور لايمكن ان يكون اقل من 9 ارقام",
   "error_pass_validate_more": "رقم المرور لايمكن أن يكون اكثرمن 15 رقم",
   "error_phone_validate": "رقم الهاتف غير صحيح",
+  "error_phone_less": "رقم الهاتف اقل من 11 رقم",
+
+  "error_alphapet": "مسموح بالحروف فقط",
+  "error_less_character": "الاسم اقل من 3 حروف",
+
+
+
+
   "logout": "تسجيل الخروج",
   "error_code": "الكود غير صحيح",
 

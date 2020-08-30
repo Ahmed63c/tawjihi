@@ -163,7 +163,8 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
               child:
               Container(
                   margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(model.error,
+                  child: Text(
+                    AppLocalizations.of(context).translate("error_code"),
                     style:
                     TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)
               ),
