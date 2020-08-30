@@ -22,7 +22,7 @@ class SignUpViewModel with ChangeNotifier{
     user=ApiResponse.loading("Loading");
     notifyListeners();
     try {
-      var response =await helper.postForm("register", formData);
+      var response =await helper.postForm("signup", formData);
       var parsedResponse=json.decode(response.data);
       userModel=UserModel.fromJson(parsedResponse);
       if(userModel.status=="01"){

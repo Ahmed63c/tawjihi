@@ -36,6 +36,7 @@ class _WebViewPageState extends State<WebViewPage> {
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
           },
+
           // TODO(iskakaushik): Remove this when collection literals makes it to stable.
           // ignore: prefer_collection_literals
           javascriptChannels: <JavascriptChannel>[

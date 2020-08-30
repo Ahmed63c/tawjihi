@@ -7,6 +7,7 @@ import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Settings/ChangePasswordViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 class ChangePassword extends StatefulWidget{
   @override
@@ -24,6 +25,8 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
   bool _validate=false;
   bool _validateConfirm=false;
   ChangePasswordViewModel vm;
+  var formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -52,15 +55,18 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children:[
-           ListView(
+           Form(
+             key: formKey,
+             child: ListView(
           children: <Widget>[
-            currentPassword(),
-            newPassword(),
-            confirmNewPassword(),
-            errorView(),
-            confirmButton(),
+              currentPassword(),
+              newPassword(),
+              confirmNewPassword(),
+              errorView(),
+              confirmButton(),
           ],
         ),
+           ),
            Consumer<ChangePasswordViewModel>(
               builder: (context, model, child){
                 WidgetsBinding.instance.addPostFrameCallback((_){
@@ -115,11 +121,15 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
         keyboardType: TextInputType.number,
         obscureText: true,
         controller: newPasswordController,
+          validator:  Validators.compose([
+            Validators.required(AppLocalizations.of(context).translate("error_field")),
+            Validators.minLength(9, AppLocalizations.of(context).translate("error_pass_validate_less")),
+            Validators.maxLength(15, AppLocalizations.of(context).translate("error_pass_validate_more"))
+          ]),
         decoration: InputDecoration(
             labelText:
             AppLocalizations.of(context).translate("new_password"),
             labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
-            errorText: _validate ? AppLocalizations.of(context).translate("error_field") : null,
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.grey, width: 1.0),
@@ -148,8 +158,12 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
         keyboardType: TextInputType.number,
         obscureText: true,
         controller: confirmPasswordController,
+        validator:  Validators.compose([
+          Validators.required(AppLocalizations.of(context).translate("error_field")),
+          Validators.minLength(9, AppLocalizations.of(context).translate("error_pass_validate_less")),
+          Validators.maxLength(15, AppLocalizations.of(context).translate("error_pass_validate_more"))
+        ]),
         decoration: InputDecoration(
-            errorText: _validateConfirm ? AppLocalizations.of(context).translate("error_field") : null,
             labelText:
             AppLocalizations.of(context).translate("confirm_password"),
             labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -181,14 +195,11 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
           color: ColorProperties.AppColorHex,
           textColor: Colors.white,
           onPressed: () {
-            setState(() {
-              confirmPasswordController.text.isEmpty ? _validateConfirm = true : _validateConfirm = false;
-              newPasswordController.text.isEmpty ? _validate = true : _validate = false;
-
-            });
-            if(!_validate&&!_validateConfirm){
-
+            if(formKey.currentState.validate()){
               if(confirmPasswordController.text==newPasswordController.text){
+                vm.baseResponseWraper=ApiResponse.empty("");
+                vm.error="";
+
                 Map<String,dynamic> paramaters=new Map();
                 paramaters.putIfAbsent("new_password", () => newPasswordController.text);
                 Provider.of<ChangePasswordViewModel>(context,listen: false).postData(paramaters);
@@ -198,6 +209,7 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
                 vm.baseResponseWraper=ApiResponse.error(AppLocalizations.of(context).translate("error_match"));
                 vm.error=AppLocalizations.of(context).translate("error_match");
                 vm.notifyListeners();
+
               }
             }
 

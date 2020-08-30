@@ -7,6 +7,7 @@ import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 import 'SignUpSecond.dart';
 
@@ -96,11 +97,10 @@ class _SignUpState extends State<SignUpFirst> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         controller: emailController,
-          validator: (String value) {
-            if (value.isEmpty) {
-              return "من فضلك إملأ كل الحقول";
-            }
-          },
+          validator: Validators.compose([
+            Validators.required(AppLocalizations.of(context).translate("error_field")),
+            Validators.email(AppLocalizations.of(context).translate("error_email_validate"))
+          ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("hint_email_login"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -125,11 +125,9 @@ class _SignUpState extends State<SignUpFirst> {
       child: TextFormField(
         keyboardType: TextInputType.text,
         controller: nameController,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return "من فضلك إملأ كل الحقول";
-          }
-        },
+        validator:   Validators.compose([
+          Validators.required(AppLocalizations.of(context).translate("error_field")),
+        ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("full_name"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -154,11 +152,9 @@ class _SignUpState extends State<SignUpFirst> {
       child: TextFormField(
         keyboardType: TextInputType.text,
         controller: regionController,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return "من فضلك إملأ كل الحقول";
-          }
-        },
+        validator:  Validators.compose([
+          Validators.required(AppLocalizations.of(context).translate("error_field")),
+        ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("region_name"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -183,11 +179,9 @@ class _SignUpState extends State<SignUpFirst> {
       child: TextFormField(
         keyboardType: TextInputType.text,
         controller: schoolController,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return "من فضلك إملأ كل الحقول";
-          }
-        },
+        validator:   Validators.compose([
+          Validators.required(AppLocalizations.of(context).translate("error_field")),
+        ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("school_name"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -212,11 +206,11 @@ class _SignUpState extends State<SignUpFirst> {
       child: TextFormField(
         keyboardType: TextInputType.number,
         controller: phoneController,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return "من فضلك إملأ كل الحقول";
-          }
-        },
+        validator: Validators.compose([
+          Validators.required(AppLocalizations.of(context).translate("error_field")),
+//           Validators.patternRegExp(
+//              RegExp(r"^(?:[+0]9)?[0-9]{10}$"), AppLocalizations.of(context).translate("error_phone_validate")),
+        ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("phone"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -241,11 +235,11 @@ class _SignUpState extends State<SignUpFirst> {
       child: TextFormField(
         keyboardType: TextInputType.number,
         controller: parentPhoneController,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return "من فضلك إملأ كل الحقول";
-          }
-        },
+        validator: Validators.compose([
+          Validators.required(AppLocalizations.of(context).translate("error_field")),
+//          Validators.patternRegExp(
+//              RegExp(r"^(?:[+0]10)?[0-9]{11}$"), AppLocalizations.of(context).translate("error_phone_validate")),
+        ]),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).translate("parent_phone"),
           labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
@@ -277,7 +271,6 @@ class _SignUpState extends State<SignUpFirst> {
             textColor: Colors.white,
             onPressed: () {
               if (formKey.currentState.validate()) {
-                print("passed validation");
                 Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
                     ChangeNotifierProvider(
                     create: (context)=>SignUpViewModel(),

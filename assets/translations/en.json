@@ -104,6 +104,19 @@
   "hide_answer": "Hide Answer",
 
 
-  "verify_answer":"verify"
+  "verify_answer":"verify",
+
+  "error_email_validate": "Invalid email address",
+  "error_pass_validate_less": "password cannot be less than 9 numbers",
+  "error_pass_validate_more": "password cannot be more than 15 numbers",
+  "error_phone_validate": "phone number is invalid",
+
+  "logout": "Logout",
+
+  "error_code": "code is not valid",
+  "danger": "danger area"
+
+
+
 
 }

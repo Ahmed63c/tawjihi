@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,34 +9,36 @@ import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
 import 'package:tawjihi/Screens/Login/VerfiyScreen.dart';
+import 'package:tawjihi/Screens/Login/VerifyScreenViewModel.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpFirst.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
 import 'package:tawjihi/Utils/LocalStorage.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 import 'LoginViewModel.dart';
 
-class LoginView extends StatefulWidget{
+class LoginView extends StatefulWidget {
   @override
   _LoginViewState createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> with BaseScreen{
-  bool obSecureText=true;
-  IconData iconOn=Icons.visibility;
-  IconData iconOff=Icons.visibility_off;
-  TextEditingController emailController=TextEditingController();
-  TextEditingController passController=TextEditingController();
-  bool _validate=false;
-  bool _validateEmail=false;
-
+class _LoginViewState extends State<LoginView> with BaseScreen {
+  bool obSecureText = true;
+  IconData iconOn = Icons.visibility;
+  IconData iconOff = Icons.visibility_off;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+  bool _validate = false;
+  bool _validateEmail = false;
+  var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-  //  checkLoggedIn();
+    //  checkLoggedIn();
   }
 
   @override
@@ -47,36 +51,48 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
   @override
   Widget build(BuildContext context) {
     return Material(
-          color: ColorProperties.AppColor,
-          child: Stack(
-            children: <Widget>[
-              loginCard(),
-              bottomSignUp(),
-             Consumer<LoginViewModel>(
-                 builder: (context, model, child){
-                   WidgetsBinding.instance.addPostFrameCallback((_){
-                     if(model.user.status==Status.COMPLETED){
-                       model.user.status=Status.empty;
-                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>VerifyScreen(
-                         model.userModel.details.user.major=="scientific"?false:true
-                       )));
-                     }
-                   });
-                return  super.loadingIndicator(model.user.status==Status.LOADING, context);
+        color: ColorProperties.AppColor,
+        child: Stack(
+          children: <Widget>[
+            loginCard(),
+            bottomSignUp(),
+            Consumer<LoginViewModel>(builder: (context, model, child) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (model.user.status == Status.COMPLETED) {
+                  model.user.status = Status.empty;
+                  if (model.userModel.details.user.status == "active") {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (_) => Home(
+                            model.userModel.details.user.major == "scientific"
+                                ? false
+                                : true)));
+                  } else {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (_) => ChangeNotifierProvider(
+                              create: (context) => VerifyScreenViewModel(),
+                              child: VerifyScreen(
+                                  model.userModel.details.user.major ==
+                                          "scientific"
+                                      ? false
+                                      : true),
+                            )));
+                  }
+                }
+              });
+              return super.loadingIndicator(
+                  model.user.status == Status.LOADING, context);
             })
-
-                ],
-          ));
+          ],
+        ));
   }
 
   Widget headerLogo() {
     return Container(
       margin: EdgeInsets.only(top: 32),
       child: Align(
-        alignment: Alignment.topCenter,
-            child: Image.asset("assets/images/tawjihi_logo.png")),
-    )
-    ;
+          alignment: Alignment.topCenter,
+          child: Image.asset("assets/images/tawjihi_logo.png")),
+    );
   }
 
   Widget loginCard() {
@@ -87,14 +103,17 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
         height: 380,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(4)),
-        child: ListView(
-          children: <Widget>[
-            cardHeader(),
-            emailField(),
-            passwordField(),
-            errorView(),
-            signInButton(),
-          ],
+        child: Form(
+          key: formKey,
+          child: ListView(
+            children: <Widget>[
+              cardHeader(),
+              emailField(),
+              passwordField(),
+              errorView(),
+              signInButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -119,10 +138,15 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         controller: emailController,
+        validator: Validators.compose([
+          Validators.required(
+              AppLocalizations.of(context).translate("error_field")),
+          Validators.email(
+              AppLocalizations.of(context).translate("error_email_validate"))
+        ]),
         decoration: InputDecoration(
-          errorText: _validateEmail ? AppLocalizations.of(context).translate("error_field") : null,
           labelText: AppLocalizations.of(context).translate("hint_email_login"),
-          labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
+          labelStyle: TextStyle(color: Colors.grey, fontFamily: "Cairo"),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.grey, width: 1.0),
@@ -145,11 +169,22 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
         keyboardType: TextInputType.number,
         obscureText: obSecureText,
         controller: passController,
+        validator: Validators.compose([
+          Validators.required(
+              AppLocalizations.of(context).translate("error_field")),
+          Validators.minLength(
+              9,
+              AppLocalizations.of(context)
+                  .translate("error_pass_validate_less")),
+          Validators.maxLength(
+              15,
+              AppLocalizations.of(context)
+                  .translate("error_pass_validate_more"))
+        ]),
         decoration: InputDecoration(
-            errorText: _validate ? AppLocalizations.of(context).translate("error_field") : null,
             labelText:
                 AppLocalizations.of(context).translate("hint_password_login"),
-            labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
+            labelStyle: TextStyle(color: Colors.grey, fontFamily: "Cairo"),
             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             border: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.grey, width: 1.0),
@@ -160,13 +195,12 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
                   const BorderSide(color: ColorProperties.AppColor, width: 1.0),
               borderRadius: BorderRadius.circular(4.0),
             ),
-            suffixIcon:
-            IconButton(
-              icon:Icon(obSecureText?iconOff:iconOn),
+            suffixIcon: IconButton(
+              icon: Icon(obSecureText ? iconOff : iconOn),
               color: Colors.black,
-              onPressed: (){
+              onPressed: () {
                 setState(() {
-                  obSecureText=obSecureText?false:true;
+                  obSecureText = obSecureText ? false : true;
                 });
               },
             )),
@@ -180,17 +214,13 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
         child: RaisedButton(
           color: ColorProperties.AppColorHex,
           textColor: Colors.white,
-          onPressed: (){
-            setState(() {
-              emailController.text.isEmpty ? _validateEmail = true : _validateEmail = false;
-              passController.text.isEmpty ? _validate = true : _validate = false;
-
-            });
-            if(!_validate&&!_validateEmail){
-              Map<String,dynamic> paramaters=new Map();
+          onPressed: () {
+            if (formKey.currentState.validate()) {
+              Map<String, dynamic> paramaters = new Map();
               paramaters.putIfAbsent("email", () => emailController.text);
               paramaters.putIfAbsent("password", () => passController.text);
-              Provider.of<LoginViewModel>(context,listen: false).postData(paramaters);
+              Provider.of<LoginViewModel>(context, listen: false)
+                  .postData(paramaters);
             }
 
             // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home()));
@@ -240,13 +270,11 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
                       decoration: TextDecoration.underline),
                 ),
               ),
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
-                    ChangeNotifierProvider(
-                      create: (context)=>SignUpViewModel(),
-                    child: SignUpFirst()
-                    )
-                ));
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => ChangeNotifierProvider(
+                        create: (context) => SignUpViewModel(),
+                        child: SignUpFirst())));
               },
             )
           ],
@@ -254,20 +282,20 @@ class _LoginViewState extends State<LoginView> with BaseScreen{
   }
 
   errorView() {
-    return
-      Consumer<LoginViewModel>(
-          builder: (context, model, child){
-            return Visibility(
-              visible: model.user.status==Status.ERROR,
-              child:
-              Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(model.error,
-                    style:
-                    TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)
-              ),
-            );
-          });
-
+    return Consumer<LoginViewModel>(builder: (context, model, child) {
+      return Visibility(
+        visible: model.user.status == Status.ERROR,
+        child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              AppLocalizations.of(context).translate("error_code"),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "Cairo",
+                  color: Colors.red),
+            )),
+      );
+    });
   }
 }

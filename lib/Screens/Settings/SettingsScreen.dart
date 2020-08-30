@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Login/LoginView.dart';
 import 'package:tawjihi/Screens/Settings/About.dart';
 import 'package:tawjihi/Screens/Settings/ChangPassword.dart';
 import 'package:tawjihi/Screens/Settings/ChangeLanguage.dart';
 import 'package:tawjihi/Screens/Settings/ChangePasswordViewModel.dart';
+import 'package:tawjihi/SplashScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 class SettingsScreen extends StatelessWidget{
@@ -33,6 +35,9 @@ class SettingsScreen extends StatelessWidget{
         settingsCard(context, "change_password", Icons.lock),
         title("more"),
         settingsCard(context, "about", Icons.assignment),
+
+        Visibility(visible:false,child: title("danger")),
+        Visibility(visible:false,child: settingsCard(context, "logout", Icons.exit_to_app)),
 
       ],
     );
@@ -75,11 +80,15 @@ class SettingsScreen extends StatelessWidget{
               case "about":
                 Navigator.of(context).push(MaterialPageRoute(builder: (_)=>About()));
                 break;
+
+              case "logout":
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>SplashScreen()));
+                break;
             }
           },
           child: ListTile(
             title: MyText(title,style: TextStyle(fontFamily: "Cairo",fontSize: 18,fontWeight: FontWeight.w600),),
-            leading: Container(height:double.infinity,child: Icon(icon,color: Colors.blue,size: 18,)),
+            leading: Container(height:double.infinity,child: Icon(icon,color: icon==Icons.exit_to_app?Colors.red:Colors.blue,size: 18,)),
             trailing: Icon(Icons.arrow_forward_ios,color: Colors.black,size: 14,),
           ),
         ),

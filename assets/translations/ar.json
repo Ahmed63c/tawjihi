@@ -104,6 +104,20 @@
   "show_answer": "أظهار الإجابة",
   "hide_answer": "إخفاء الإجابة",
 
-  "verify_answer":"تصحيح"
+  "verify_answer":"تصحيح",
+
+  "error_email_validate": "البريد الالكتروني غير صحيح",
+  "error_pass_validate_less": "رقم المرور لايمكن ان يكون اقل من 9 ارقام",
+  "error_pass_validate_more": "رقم المرور لايمكن أن يكون اكثرمن 15 رقم",
+  "error_phone_validate": "رقم الهاتف غير صحيح",
+  "logout": "تسجيل الخروج",
+  "error_code": "الكود غير صحيح",
+
+  "danger": "منطقة الخطر"
+
+
+
+
+
 
 }

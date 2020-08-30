@@ -114,7 +114,7 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
     return Container(
       margin: EdgeInsets.only(left: 16,right: 16,top: 8),
       child: Text(model.QAndAnswers.details[index].title==null?"":
-      model.QAndAnswers.details[index].title==null,
+      model.QAndAnswers.details[index].title,
         style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
             fontSize: 16,color: Colors.black),),
     );
@@ -276,7 +276,7 @@ class ChildState extends State<Child> {
       Container(
         margin: EdgeInsets.only(left: 16,right: 16,top: 16),
         child: Text(model.QAndAnswers.details[index].answer==null?"":
-        model.QAndAnswers.details[index].answer==null,
+        model.QAndAnswers.details[index].answer,
           style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
               fontSize: 16,color: Colors.black),),
       ),

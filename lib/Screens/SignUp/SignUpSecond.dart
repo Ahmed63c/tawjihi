@@ -12,6 +12,7 @@ import 'package:tawjihi/Screens/Login/LoginViewModel.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 import 'SignUpFirst.dart';
 
@@ -22,6 +23,7 @@ class SignUpSecond extends StatefulWidget {
   String school = "";
   String phone = "";
   String parentPhone = "";
+
 
   SignUpSecond(this.email, this.name, this.area, this.school, this.phone,
       this.parentPhone);
@@ -47,6 +49,9 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
   IconData iconOff = Icons.visibility_off;
   TextEditingController confirmController = TextEditingController();
   TextEditingController passController = TextEditingController();
+
+  var formKey = GlobalKey<FormState>();
+
 
   _SignUpSecond(this.email, this.name, this.area, this.school, this.phone,
       this.parentPhone);
@@ -88,15 +93,18 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
         height: 400,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(4)),
-        child: ListView(
-          children: <Widget>[
-            cardHeader(),
-            passwordField(),
-            passwordConfirmField(),
-            chooseCategoryRow(),
-            errorView(),
-            actionRow()
-          ],
+        child: Form(
+          key: formKey,
+          child: ListView(
+            children: <Widget>[
+              cardHeader(),
+              passwordField(),
+              passwordConfirmField(),
+              chooseCategoryRow(),
+              errorView(),
+              actionRow()
+            ],
+          ),
         ),
       ),
     );
@@ -122,10 +130,12 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
         keyboardType: TextInputType.number,
         obscureText: obSecureText,
         controller: passController,
+        validator:  Validators.compose([
+          Validators.required(AppLocalizations.of(context).translate("error_field")),
+          Validators.minLength(9, AppLocalizations.of(context).translate("error_pass_validate_less")),
+          Validators.maxLength(15, AppLocalizations.of(context).translate("error_pass_validate_more"))
+        ]),
         decoration: InputDecoration(
-            errorText: _validate
-                ? AppLocalizations.of(context).translate("error_field")
-                : null,
             labelText:
                 AppLocalizations.of(context).translate("hint_password_login"),
             labelStyle: TextStyle(color: Colors.grey, fontFamily: "Cairo"),
@@ -159,10 +169,12 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
         keyboardType: TextInputType.number,
         obscureText: obSecureText,
         controller: confirmController,
+        validator:  Validators.compose([
+          Validators.required(AppLocalizations.of(context).translate("error_field")),
+          Validators.minLength(9, AppLocalizations.of(context).translate("error_pass_validate_less")),
+          Validators.maxLength(15, AppLocalizations.of(context).translate("error_pass_validate_more"))
+        ]),
         decoration: InputDecoration(
-          errorText: _validate
-              ? AppLocalizations.of(context).translate("error_field")
-              : null,
           labelText:
               AppLocalizations.of(context).translate("hint_password_confirm"),
           labelStyle: TextStyle(color: Colors.grey, fontFamily: "Cairo"),
@@ -329,15 +341,8 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
           color: ColorProperties.AppColorHex,
           textColor: Colors.white,
           onPressed: () {
-            setState(() {
-              confirmController.text.isEmpty
-                  ? _validate = true
-                  : _validate = false;
-              passController.text.isEmpty
-                  ? _validate = true
-                  : _validate = false;
-            });
-            if (!_validate) {
+
+            if (formKey.currentState.validate()) {
               FormData formData = FormData.fromMap({
                 "email": email,
                 "name": name,

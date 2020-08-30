@@ -17,7 +17,7 @@ class QuestionsAndAnswersViewModel with ChangeNotifier{
     notifyListeners();
     try {
 
-      var response =await helper.get("getAllMaterialSections",data);
+      var response =await helper.get("getMaterialQuestions",data);
       var parsedResponse=json.decode(response.data);
       QAndAnswers=QAndAnswersModel.fromJson(parsedResponse);
       if(QAndAnswers.status=="01"){

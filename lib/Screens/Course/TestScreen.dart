@@ -32,6 +32,8 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   Color selectedAnswer=ColorProperties.AppColor;
   bool clicked=false;
   bool verifyAnswer=false;
+  bool verifyAnswerText=false;
+
   String choose="";
   int materialId;
   int unitId;
@@ -191,62 +193,70 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
   Widget nextButton(TestViewModel model) {
-    return Container(
-        height: 40,
-        width: 110,
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        child: RaisedButton(
-            onPressed: () {
-              if(clicked){
-                verifyAnswer=true;
-                clicked=false;
-                model.notifyListeners();
-              }
+    return
 
-              else{
-                if(verifyAnswer){
-                  if((questionNum+1)==model.test.details.length){
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
-                  else{
-                    questionNum++;
+      Consumer<TestViewModel>(builder: (context, model, child) {
+        return Container(
+            height: 40,
+            width: 110,
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            child: RaisedButton(
+                onPressed: () {
+                  if(clicked){
+                    verifyAnswer=true;
+                    verifyAnswerText=true;
+                    clicked=false;
                     model.notifyListeners();
                   }
-                  verifyAnswer=false;
-                }
 
-              }
+                  else{
+                    if(verifyAnswer){
+                      if((questionNum+1)==model.test.details.length){
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
+                      else{
+                        questionNum++;
+                        model.notifyListeners();
+                      }
+                      verifyAnswer=false;
+                      verifyAnswerText=false;
+
+                    }
+
+                  }
 
 
 
-            },
-            color: ColorProperties.AppColorHex,
-            textColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(left: 4, right: 4, bottom: 4),
-                  child: MyText(
-                    verifyAnswer?"next":"verify_answer",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontFamily: "Cairo",
-                        fontWeight: FontWeight.w700),
-                  ),
+                },
+                color: ColorProperties.AppColorHex,
+                textColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                Container(
-                    margin: EdgeInsets.only(left: 4, right: 4),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                    ))
-              ],
-            )));
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(left: 4, right: 4, bottom: 4),
+                      child: MyText(
+                        verifyAnswerText?"next":"verify_answer",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontFamily: "Cairo",
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(left: 4, right: 4),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                        ))
+                  ],
+                )));
+      }
+      );
   }
 
   Widget previousButton() {

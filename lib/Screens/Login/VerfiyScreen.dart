@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tawjihi/Network/BaseApiResponse.dart';
+import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
+import 'package:tawjihi/Screens/Login/VerifyScreenViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
@@ -13,7 +17,7 @@ class VerifyScreen extends StatefulWidget{
   _VerifyScreenState createState() => _VerifyScreenState(isLiteral);
 }
 
-class _VerifyScreenState extends State<VerifyScreen> {
+class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
 
   TextEditingController _editingController;
   bool _validate=false;
@@ -32,6 +36,17 @@ class _VerifyScreenState extends State<VerifyScreen> {
         child: Stack(
           children: <Widget>[
             verifyCard(),
+            Consumer<VerifyScreenViewModel>(
+                builder: (context, model, child){
+                  WidgetsBinding.instance.addPostFrameCallback((_){
+                    if(model.user.status==Status.COMPLETED){
+                      model.user.status=Status.empty;
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home(isLiteral)));
+                    }
+                  });
+                  return  super.loadingIndicator(model.user.status==Status.LOADING, context);
+                })
+
           ],
         )
     );
@@ -60,7 +75,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
           children: <Widget>[
             cardHeader(),
             codeField(),
-            verifyButton(),
+            errorView(),
+            verifyButton()
           ],
         ),
       ),
@@ -119,12 +135,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
             });
 
             if(!_validate){
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) =>
-                    Home(isLiteral)),
-              );
-
+              Map<String,dynamic> paramaters=new Map();
+              paramaters.putIfAbsent("code", () => _editingController.text);
+              Provider.of<VerifyScreenViewModel>(context,listen: false).postData(paramaters);
             }
             },
           shape: RoundedRectangleBorder(
@@ -139,6 +152,24 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 fontWeight: FontWeight.w700),
           ),
         ));
+  }
+
+  errorView() {
+    return
+      Consumer<VerifyScreenViewModel>(
+          builder: (context, model, child){
+            return Visibility(
+              visible: model.user.status==Status.ERROR,
+              child:
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(model.error,
+                    style:
+                    TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)
+              ),
+            );
+          });
+
   }
 
 }
