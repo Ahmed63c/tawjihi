@@ -35,6 +35,7 @@ void postData(Map<String,dynamic> data) async{
     }
     else{
       user=ApiResponse.error(userModel.message);
+      error="رقم الهاتف او رقم المرور غير صحيح";
       notifyListeners();
     }
   }

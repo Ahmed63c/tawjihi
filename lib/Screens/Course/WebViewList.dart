@@ -65,21 +65,25 @@ class _WebViewListState extends State<WebViewList> with BaseScreen {
   }
 
   Widget viewCard(int index, BuildContext context,DataList data) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(builder:(_)=> WebViewPage(data.details[index].description)));
-      },
-      child: Card(
-        elevation: 4,
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            viewImage(context,data,index),
-            title(context,data,index),
-            subTitle(context,data,index),
-          ],
+    return Directionality(
+      textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
+
+      child: GestureDetector(
+        onTap: (){
+          Navigator.of(context).push(MaterialPageRoute(builder:(_)=> WebViewPage(data.details[index].description)));
+        },
+        child: Card(
+          elevation: 4,
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              viewImage(context,data,index),
+              title(context,data,index),
+              subTitle(context,data,index),
+            ],
+          ),
         ),
       ),
     );

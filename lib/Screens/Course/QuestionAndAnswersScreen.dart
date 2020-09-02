@@ -73,7 +73,7 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
          questionImage(model,index),
          questionText(model,index),
          divider(),
-         Child(model, index)
+         Child(model, index,materialId)
        ],
 
       ),
@@ -118,12 +118,15 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
   }
 
   Widget questionText(QuestionsAndAnswersViewModel model,int index) {
-    return Container(
-      margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-      child: Text(model.QAndAnswers.details[index].title==null?"":
-      model.QAndAnswers.details[index].title,
-        style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
-            fontSize: 16,color: Colors.black),),
+    return Directionality(
+      textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
+      child: Container(
+        margin: EdgeInsets.only(left: 16,right: 16,top: 8),
+        child: Text(model.QAndAnswers.details[index].title==null?"":
+        model.QAndAnswers.details[index].title,
+          style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
+              fontSize: 16,color: Colors.black),),
+      ),
     );
   }
 
@@ -197,16 +200,18 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
 class Child extends StatefulWidget {
   QuestionsAndAnswersViewModel model;
   int index;
-  Child(this.model,this.index);
+  int materialId;
+  Child(this.model,this.index,this.materialId);
   @override
-  ChildState createState() => ChildState(model,index);
+  ChildState createState() => ChildState(model,index,materialId);
 }
 
 class ChildState extends State<Child> {
   QuestionsAndAnswersViewModel model;
   int index;
   bool isVisble=false;
-  ChildState(this.model,this.index);
+  int materialId;
+  ChildState(this.model,this.index,this.materialId);
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +220,7 @@ class ChildState extends State<Child> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         answerImage(model,index),
-        answerText(model,index),
+        answerText(model,index,materialId),
         showAnswerButton()
 
       ],
@@ -281,17 +286,19 @@ class ChildState extends State<Child> {
     );
   }
 
-  Widget answerText(QuestionsAndAnswersViewModel model,int index) {
-
+  Widget answerText(QuestionsAndAnswersViewModel model,int index,int materialID) {
     return Visibility(
       visible: isVisble,
       child:
-      Container(
-        margin: EdgeInsets.only(left: 16,right: 16,top: 16),
-        child: Text(model.QAndAnswers.details[index].answer==null?"":
-        model.QAndAnswers.details[index].answer,
-          style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
-              fontSize: 16,color: Colors.black),),
+      Directionality(
+        textDirection:materialID==2?TextDirection.ltr:TextDirection.rtl,
+        child: Container(
+          margin: EdgeInsets.only(left: 16,right: 16,top: 16),
+          child: Text(model.QAndAnswers.details[index].answer==null?"":
+          model.QAndAnswers.details[index].answer,
+            style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
+                fontSize: 16,color: Colors.black),),
+        ),
       ),
     );
   }

@@ -70,23 +70,23 @@ class _UnitsState extends State<Units> with BaseScreen {
                      );
 
            }
-
-
-
       },
       child: Visibility(
         visible: term==model.units.details[index].term,
-        child: Card(
-          elevation: 4,
-          child: ListTile(
-            title: Text(model.units.details[index].name,
-              style: TextStyle(
-                  fontFamily: "Cairo", fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.black,
-              size: 14,
+        child: Directionality(
+          textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
+          child: Card(
+            elevation: 4,
+            child: ListTile(
+              title: Text(model.units.details[index].name,
+                style: TextStyle(
+                    fontFamily: "Cairo", fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.black,
+                size: 14,
+              ),
             ),
           ),
         ),

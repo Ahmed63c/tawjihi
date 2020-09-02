@@ -164,9 +164,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-              Visibility(
-                visible: model.testResponseWraper.status==Status.COMPLETED&&model.test.details.length>0,
-                child: Container(
+               Container(
                   margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                   child: MyText(
                     "choose",
@@ -177,7 +175,6 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
                         color: Colors.grey),
                   ),
                 ),
-              ),
               questionImage(model),
               questionText(model),
               questionAnswers(model),
@@ -315,9 +312,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
   Widget bottomActions(TestViewModel model) {
-    return Visibility(
-      visible: model.testResponseWraper.status==Status.COMPLETED&&model.test.details.length>0,
-      child: Positioned(
+    return Positioned(
         bottom: 16,
         child: Container(
           height: 60,
@@ -332,7 +327,6 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
             ],
           ),
         ),
-      ),
     );
   }
 
@@ -365,18 +359,22 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
     if(model.test.details==null||model.test.details.isEmpty){
       return Container();
     }
-    else
-    return Container(
-      margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-      child: Text(
-        model.test.details[questionNum].title,
-        style: TextStyle(
-            fontFamily: "Cairo",
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            color: Colors.black),
-      ),
-    );
+    else {
+      return Directionality(
+        textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
+        child: Container(
+        margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+        child: Text(
+          model.test.details[questionNum].title,
+          style: TextStyle(
+              fontFamily: "Cairo",
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              color: Colors.black),
+        ),
+    ),
+      );
+    }
   }
 
   Widget questionAnswers(TestViewModel model) {
@@ -407,44 +405,48 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
 
   Widget questionCell(String answer,TestViewModel model) {
     return
-      GestureDetector(
-        onTap: (){
-            clicked=true;
-            choose=answer;
-            model.notifyListeners();
-        },
-        child: Container(
-          margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-          height: 40,
-          decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.grey,
-              ),
-              color:answerColor(answer, model.test.details[questionNum].correct_answer),
-              borderRadius: BorderRadius.all(Radius.circular(8))),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(left: 16, right: 16),
-                width: 12,
-                height: 12,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 16, right: 16),
-                child: Text(
-                answer,
-                  style: TextStyle(
-                      fontFamily: "Cairo",
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                      color: answerTextColor(answer, model.test.details[questionNum].correct_answer),
+      Directionality(
+        textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
+
+        child: GestureDetector(
+          onTap: (){
+              clicked=true;
+              choose=answer;
+              model.notifyListeners();
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+            height: 40,
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
                 ),
-              ),
-              )],
+                color:answerColor(answer, model.test.details[questionNum].correct_answer),
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  width: 12,
+                  height: 12,
+                  decoration:
+                      BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  child: Text(
+                  answer,
+                    style: TextStyle(
+                        fontFamily: "Cairo",
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18,
+                        color: answerTextColor(answer, model.test.details[questionNum].correct_answer),
+                  ),
+                ),
+                )],
+            ),
           ),
         ),
       );
@@ -511,43 +513,4 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
       }    }
 
   }
-
-//  void showDialogeImage(String image) {
-//
-//    showGeneralDialog(
-//      context: context,
-//      barrierColor: Colors.black12.withOpacity(0.6), // background color
-//      barrierDismissible: false, // should dialog be dismissed when tapped outside
-//      transitionDuration: Duration(milliseconds: 400), // how long it takes to popup dialog after button click
-//      pageBuilder: (_, __, ___) { // your widget implementation
-//        return
-//          SizedBox.expand( // makes widget fullscreen
-//          child:
-//          Stack(
-//            children: [
-//              Container(
-//                    margin: EdgeInsets.only(top: 32,right: 32),
-//                    child:  IconButton(
-//                      icon: Icon(Icons.clear,color: Colors.red,size: 32,),
-//                      onPressed: (){
-//                        Navigator.pop(context);
-//                      },
-//                    )),
-//              Container(
-//                width: MediaQuery.of(context).size.width,
-//                height: MediaQuery.of(context).size.height,
-//                decoration: BoxDecoration(
-//                    image: DecorationImage(
-//                      image: CachedNetworkImageProvider(image),fit: BoxFit.contain,
-//                    )
-//                ),
-//              )
-//            ],
-//          ),
-//        );
-//      },
-//    );
-//  }
-
-
 }

@@ -62,20 +62,23 @@ class _QuestionsSectionsState extends State<QuestionsSections> with BaseScreen {
               child: QAndAnswers(title, materialId, unitId, sectionId)),
         ));
       },
-      child: Card(
-        elevation: 4,
-        child: ListTile(
-          title: Text(
-            model.units.details[index].name != null
-                ? model.units.details[index].name
-                : "",
-            style: TextStyle(
-                fontFamily: "Cairo", fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.black,
-            size: 14,
+      child: Directionality(
+        textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
+        child: Card(
+          elevation: 4,
+          child: ListTile(
+            title: Text(
+              model.units.details[index].name != null
+                  ? model.units.details[index].name
+                  : "",
+              style: TextStyle(
+                  fontFamily: "Cairo", fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.black,
+              size: 14,
+            ),
           ),
         ),
       ),

@@ -9,27 +9,33 @@ class ImageDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return
     Scaffold(backgroundColor: Colors.white.withOpacity(0.85),
-    body: Stack(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(image),fit: BoxFit.contain,
-                )
+    body: InteractiveViewer(
+      panEnabled: false, // Set it to false to prevent panning.
+      boundaryMargin: EdgeInsets.all(80),
+      minScale: 0.5,
+      maxScale: 4,
+      child: Stack(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(image),fit: BoxFit.contain,
+                  )
+              ),
             ),
-          ),
-          GestureDetector(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child: Container(
-                margin: EdgeInsets.only(top: 32,right: 32),
-                child:  Icon(Icons.clear,color: Colors.red,size: 32,)),
-          ),
-        ],
-      ),
+            GestureDetector(
+              onTap: (){
+                Navigator.pop(context);
+              },
+              child: Container(
+                  margin: EdgeInsets.only(top: 32,right: 32),
+                  child:  Icon(Icons.clear,color: Colors.red,size: 32,)),
+            ),
+          ],
+        ),
+    ),
     );
 
   }

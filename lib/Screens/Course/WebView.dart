@@ -34,7 +34,19 @@ class _WebViewPageState extends State<WebViewPage> {
           initialUrl: Uri.dataFromString(page, mimeType: 'text/html',encoding: Encoding.getByName('utf-8'),).toString(),
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
+//            webViewController.evaluateJavascript("var meta = document.getElementsByTagName('meta');"
+//                "for (var i = 0; i < meta.length; i++) {"
+//                "if (meta[I].attribute('name') == null) continue;"
+//                "if (meta[i].attribute('name').includes('viewport')) {"
+//                "document.getElementsByTagName('meta')[i].remove();"
+//                "break;"
+//                "}"
+//                "}"
+//                "document.getElementsByTagName('head')[0].innerHTML += "
+//                "\"<meta name='viewport' content='initial-scale=1.0, maximum-scale=5.0'>\";"
+//            );
             _controller.complete(webViewController);
+
           },
 
           // TODO(iskakaushik): Remove this when collection literals makes it to stable.
