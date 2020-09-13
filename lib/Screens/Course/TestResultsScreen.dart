@@ -5,6 +5,7 @@ import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/TestViewModel.dart';
 import 'package:tawjihi/Screens/Course/UnitsViewModel.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
+import 'package:tawjihi/Screens/Home/MainScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
 import 'package:tawjihi/Utils/LocalStorage.dart';
@@ -59,7 +60,7 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
                     StorageUtil.getInstance().then((storage){
                      String major= StorageUtil.getString(Constant.MAJOR);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>
-                          Home(major=="literature"?true:false)));
+                          MainScreen(major=="literature"?true:false)));
                     });
 
                   },
@@ -190,7 +191,7 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
   Widget answerResultContainer(String header,String color){
     return Container(
       width: 152,
-      height: 156,
+      height: 170,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
           color:color=="red"?Colors.red:Colors.green, borderRadius: BorderRadius.circular(8)),
@@ -207,12 +208,12 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
                   fontWeight: FontWeight.w700),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 32,),
+            SizedBox(height: 24,),
             Text(
               color=="green"?"$correctResult":"$wrongResult",
               style: TextStyle(
                   color:Colors.white,
-                  fontSize: 18,
+                  fontSize: 24,
                   fontFamily: "Cairo",
                   fontWeight: FontWeight.w700),
               textAlign: TextAlign.center,

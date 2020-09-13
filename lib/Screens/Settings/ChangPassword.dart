@@ -18,6 +18,7 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
 
 
   bool obSecureText=true;
+  bool obSecureTextConfirm=true;
   IconData iconOn=Icons.visibility;
   IconData iconOff=Icons.visibility_off;
   TextEditingController newPasswordController=TextEditingController();
@@ -119,7 +120,7 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: TextFormField(
         keyboardType: TextInputType.number,
-        obscureText: true,
+        obscureText: obSecureText,
         controller: newPasswordController,
           validator:  Validators.compose([
             Validators.required(AppLocalizations.of(context).translate("error_field")),
@@ -140,13 +141,17 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
               const BorderSide(color: ColorProperties.AppColor, width: 1.0),
               borderRadius: BorderRadius.circular(4.0),
             ),
-            suffixIcon: Visibility(
-              visible: false,
-              child: Icon(
-                Icons.visibility_off,
-                color: Colors.black,
-              ),
-            )),
+            suffixIcon:
+            IconButton(
+              icon: Icon(obSecureText ? iconOff : iconOn),
+              color: Colors.black,
+              onPressed: () {
+                setState(() {
+                  obSecureText = obSecureText ? false : true;
+                });
+              },
+            )
+        ),
       ),
     );
   }
@@ -156,7 +161,7 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: TextFormField(
         keyboardType: TextInputType.number,
-        obscureText: true,
+        obscureText: obSecureTextConfirm,
         controller: confirmPasswordController,
         validator:  Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
@@ -177,13 +182,17 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
               const BorderSide(color: ColorProperties.AppColor, width: 1.0),
               borderRadius: BorderRadius.circular(4.0),
             ),
-            suffixIcon: Visibility(
-              visible: false,
-              child: Icon(
-                Icons.visibility_off,
-                color: Colors.black,
-              ),
-            )),
+            suffixIcon:
+            IconButton(
+              icon: Icon(obSecureTextConfirm ? iconOff : iconOn),
+              color: Colors.black,
+              onPressed: () {
+                setState(() {
+                  obSecureTextConfirm = obSecureTextConfirm ? false : true;
+                });
+              },
+            )
+        ),
       ),
     );
   }

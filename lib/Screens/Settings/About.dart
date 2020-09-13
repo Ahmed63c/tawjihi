@@ -28,7 +28,8 @@ class About extends StatelessWidget{
 
 
   Widget aboutText() {
-    String test="حتى هاربر موسكو ثم, وتقهقر المنتصرة حدة عل, التي فهرست واشتدّت أن أسر. كانت المتاخمة التغييرات أم وفي. ان وانتهاءً باستحداث قهر. ان ضمنها للأراضي الأوروبية ذ";
+    String test="نحن منصه تعليميه تخدم جميع الطلاب بالمراحل المختلفه";
+
     return Container(
       margin: EdgeInsets.only(left: 16,right: 16,top: 8),
       child: Text(test,

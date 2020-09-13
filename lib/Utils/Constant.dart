@@ -17,7 +17,9 @@ class Constant{
   static const int TECH_ID=9;
   static const int BIOLOGY_ID=10;
   static const int PHYSICS_ID=11;
-  static const int GENRAL_VIDEOS_ARTICLES=12;
+  static const int GUIDENESS=12;
+  static const int HOW_TO_CHOOSE=13;
+
 
 
   static const int ARTICLES_ID=1;
@@ -25,5 +27,19 @@ class Constant{
   static const int PAPERS_ID=3;
   static const int PREVIOUS_EXAMS_ID=4;
   static const int QUESTION_TOPICS_ID=5;
+  static const int SCHOOL_ORDER=6;
+  static const int EXAM_WORRY=7;
+  static const int PROBLEMS=8;
+  static const int SKILLS=9;
+  static const int COLLEGE_GIFT=10;
+  static const int ALL_COLLEGS=11;
+  static const int SPECHIALIZE_CHOOSE=12;
+
+
+
+
+
+
+
 
 }

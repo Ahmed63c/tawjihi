@@ -40,12 +40,12 @@ class CourseList extends StatelessWidget{
     return  Stack(children: <Widget>[
       ListView(
         children: <Widget>[
-          viewCard(context, 'videos', Icons.video_library,0),
-          viewCard(context, 'articles', Icons.assignment,Constant.ARTICLES_ID),
           viewCard(context, 'school_exams', Icons.content_paste,Constant.SCHOOL_EXAMS_ID),
           viewCard(context, 'work_papers', Icons.assignment_ind,Constant.PAPERS_ID),
           viewCard(context, 'previous_exams', Icons.question_answer,Constant.PREVIOUS_EXAMS_ID),
           viewCard(context, 'questions_topics', Icons.help,Constant.QUESTION_TOPICS_ID),
+          viewCard(context, 'articles', Icons.assignment,Constant.ARTICLES_ID),
+          viewCard(context, 'videos', Icons.video_library,0),
         ],
 
       ),

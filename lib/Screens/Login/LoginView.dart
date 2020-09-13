@@ -8,6 +8,7 @@ import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
+import 'package:tawjihi/Screens/Home/MainScreen.dart';
 import 'package:tawjihi/Screens/Login/VerfiyScreen.dart';
 import 'package:tawjihi/Screens/Login/VerifyScreenViewModel.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpFirst.dart';
@@ -62,7 +63,7 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
                   model.user.status = Status.empty;
                   if (model.userModel.details.user.status == "active") {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (_) => Home(
+                        builder: (_) => MainScreen(
                             model.userModel.details.user.major == "scientific"
                                 ? false
                                 : true)));
@@ -197,7 +198,8 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
                   const BorderSide(color: ColorProperties.AppColor, width: 1.0),
               borderRadius: BorderRadius.circular(4.0),
             ),
-            suffixIcon: IconButton(
+            suffixIcon:
+            IconButton(
               icon: Icon(obSecureText ? iconOff : iconOn),
               color: Colors.black,
               onPressed: () {
@@ -205,7 +207,8 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
                   obSecureText = obSecureText ? false : true;
                 });
               },
-            )),
+            )
+        ),
       ),
     );
   }
@@ -277,6 +280,8 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
                     builder: (_) => ChangeNotifierProvider(
                         create: (context) => SignUpViewModel(),
                         child: SignUpFirst())));
+              //  Navigator.of(context).push(MaterialPageRoute(builder: (_)=>MainScreen(false)));
+
               },
             )
           ],

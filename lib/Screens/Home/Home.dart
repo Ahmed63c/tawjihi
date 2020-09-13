@@ -14,49 +14,38 @@ import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
 
 class Home extends StatelessWidget {
-  bool isLitery=false;
+  bool isLitery = false;
+
   Home(this.isLitery);
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child:
-      Scaffold(
-          appBar: AppBar(
-            backgroundColor: ColorProperties.AppColor,
-            automaticallyImplyLeading: false,
-            title: Text(
-              AppLocalizations.of(context).translate("home"),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: "Cairo"),
-            ),
-            bottom: tabBar(context),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => SettingsScreen()));
-                },
-              )
-            ],
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: ColorProperties.AppColor,
+          title: Text(
+            AppLocalizations.of(context).translate("home"),
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                fontFamily: "Cairo"),
           ),
-          body: TabBarView(
-            children: <Widget>[
-              isLitery?homeAdby(context):home(context),
-              secondTab(context),
-              thirdTab(context)
-            ],
-          ),
-          floatingActionButton: speedDial()
-      ),
-    );
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => SettingsScreen()));
+              },
+            )
+          ],
+        ),
+        body: isLitery ? homeAdby(context) : home(context),
+        floatingActionButton: speedDial());
   }
 
   Widget tabBar(BuildContext context) {
@@ -93,153 +82,163 @@ class Home extends StatelessWidget {
   }
 
   Widget home(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
+    var size = MediaQuery.of(context).size;
     final double itemHeight = 220;
     final double itemWidth = 160;
-    return
-      GridView.count(
-        crossAxisCount: 2,
-        childAspectRatio: itemWidth / itemHeight,
-        children: <Widget>[
-          tile(context, "math",Constant.MATH_ID, Image.asset(
+    return GridView.count(
+      crossAxisCount: 2,
+      childAspectRatio: itemWidth / itemHeight,
+      children: <Widget>[
+        tile(
+          context,
+          "math",
+          Constant.MATH_ID,
+          Image.asset(
             'assets/images/math.png',
             fit: BoxFit.fill,
-          ),),
-          tile(context, "biology", Constant.BIOLOGY_ID,Image.asset(
+          ),
+        ),
+        tile(
+          context,
+          "biology",
+          Constant.BIOLOGY_ID,
+          Image.asset(
             'assets/images/biology.png',
             fit: BoxFit.fill,
-          ),),
-          tile(context, "chemistry", Constant.CHEMISTRY_ID,Image.asset(
+          ),
+        ),
+        tile(
+          context,
+          "chemistry",
+          Constant.CHEMISTRY_ID,
+          Image.asset(
             'assets/images/chemistry.png',
             fit: BoxFit.fill,
-          ),),
-          tile(context, "physics",Constant.PHYSICS_ID, Image.asset(
+          ),
+        ),
+        tile(
+          context,
+          "physics",
+          Constant.PHYSICS_ID,
+          Image.asset(
             'assets/images/physics.png',
             fit: BoxFit.fill,
-          ),),
-        ],
-      );
+          ),
+        ),
+      ],
+    );
   }
 
   Widget homeAdby(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
+    var size = MediaQuery.of(context).size;
     final double itemHeight = 220;
     final double itemWidth = 160;
     return GridView.count(
       crossAxisCount: 2,
       childAspectRatio: itemWidth / itemHeight,
       children: <Widget>[
-        tile(context, "math",Constant.MATH_ID, Image.asset(
-          'assets/images/math.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "sci",Constant.SCIENTIFIC_CALTURE_ID, Image.asset(
-          'assets/images/scientific_culture.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "history", Constant.HISTORY_ID,Image.asset(
-          'assets/images/history.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "geo", Constant.GEOGRAPHIC_ID,Image.asset(
-          'assets/images/geography.png',
-          fit: BoxFit.fill,
-        ),),
+        tile(
+          context,
+          "math",
+          Constant.MATH_ID,
+          Image.asset(
+            'assets/images/math.png',
+            fit: BoxFit.fill,
+          ),
+        ),
+        tile(
+          context,
+          "sci",
+          Constant.SCIENTIFIC_CALTURE_ID,
+          Image.asset(
+            'assets/images/scientific_culture.png',
+            fit: BoxFit.fill,
+          ),
+        ),
+        tile(
+          context,
+          "history",
+          Constant.HISTORY_ID,
+          Image.asset(
+            'assets/images/history.png',
+            fit: BoxFit.fill,
+          ),
+        ),
+        tile(
+          context,
+          "geo",
+          Constant.GEOGRAPHIC_ID,
+          Image.asset(
+            'assets/images/geography.png',
+            fit: BoxFit.fill,
+          ),
+        ),
       ],
     );
   }
 
-  Widget secondTab(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    final double itemHeight = 220;
-    final double itemWidth = 160;
-    return GridView.count(
-      crossAxisCount: 2,
-      childAspectRatio: itemWidth / itemHeight,
-      children: <Widget>[
-        tile(context, "english",Constant.ENGLISH_ID,Image.asset(
-          'assets/images/english.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "arabic",Constant.ARABIC_ID,Image.asset(
-          'assets/images/arabic.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "islamic", Constant.ISLAMIC_ID,Image.asset(
-          'assets/images/islamic.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "tech", Constant.TECH_ID,Image.asset(
-          'assets/images/technology.png',
-          fit: BoxFit.fill,
-        ),),
-      ],
-    );
-  }
+  // Widget secondTab(BuildContext context) {
+  //   var size = MediaQuery
+  //       .of(context)
+  //       .size;
+  //   final double itemHeight = 220;
+  //   final double itemWidth = 160;
+  //   return GridView.count(
+  //     crossAxisCount: 2,
+  //     childAspectRatio: itemWidth / itemHeight,
+  //     children: <Widget>[
+  //       tile(context, "english",Constant.ENGLISH_ID,Image.asset(
+  //         'assets/images/english.png',
+  //         fit: BoxFit.fill,
+  //       ),),
+  //       tile(context, "arabic",Constant.ARABIC_ID,Image.asset(
+  //         'assets/images/arabic.png',
+  //         fit: BoxFit.fill,
+  //       ),),
+  //       tile(context, "islamic", Constant.ISLAMIC_ID,Image.asset(
+  //         'assets/images/islamic.png',
+  //         fit: BoxFit.fill,
+  //       ),),
+  //       tile(context, "tech", Constant.TECH_ID,Image.asset(
+  //         'assets/images/technology.png',
+  //         fit: BoxFit.fill,
+  //       ),),
+  //     ],
+  //   );
+  // }
+  //
+  // Widget thirdTab(BuildContext context) {
+  //   var size = MediaQuery
+  //       .of(context)
+  //       .size;
+  //   final double itemHeight = 220;
+  //   final double itemWidth = 160;
+  //   return GridView.count(
+  //     crossAxisCount: 2,
+  //     childAspectRatio: itemWidth / itemHeight,
+  //     children: <Widget>[
+  //       tile(context, "articles", Constant.GENRAL_VIDEOS_ARTICLES,Image.asset(
+  //         'assets/images/articles.png',
+  //         fit: BoxFit.fill,
+  //       ),),
+  //       tile(context, "videos", Constant.GENRAL_VIDEOS_ARTICLES,Image.asset(
+  //         'assets/images/videos.png',
+  //         fit: BoxFit.fill,
+  //       ),),
+  //     ],
+  //   );
+  // }
 
-  Widget thirdTab(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    final double itemHeight = 220;
-    final double itemWidth = 160;
-    return GridView.count(
-      crossAxisCount: 2,
-      childAspectRatio: itemWidth / itemHeight,
-      children: <Widget>[
-        tile(context, "articles", Constant.GENRAL_VIDEOS_ARTICLES,Image.asset(
-          'assets/images/articles.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "videos", Constant.GENRAL_VIDEOS_ARTICLES,Image.asset(
-          'assets/images/videos.png',
-          fit: BoxFit.fill,
-        ),),
-      ],
-    );
-  }
-
-  Widget tile(BuildContext context, String courseName,int materialId, Image image) {
+  Widget tile(
+      BuildContext context, String courseName, int materialId, Image image) {
     return Container(
       child: GestureDetector(
         onTap: () {
-          if(materialId==Constant.GENRAL_VIDEOS_ARTICLES&&courseName=="articles"){
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
-                ChangeNotifierProvider(
-                  create: (context)=>WebViewListViewModel(),
-                  child: WebViewList("articles",courseName,materialId,1),
-                )
-            )
-            );
-
-          }
-          else if(materialId==Constant.GENRAL_VIDEOS_ARTICLES){
-            print('in videos');
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
-                ChangeNotifierProvider(
-                  create: (context)=>VideosViewModel(),
-                  child: Videos("videos",courseName,materialId,0),
-                )
-            )
-            );
-          }
-          else{
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => CourseList(courseName,materialId)));
-          }
-
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => CourseList(courseName, materialId)));
         },
         child: Stack(children: <Widget>[
-          Container(
-              height: double.infinity,
-
-              child: image),
+          Container(height: double.infinity, child: image),
           Positioned(
             bottom: 30,
             right: 20,
@@ -247,9 +246,10 @@ class Home extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  width: 80,
+                  width: 120,
                   margin: EdgeInsets.only(bottom: 4, right: 8, left: 8),
-                  child: MyText(courseName,
+                  child: MyText(
+                    courseName,
                     style: TextStyle(
                         fontFamily: "Cairo",
                         fontWeight: FontWeight.w700,
@@ -287,7 +287,7 @@ class Home extends StatelessWidget {
       closeManually: false,
       curve: Curves.bounceIn,
       overlayColor: Colors.black,
-      overlayOpacity: 0.5,
+      overlayOpacity: 0.0,
       onOpen: () => print('OPENING DIAL'),
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'Speed Dial',
@@ -302,8 +302,7 @@ class Home extends StatelessWidget {
         SpeedDialChild(
             child: Icon(Icons.mail),
             backgroundColor: Colors.red,
-            onTap: () => print('FIRST CHILD')
-        ),
+            onTap: () => print('FIRST CHILD')),
         SpeedDialChild(
           child: Icon(Icons.call),
           backgroundColor: Colors.green,

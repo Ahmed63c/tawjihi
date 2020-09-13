@@ -5,6 +5,7 @@ import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
+import 'package:tawjihi/Screens/Home/MainScreen.dart';
 import 'package:tawjihi/Screens/Login/VerifyScreenViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
@@ -41,7 +42,9 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
                   WidgetsBinding.instance.addPostFrameCallback((_){
                     if(model.user.status==Status.COMPLETED){
                       model.user.status=Status.empty;
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home(isLiteral)));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>MainScreen(isLiteral)));
+
+                   //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home(isLiteral)));
                     }
                   });
                   return  super.loadingIndicator(model.user.status==Status.LOADING, context);

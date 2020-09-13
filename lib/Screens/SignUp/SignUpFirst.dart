@@ -131,8 +131,8 @@ class _SignUpState extends State<SignUpFirst> {
         validator:
         Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
-          Validators.patternRegExp(
-              RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
+          // Validators.patternRegExp(
+          //     RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
           Validators.minLength(
               3,
               AppLocalizations.of(context)
@@ -164,8 +164,8 @@ class _SignUpState extends State<SignUpFirst> {
         controller: regionController,
         validator:  Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
-          Validators.patternRegExp(
-              RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
+          // Validators.patternRegExp(
+          //     RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
           Validators.minLength(
               3,
               AppLocalizations.of(context)
@@ -197,8 +197,8 @@ class _SignUpState extends State<SignUpFirst> {
         controller: schoolController,
         validator:   Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
-          Validators.patternRegExp(
-              RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
+          // Validators.patternRegExp(
+          //     RegExp(r"^[\u0621-\u064A0-9 ]+$"), AppLocalizations.of(context).translate("error_alphapet")),
           Validators.minLength(
               3,
               AppLocalizations.of(context)
