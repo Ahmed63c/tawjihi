@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -8,6 +10,7 @@ import 'package:tawjihi/Screens/Home/Home.dart';
 import 'package:tawjihi/Screens/Settings/SettingsScreen.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'CommonMaterials.dart';
 import 'HowToChooseScreen.dart';
@@ -17,11 +20,14 @@ class MainScreen extends StatefulWidget {
   MainScreen(this.isLiteral);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _MainScreenState createState() => _MainScreenState(isLiteral);
 }
 
 class _MainScreenState extends State<MainScreen>
     with WidgetsBindingObserver{
+  bool isLiteral;
+
+  _MainScreenState(this.isLiteral);
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -66,6 +72,7 @@ class _MainScreenState extends State<MainScreen>
             'assets/images/guide.png',fit: BoxFit.fill,),context),
           viewCard("how_to", Image.asset(
             'assets/images/howToChoose.png',fit: BoxFit.fill,),context),
+          Divider(height: 100,)
 
         ],
       ),
@@ -86,7 +93,7 @@ class _MainScreenState extends State<MainScreen>
       onTap: (){
         switch (name){
           case "main":
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Home(true)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Home(isLiteral)));
             break;
           case "common":
             Navigator.of(context).push(MaterialPageRoute(builder: (_)=>CommonMaterials()));
@@ -153,20 +160,47 @@ class _MainScreenState extends State<MainScreen>
         SpeedDialChild(
             child: Icon(Icons.mail),
             backgroundColor: Colors.red,
-            onTap: () => print('FIRST CHILD')
+            onTap: () => _launchURL()
         ),
         SpeedDialChild(
-          child: Icon(Icons.call),
+          child: Icon(Icons.call,color: Colors.white,),
           backgroundColor: Colors.green,
-          onTap: () => print('SECOND CHILD'),
+          onTap: () => launchWhatsApp(phone: "+970 599955706", message: "مرحبا"),
         ),
       ],
     );
   }
 
-  // @override
-  // Future<bool> didPopRoute() async {
-  //   await SystemShortcuts.home();
-  //   return true;
-  // }
+
+  void launchWhatsApp(
+      {@required String phone,
+        @required String message,
+      }) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/$phone/?text=${Uri.parse(message)}";
+      } else {
+        return "whatsapp://send?phone=$phone&text=${Uri.parse(message)}";
+      }
+    }
+
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+
+  void _launchURL() async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'Twjihi2021@gmail.com',
+    );
+    String  url = params.toString();
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print( 'Could not launch $url');
+    }
+  }
 }

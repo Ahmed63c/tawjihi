@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -12,6 +14,7 @@ import 'package:tawjihi/Screens/Settings/SettingsScreen.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GuidenessScreen extends StatelessWidget{
   @override
@@ -51,32 +54,41 @@ class GuidenessScreen extends StatelessWidget{
         .size;
     final double itemHeight = 220;
     final double itemWidth = 160;
-    return GridView.count(
-      crossAxisCount: 2,
-      childAspectRatio: itemWidth / itemHeight,
-      children: <Widget>[
-        tile(context, "videos", Constant.GUIDENESS,Image.asset(
-          'assets/images/videos.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "school_order",Constant.SCHOOL_ORDER,Image.asset(
-          'assets/images/examOrder.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "exam_worry", Constant.EXAM_WORRY,Image.asset(
-          'assets/images/examWorry.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "problems", Constant.PROBLEMS,Image.asset(
-          'assets/images/problems.png',
-          fit: BoxFit.fill,
-        ),),
-        tile(context, "skills", Constant.SKILLS,Image.asset(
-          'assets/images/skills.png',
-          fit: BoxFit.fill,
-        ),),
-      ],
-    );
+    return
+      ListView(
+        shrinkWrap: true,
+        children: [
+          GridView.count(
+            crossAxisCount: 2,
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            childAspectRatio: itemWidth / itemHeight,
+            children: <Widget>[
+              tile(context, "videos", Constant.GUIDENESS,Image.asset(
+                'assets/images/videos.png',
+                fit: BoxFit.fill,
+              ),),
+              tile(context, "school_order",Constant.SCHOOL_ORDER,Image.asset(
+                'assets/images/examOrder.png',
+                fit: BoxFit.fill,
+              ),),
+              tile(context, "exam_worry", Constant.EXAM_WORRY,Image.asset(
+                'assets/images/examWorry.png',
+                fit: BoxFit.fill,
+              ),),
+              tile(context, "problems", Constant.PROBLEMS,Image.asset(
+                'assets/images/problems.png',
+                fit: BoxFit.fill,
+              ),),
+              tile(context, "skills", Constant.SKILLS,Image.asset(
+                'assets/images/skills.png',
+                fit: BoxFit.fill,
+              ),),
+            ],
+          ),
+          Divider(height: 100,)
+        ],
+      );
   }
 
   Widget speedDial() {
@@ -101,12 +113,11 @@ class GuidenessScreen extends StatelessWidget{
         SpeedDialChild(
             child: Icon(Icons.mail),
             backgroundColor: Colors.red,
-            onTap: () => print('FIRST CHILD')
-        ),
+            onTap: () => _launchURL()),
         SpeedDialChild(
-          child: Icon(Icons.call),
+          child: Icon(Icons.call,color: Colors.white,),
           backgroundColor: Colors.green,
-          onTap: () => print('SECOND CHILD'),
+          onTap: () => launchWhatsApp(phone: "+970 599955706", message: "مرحبا"),
         ),
       ],
     );
@@ -207,5 +218,35 @@ class GuidenessScreen extends StatelessWidget{
     );
   }
 
+  void launchWhatsApp(
+      {@required String phone,
+        @required String message,
+      }) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/$phone/?text=${Uri.parse(message)}";
+      } else {
+        return "whatsapp://send?phone=$phone&text=${Uri.parse(message)}";
+      }
+    }
 
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+
+  void _launchURL() async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'Twjihi2021@gmail.com',
+    );
+    String  url = params.toString();
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print( 'Could not launch $url');
+    }
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -12,6 +14,7 @@ import 'package:tawjihi/Screens/Settings/SettingsScreen.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HowToChooseScreen extends StatelessWidget{
   @override
@@ -81,12 +84,12 @@ class HowToChooseScreen extends StatelessWidget{
         SpeedDialChild(
             child: Icon(Icons.mail),
             backgroundColor: Colors.red,
-            onTap: () => print('FIRST CHILD')
+            onTap: () => _launchURL()
         ),
         SpeedDialChild(
-          child: Icon(Icons.call),
+          child: Icon(Icons.call,color: Colors.white,),
           backgroundColor: Colors.green,
-          onTap: () => print('SECOND CHILD'),
+          onTap: () => launchWhatsApp(phone: "+970 599955706", message: "مرحبا"),
         ),
       ],
     );
@@ -151,4 +154,35 @@ class HowToChooseScreen extends StatelessWidget{
     );
   }
 
+  void launchWhatsApp(
+      {@required String phone,
+        @required String message,
+      }) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/$phone/?text=${Uri.parse(message)}";
+      } else {
+        return "whatsapp://send?phone=$phone&text=${Uri.parse(message)}";
+      }
+    }
+
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+
+  void _launchURL() async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'Twjihi2021@gmail.com',
+    );
+    String  url = params.toString();
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print( 'Could not launch $url');
+    }
+  }
 }

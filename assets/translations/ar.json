@@ -2,7 +2,7 @@
   "app_title": "توجيهي",
   "login": "تسجيل الدخول",
   "hint_email_login": "البريد الالكتروني",
-  "hint_password_login": "الرقم السري",
+  "hint_password_login": "كلمة المرور",
   "sign_in": "تسجيل الدخول",
   "dont_have_account": "ليس لديك حساب ؟",
   "already_have_acount": "هل لديك حساب ؟",
@@ -18,7 +18,7 @@
   "phone": "رقم الهاتف",
   "parent_phone": "رقم هاتف الوالد",
   "next": "التالي",
-  "hint_password_confirm": "تأكيد رقم المرور",
+  "hint_password_confirm": "تأكيد كلمة المرور",
   "literary": "أدبي",
   "scientific": "علمي",
   "Subscribe": "اشترك",
@@ -93,12 +93,12 @@
   "language": "اللغة",
   "change_language": "تغيير اللغة",
   "security": "الحماية",
-  "change_password": "تغيير رقم المرور",
+  "change_password": "تغيير كلمة المرور",
   "more": "المزيد",
   "about": "عن توجيهي",
-  "current_password": "الرقم السري الحالي",
-  "new_password": "الرقم السري الجديد",
-  "confirm_password": "تأكيد الرقم السري",
+  "current_password": "كلمة المرور الحالية",
+  "new_password": "كلمة المرور الجديدة",
+  "confirm_password": "تأكيد كلمة المرور",
   "update": "تحديث",
 
   "loading": "تحميل...",
@@ -106,7 +106,7 @@
   "error": "حدث خطأ ما تحقق من اتصال الإنترنت وحاول مرة أخري",
   "error_title": "خطأ",
   "error_empty": "لاتوجد بيانات ",
-  "error_match": "رقم المرور غير متطابق",
+  "error_match": "كلمة المرور غير متطابقة",
 
 
   "show_answer": "إظهار الإجابة",
@@ -115,13 +115,13 @@
   "verify_answer":"تصحيح",
 
   "error_email_validate": "البريد الالكتروني غير صحيح",
-  "error_pass_validate_less": "رقم المرور لايمكن ان يكون اقل من 9 ارقام",
-  "error_pass_validate_more": "رقم المرور لايمكن أن يكون اكثرمن 15 رقم",
+  "error_pass_validate_less": "كلمة المرور لايمكن ان تكون اقل من 9 حروف",
+  "error_pass_validate_more": "كلمة المرور لايمكن أن تكون اكثرمن 15 حرف",
   "error_phone_validate": "رقم الهاتف غير صحيح",
   "error_phone_less": "رقم الهاتف علي الاقل 11 رقم",
 
   "error_alphapet": "مسموح بالحروف فقط",
-  "error_less_character": "الاسم علي الاقل 3 حروف",
+  "error_less_character": "الاسم لا يمكن ان يكون  اقل من 3 حروف",
 
 
 
@@ -129,7 +129,9 @@
   "logout": "تسجيل الخروج",
   "error_code": "الكود غير صحيح",
 
-  "danger": "منطقة الخطر"
+  "danger": "منطقة الخطر",
+
+  "help": "كيفية الحصول علي كود تفعيل؟"
 
 
 

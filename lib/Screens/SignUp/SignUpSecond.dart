@@ -132,7 +132,7 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
     return Padding(
       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: TextFormField(
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         obscureText: obSecureText,
         controller: passController,
         validator:  Validators.compose([
@@ -171,7 +171,7 @@ class _SignUpSecond extends State<SignUpSecond> with BaseScreen{
     return Padding(
       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: TextFormField(
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         obscureText: obSecureText,
         controller: confirmController,
         validator:  Validators.compose([

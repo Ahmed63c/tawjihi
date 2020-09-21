@@ -90,7 +90,7 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
       child: Padding(
         padding: EdgeInsets.only(left: 16, right: 16, top: 16),
         child: TextFormField(
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.text,
           obscureText: true,
           decoration: InputDecoration(
               labelText:
@@ -119,7 +119,7 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
     return Padding(
       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: TextFormField(
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         obscureText: obSecureText,
         controller: newPasswordController,
           validator:  Validators.compose([
@@ -160,7 +160,7 @@ class _ChangePasswordState extends State<ChangePassword> with BaseScreen {
     return Padding(
       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: TextFormField(
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
         obscureText: obSecureTextConfirm,
         controller: confirmPasswordController,
         validator:  Validators.compose([

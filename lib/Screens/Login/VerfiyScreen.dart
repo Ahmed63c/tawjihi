@@ -11,25 +11,28 @@ import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 
 // ignore: must_be_immutable
-class VerifyScreen extends StatefulWidget{
+class VerifyScreen extends StatefulWidget {
   bool isLiteral;
+
   VerifyScreen(this.isLiteral);
+
   @override
   _VerifyScreenState createState() => _VerifyScreenState(isLiteral);
 }
 
 class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
-
   TextEditingController _editingController;
-  bool _validate=false;
+  bool _validate = false;
   bool isLiteral;
+
   _VerifyScreenState(this.isLiteral);
 
   @override
   void initState() {
     super.initState();
-    _editingController=new TextEditingController();
+    _editingController = new TextEditingController();
   }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -37,22 +40,21 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
         child: Stack(
           children: <Widget>[
             verifyCard(),
-            Consumer<VerifyScreenViewModel>(
-                builder: (context, model, child){
-                  WidgetsBinding.instance.addPostFrameCallback((_){
-                    if(model.user.status==Status.COMPLETED){
-                      model.user.status=Status.empty;
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>MainScreen(isLiteral)));
+            Consumer<VerifyScreenViewModel>(builder: (context, model, child) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (model.user.status == Status.COMPLETED) {
+                  model.user.status = Status.empty;
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => MainScreen(isLiteral)));
 
-                   //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home(isLiteral)));
-                    }
-                  });
-                  return  super.loadingIndicator(model.user.status==Status.LOADING, context);
-                })
-
+                  //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home(isLiteral)));
+                }
+              });
+              return super.loadingIndicator(
+                  model.user.status == Status.LOADING, context);
+            })
           ],
-        )
-    );
+        ));
   }
 
   Widget headerLogo() {
@@ -61,8 +63,7 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
       child: Align(
           alignment: Alignment.topCenter,
           child: Image.asset("assets/images/tawjihi_logo.png")),
-    )
-    ;
+    );
   }
 
   Widget verifyCard() {
@@ -79,7 +80,8 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
             cardHeader(),
             codeField(),
             errorView(),
-            verifyButton()
+            verifyButton(),
+            help()
           ],
         ),
       ),
@@ -106,9 +108,11 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
         keyboardType: TextInputType.number,
         controller: _editingController,
         decoration: InputDecoration(
-          errorText: _validate ? AppLocalizations.of(context).translate("error_field") : null,
+          errorText: _validate
+              ? AppLocalizations.of(context).translate("error_field")
+              : null,
           labelText: AppLocalizations.of(context).translate("verify_code"),
-          labelStyle: TextStyle(color: Colors.grey,fontFamily: "Cairo"),
+          labelStyle: TextStyle(color: Colors.grey, fontFamily: "Cairo"),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.grey, width: 1.0),
@@ -116,13 +120,12 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide:
-            const BorderSide(color: ColorProperties.AppColor, width: 1.0),
+                const BorderSide(color: ColorProperties.AppColor, width: 1.0),
             borderRadius: BorderRadius.circular(4.0),
           ),
         ),
       ),
     );
-
   }
 
   Widget verifyButton() {
@@ -131,18 +134,21 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
         child: RaisedButton(
           color: ColorProperties.AppColorHex,
           textColor: Colors.white,
-          onPressed: (){
+          onPressed: () {
             print("pressed");
             setState(() {
-              _editingController.text.isEmpty ? _validate = true : _validate = false;
+              _editingController.text.isEmpty
+                  ? _validate = true
+                  : _validate = false;
             });
 
-            if(!_validate){
-              Map<String,dynamic> paramaters=new Map();
+            if (!_validate) {
+              Map<String, dynamic> paramaters = new Map();
               paramaters.putIfAbsent("code", () => _editingController.text);
-              Provider.of<VerifyScreenViewModel>(context,listen: false).postData(paramaters);
+              Provider.of<VerifyScreenViewModel>(context, listen: false)
+                  .postData(paramaters);
             }
-            },
+          },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
@@ -158,23 +164,46 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
   }
 
   errorView() {
-    return
-      Consumer<VerifyScreenViewModel>(
-          builder: (context, model, child){
-            return Visibility(
-              visible: model.user.status==Status.ERROR,
-              child:
-              Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    AppLocalizations.of(context).translate("error_code"),
-                    style:
-                    TextStyle(fontSize: 16,fontWeight: FontWeight.w500,fontFamily: "Cairo",color: Colors.red),)
-              ),
-            );
-          });
-
+    return Consumer<VerifyScreenViewModel>(builder: (context, model, child) {
+      return Visibility(
+        visible: model.user.status == Status.ERROR,
+        child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              AppLocalizations.of(context).translate("error_code"),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "Cairo",
+                  color: Colors.red),
+            )),
+      );
+    });
   }
 
+  Widget help() {
+    String helpText="يمكنكم شراء عضوية داخل التطبيق عن طريق احدى الطرق التاليةاما عن طريق تحويل المبلغ المطلوب لحسابنا على خدمة jawwal pay  ومن ثم سنقوم بارسال الكود التفعيل بشكل الكتروني.واما عن طريق شراء كرت يحتوي على كود التفعيل من خلال عدة مكتبات مشهورة في منطقتكم.";
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            content: Text(helpText,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16,fontFamily: "Cairo"),),
+          ),
+        );
+      },
+      child: Container(
+        child: Center(
+            child: MyText(
+          'help',
+          style: TextStyle(
+            fontFamily: "Cairo",
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            decoration: TextDecoration.underline,
+          ),
+        )),
+      ),
+    );
+  }
 }
-

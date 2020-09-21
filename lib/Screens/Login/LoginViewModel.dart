@@ -35,7 +35,7 @@ void postData(Map<String,dynamic> data) async{
     }
     else{
       user=ApiResponse.error(userModel.message);
-      error="البريد الالكتروني رقم  او رقم المرور غير صحيح";
+      error="البريد الالكتروني او كلمة المرور غير صحيح";
       notifyListeners();
     }
   }
