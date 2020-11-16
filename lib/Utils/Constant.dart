@@ -3,6 +3,23 @@ class Constant{
   static const String TOKEN="token";
   static const String MAJOR="scientific";
   static const String LOGGED_IN="logged";
+  static const String ACTIVE="active";
+
+  static const String PHONE="PHONE";
+  static const String WHATS="WHATS";
+  static const String ABOUT="ABOUT";
+  static const String GET_CODE="GET_CODE";
+  static const String FACE_BOOK="FACE_BOOK";
+  static const String YOUTUBE="YOUTUBE";
+  static const String TWITTER="TWITTER";
+  static const String LINKED_IN="LINKED_IN";
+  static const String INSTGRAM="INSTGRAM";
+  static const String EMAIL="EMAIL";
+
+
+
+
+
 
 
 
@@ -19,6 +36,12 @@ class Constant{
   static const int PHYSICS_ID=11;
   static const int GUIDENESS=12;
   static const int HOW_TO_CHOOSE=13;
+  static const int ARABIC_ID_ADBY=14;
+  static const int ENGLISH_ID_ADBY=15;
+  static const int TECH_ID_ALMY=16;
+  static const int MATH_ID_ALMY=18;
+
+
 
 
 
@@ -34,6 +57,11 @@ class Constant{
   static const int COLLEGE_GIFT=10;
   static const int ALL_COLLEGS=11;
   static const int SPECHIALIZE_CHOOSE=12;
+
+
+
+  static const String APP_VERSION="1";
+
 
 
 

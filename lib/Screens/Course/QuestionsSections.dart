@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/NumberOfQAScreen.dart';
+import 'package:tawjihi/Screens/Course/NumberOfQAViewModel.dart';
 import 'package:tawjihi/Screens/Course/QuestionAndAnswersScreen.dart';
 import 'package:tawjihi/Screens/Course/QuestionSectionsViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
@@ -56,11 +58,20 @@ class _QuestionsSectionsState extends State<QuestionsSections> with BaseScreen {
       onTap: () {
         String title = model.units.details[index].name;
         int sectionId = model.units.details[index].id;
+        // Navigator.of(context).push(MaterialPageRoute(
+        //   builder: (_) => ChangeNotifierProvider(
+        //       create: (context) => QuestionsAndAnswersViewModel(),
+        //       child: QAndAnswers(title, materialId, unitId, sectionId)),
+        // ));
+
         Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
-              create: (context) => QuestionsAndAnswersViewModel(),
-              child: QAndAnswers(title, materialId, unitId, sectionId)),
+              create: (context) => NumberOFQAViewModel(),
+              child: NumberOfQAScreen(title, materialId, unitId, sectionId)),
         ));
+
+
+
       },
       child: Directionality(
         textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,

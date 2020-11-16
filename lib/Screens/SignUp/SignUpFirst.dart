@@ -231,7 +231,7 @@ class _SignUpState extends State<SignUpFirst> {
         validator: Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
           Validators.minLength(
-              11,
+              10,
               AppLocalizations.of(context)
                   .translate("error_phone_less")),
 //           Validators.patternRegExp(
@@ -264,7 +264,7 @@ class _SignUpState extends State<SignUpFirst> {
         validator: Validators.compose([
           Validators.required(AppLocalizations.of(context).translate("error_field")),
           Validators.minLength(
-              11,
+              10,
               AppLocalizations.of(context)
                   .translate("error_phone_less")),
 

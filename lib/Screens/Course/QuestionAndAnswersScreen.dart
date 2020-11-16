@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tex/flutter_tex.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
@@ -14,9 +15,10 @@ class QAndAnswers extends StatefulWidget{
   int materialId;
   int unitId;
   int sectionId;
-  QAndAnswers(this.title,this.materialId,this.unitId,this.sectionId);
+  int quizId;
+  QAndAnswers(this.title,this.materialId,this.unitId,this.sectionId,this.quizId);
   @override
-  _QAndAnswersState createState() => _QAndAnswersState(title,materialId,unitId,sectionId);
+  _QAndAnswersState createState() => _QAndAnswersState(title,materialId,unitId,sectionId,quizId);
 }
 
 class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
@@ -24,7 +26,8 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
   int materialId;
   int unitId;
   int sectionId;
-  _QAndAnswersState(this.title,this.materialId,this.unitId,this.sectionId);
+  int quizId;
+  _QAndAnswersState(this.title,this.materialId,this.unitId,this.sectionId,this.quizId);
   bool isVisble=false;
 
   @override
@@ -63,15 +66,16 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
 
   Widget QuestionCard(int index,QuestionsAndAnswersViewModel model) {
     return Card(
-      elevation: 4,
+      elevation: 16,
       margin: EdgeInsets.symmetric(horizontal: 16,vertical: 16),
-      child: Column(
+      child:
+      Column(
         mainAxisSize: MainAxisSize.min,
        crossAxisAlignment: CrossAxisAlignment.start,
        children: <Widget>[
          questionNumber(model,index),
-         questionImage(model,index),
          questionText(model,index),
+         questionImage(model,index),
          divider(),
          Child(model, index,materialId)
        ],
@@ -87,9 +91,9 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
       child: Row(
         children: <Widget>[
           MyText("question_number",style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w400,
-              fontSize: 14,color: Colors.grey),),
-          Text("${index+1}",style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w400,
-              fontSize: 14,color: Colors.grey),),
+              fontSize: 14,color: Colors.grey,decoration: TextDecoration.underline),),
+          Text(" ${index+1} :",style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w400,
+              fontSize: 14,color: Colors.grey,decoration: TextDecoration.underline),),
         ],
       )
     );
@@ -103,29 +107,47 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
       },
       child: Visibility(
         visible: model.QAndAnswers.details[index].pics!=null,
-        child: Card(
-          child: Container(
-              margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-              height: 80,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-              child:  Image(image: CachedNetworkImageProvider(model.QAndAnswers.details[index].pics==null?"":
-              model.QAndAnswers.details[index].pics),fit: BoxFit.contain,),
-          ),
+        child:
+        Card(
+          elevation: 10,
+          child:
+         Column(children: [
+           Container(
+             margin: EdgeInsets.only(left: 16,right: 16,top: 8),
+             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+             child:  Image(image: CachedNetworkImageProvider(model.QAndAnswers.details[index].pics==null?"":
+             model.QAndAnswers.details[index].pics),fit: BoxFit.fill,),
+           ),
+         ],)
         ),
       ),
     );
   }
 
   Widget questionText(QuestionsAndAnswersViewModel model,int index) {
-    return Directionality(
-      textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
-      child: Container(
-        margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-        child: Text(model.QAndAnswers.details[index].title==null?"":
-        model.QAndAnswers.details[index].title,
-          style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
-              fontSize: 16,color: Colors.black),),
+    return Visibility(
+      visible:model.QAndAnswers.details[index].title!=null ,
+      child: Directionality(
+        textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
+        child: Container(
+          margin: EdgeInsets.only(left: 16,right: 16,top: 8),
+          child:model.QAndAnswers.details[index].title==null?Container(): TeXView(
+            fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
+            style: TeXViewStyle(contentColor: Colors.black,fontStyle:
+            TeXViewFontStyle(fontSize: 16,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.bold,),
+                backgroundColor: Colors.white ),
+            renderingEngine: TeXViewRenderingEngine.katex(),
+            loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
+            child: TeXViewContainer(child: TeXViewDocument(
+                model.QAndAnswers.details[index].title,
+                style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
+            )),
+          ),
+          // Text(model.QAndAnswers.details[index].title==null?"":
+          // model.QAndAnswers.details[index].title,
+          //   style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w700,
+          //       fontSize: 15,color: Colors.black),),
+        ),
       ),
     );
   }
@@ -192,8 +214,10 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
     paramaters.putIfAbsent("materialId", () =>materialId);
     paramaters.putIfAbsent("unitId", () => unitId);
     paramaters.putIfAbsent("sectionId", () => sectionId);
+    paramaters.putIfAbsent("quizId", () => quizId);
     Provider.of<QuestionsAndAnswersViewModel>(context,listen: false).get(paramaters);
   }
+
 }
 
 
@@ -219,6 +243,13 @@ class ChildState extends State<Child> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Divider(
+          color: Colors.blue,
+          height: 32,
+          thickness: 1,
+          indent: 32,
+          endIndent: 32,
+        ),
         answerImage(model,index),
         answerText(model,index,materialId),
         showAnswerButton()
@@ -251,9 +282,9 @@ class ChildState extends State<Child> {
                   isVisble?"hide_answer":"show_answer",
                   style: TextStyle(
                       color: Colors.blue,
-                      fontSize: 16,
+                      fontSize: 14,
                       fontFamily: "Cairo",
-                      fontWeight: FontWeight.w700),
+                      fontWeight: FontWeight.w500),
                 ),
                 Container(
                     margin: EdgeInsets.only(top: 4),
@@ -272,15 +303,20 @@ class ChildState extends State<Child> {
       },
       child: Visibility(
         visible: isVisble&&model.QAndAnswers.details[index].answer_pic!=null,
-        child: Card(
-          child: Container(
-            margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-            height: 80,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-            child:  Image(image: CachedNetworkImageProvider(model.QAndAnswers.details[index].answer_pic==null?
-            "":model.QAndAnswers.details[index].answer_pic,),fit: BoxFit.contain,),
-          ),
+        child:
+        Card(
+          elevation: 10,
+            child:
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+              Container(
+                margin: EdgeInsets.only(left: 16,right: 16,top: 8),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                child:  Image(image: CachedNetworkImageProvider(model.QAndAnswers.details[index].answer_pic==null?
+                "":model.QAndAnswers.details[index].answer_pic,),fit: BoxFit.contain,),
+              ),
+            ],)
         ),
       ),
     );
@@ -294,10 +330,23 @@ class ChildState extends State<Child> {
         textDirection:materialID==2?TextDirection.ltr:TextDirection.rtl,
         child: Container(
           margin: EdgeInsets.only(left: 16,right: 16,top: 16),
-          child: Text(model.QAndAnswers.details[index].answer==null?"":
-          model.QAndAnswers.details[index].answer,
-            style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
-                fontSize: 16,color: Colors.black),),
+          child: model.QAndAnswers.details[index].answer==null?Container():
+          TeXView(
+            loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
+            fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
+            style: TeXViewStyle(contentColor: Colors.black,fontStyle:
+            TeXViewFontStyle(fontSize: 18,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.w300 ) ),
+            renderingEngine: TeXViewRenderingEngine.katex(),
+            child: TeXViewContainer(child: TeXViewDocument(
+                r""+model.QAndAnswers.details[index].answer,
+                style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
+            )),
+          ),
+
+          // Text(model.QAndAnswers.details[index].answer==null?"":
+          // model.QAndAnswers.details[index].answer,
+          //   style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w500,
+          //       fontSize: 16,color: Colors.black),),
         ),
       ),
     );

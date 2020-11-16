@@ -6,37 +6,34 @@ import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
 import 'package:tawjihi/Screens/Home/MainScreen.dart';
+import 'package:tawjihi/Screens/Login/ForgetPasswordViewModel.dart';
+import 'package:tawjihi/Screens/Login/LoginView.dart';
+import 'package:tawjihi/Screens/Login/LoginViewModel.dart';
 import 'package:tawjihi/Screens/Login/VerifyScreenViewModel.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
 import 'package:tawjihi/Utils/LocalStorage.dart';
+import 'package:wc_form_validators/wc_form_validators.dart';
 
 // ignore: must_be_immutable
-class VerifyScreen extends StatefulWidget {
-  bool isLiteral;
-
-  VerifyScreen(this.isLiteral);
-
+class ForgetPasswordView extends StatefulWidget {
   @override
-  _VerifyScreenState createState() => _VerifyScreenState(isLiteral);
+  _ForgetPasswordView createState() => _ForgetPasswordView();
 }
 
-class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
-  TextEditingController _editingController;
+class _ForgetPasswordView extends State<ForgetPasswordView> with BaseScreen {
+  TextEditingController emailController;
   bool _validate = false;
   bool isLiteral;
   String helpText="";
 
-  _VerifyScreenState(this.isLiteral);
+  _ForgetPasswordView();
 
   @override
   void initState() {
     super.initState();
-    _editingController = new TextEditingController();
-    //  StorageUtil.getInstance().then((storage) {
-    //    helpText=StorageUtil.getString(Constant.GET_CODE);
-    // });
+    emailController = new TextEditingController();
   }
 
   @override
@@ -45,19 +42,21 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
         color: ColorProperties.AppColor,
         child: Stack(
           children: <Widget>[
-            verifyCard(),
-            Consumer<VerifyScreenViewModel>(builder: (context, model, child) {
+            forgetPasswordCard(),
+            Consumer<ForgetPasswordViewModel>(builder: (context, model, child) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (model.user.status == Status.COMPLETED) {
-                  model.user.status = Status.empty;
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => MainScreen(isLiteral)));
-
-                  //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>Home(isLiteral)));
+                if (model.resposeWrapper.status == Status.COMPLETED) {
+                  model.resposeWrapper.status = Status.empty;
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) =>ChangeNotifierProvider(
+                        create: (context)=>LoginViewModel(),
+                        child: LoginView(),))
+                  );
                 }
               });
               return super.loadingIndicator(
-                  model.user.status == Status.LOADING, context);
+                  model.resposeWrapper.status == Status.LOADING, context);
             })
           ],
         ));
@@ -72,7 +71,7 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
     );
   }
 
-  Widget verifyCard() {
+  Widget forgetPasswordCard() {
     return Center(
       child: Container(
         margin: EdgeInsets.only(top: 80),
@@ -84,10 +83,11 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
           shrinkWrap: true,
           children: <Widget>[
             cardHeader(),
-            codeField(),
+            cardHeadereXplain(),
+            emailField(),
             errorView(),
-            verifyButton(),
-            help()
+            confirmButton(),
+
           ],
         ),
       ),
@@ -97,7 +97,7 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
   Widget cardHeader() {
     return Center(
       child: MyText(
-        "verify",
+        "Forgotten_password",
         style: TextStyle(
             color: ColorProperties.colorAccent,
             fontWeight: FontWeight.w700,
@@ -107,17 +107,35 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
     );
   }
 
-  Widget codeField() {
+  Widget cardHeadereXplain() {
+    return Center(
+      child: MyText(
+        "Forgotten_password_details",
+        style: TextStyle(
+            color: ColorProperties.colorAccent,
+            fontWeight: FontWeight.w500,
+            fontFamily: "Cairo",
+            fontSize: 14),
+      ),
+    );
+  }
+
+  Widget emailField() {
     return Padding(
-      padding: EdgeInsets.only(left: 16, right: 16, top: 8),
+      padding: EdgeInsets.only(left: 16, right: 16, top: 30),
       child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: _editingController,
+        keyboardType: TextInputType.emailAddress,
+        controller: emailController,
+        validator: Validators.compose([
+          Validators.required(
+              AppLocalizations.of(context).translate("error_field")),
+          Validators.patternRegExp(
+              RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)"
+              r"*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"),
+              AppLocalizations.of(context).translate("error_email_validate")),
+        ]),
         decoration: InputDecoration(
-          errorText: _validate
-              ? AppLocalizations.of(context).translate("error_field")
-              : null,
-          labelText: AppLocalizations.of(context).translate("verify_code"),
+          labelText: AppLocalizations.of(context).translate("hint_email_login"),
           labelStyle: TextStyle(color: Colors.grey, fontFamily: "Cairo"),
           contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border: OutlineInputBorder(
@@ -126,7 +144,7 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide:
-                const BorderSide(color: ColorProperties.AppColor, width: 1.0),
+            const BorderSide(color: ColorProperties.AppColor, width: 1.0),
             borderRadius: BorderRadius.circular(4.0),
           ),
         ),
@@ -134,7 +152,7 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
     );
   }
 
-  Widget verifyButton() {
+  Widget confirmButton() {
     return Padding(
         padding: EdgeInsets.only(left: 16, right: 16, top: 48, bottom: 40),
         child: RaisedButton(
@@ -143,15 +161,15 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
           onPressed: () {
             print("pressed");
             setState(() {
-              _editingController.text.isEmpty
+              emailController.text.isEmpty
                   ? _validate = true
                   : _validate = false;
             });
 
             if (!_validate) {
               Map<String, dynamic> paramaters = new Map();
-              paramaters.putIfAbsent("code", () => _editingController.text);
-              Provider.of<VerifyScreenViewModel>(context, listen: false)
+              paramaters.putIfAbsent("email", () => emailController.text);
+              Provider.of<ForgetPasswordViewModel>(context, listen: false)
                   .postData(paramaters);
             }
           },
@@ -159,7 +177,7 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
             borderRadius: BorderRadius.circular(4),
           ),
           child: MyText(
-            "verify_button",
+            "confirm",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 14,
@@ -170,13 +188,13 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
   }
 
   errorView() {
-    return Consumer<VerifyScreenViewModel>(builder: (context, model, child) {
+    return Consumer<ForgetPasswordViewModel>(builder: (context, model, child) {
       return Visibility(
-        visible: model.user.status == Status.ERROR,
+        visible: model.resposeWrapper.status == Status.ERROR,
         child: Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              AppLocalizations.of(context).translate("error_code"),
+              model.error,
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -185,32 +203,5 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
             )),
       );
     });
-  }
-
-  Widget help() {
-    helpText="يمكنكم شراء عضوية داخل التطبيق عن طريق احدى الطرق التاليةاما عن طريق تحويل المبلغ المطلوب لحسابنا على خدمة jawwal pay "
-           " ومن ثم سنقوم بارسال الكود التفعيل بشكل الكتروني.واما عن طريق شراء كرت يحتوي على كود التفعيل من خلال عدة مكتبات مشهورة في منطقتكم.";
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            content: Text(helpText,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16,fontFamily: "Cairo"),),
-          ),
-        );
-      },
-      child: Container(
-        child: Center(
-            child: MyText(
-          'help',
-          style: TextStyle(
-            fontFamily: "Cairo",
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            decoration: TextDecoration.underline,
-          ),
-        )),
-      ),
-    );
   }
 }

@@ -6,10 +6,12 @@
   "sign_in": "Sign in",
   "dont_have_account": "Don't Have Account",
   "already_have_acount": "Already Have Account",
+  "Forgotten_password": "Forgotten_password",
   "verify": "Verify Account",
   "verify_code": "Verify Code",
   "verify_button": "Verify",
-
+  "confirm": "Confirm",
+"Forgotten_password_details": "email will sent to u with new password",
 
   "register_new_user": "Register New User",
   "full_name": "Full Name",
@@ -39,6 +41,8 @@
   "geo": "Geographic",
   "arabic": "Arabic",
   "english": "English",
+  "arabicAdby": "Arabic",
+  "englishAdby": "English",
   "articles": "Articles",
   "islamic": "Islamic Education",
   "tech": "Technology",
@@ -74,6 +78,8 @@
   "clear_up": "Clear Up",
   "interpret": "Interpret",
   "units": "Units",
+  "Tests": "Tests",
+
 
 
   "multi_choice": "Multiple Choice",

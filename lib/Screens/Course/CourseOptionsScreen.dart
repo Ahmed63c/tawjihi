@@ -44,8 +44,11 @@ class CourseList extends StatelessWidget{
           viewCard(context, 'work_papers', Icons.assignment_ind,Constant.PAPERS_ID),
           viewCard(context, 'previous_exams', Icons.question_answer,Constant.PREVIOUS_EXAMS_ID),
           viewCard(context, 'questions_topics', Icons.help,Constant.QUESTION_TOPICS_ID),
-          viewCard(context, 'articles', Icons.assignment,Constant.ARTICLES_ID),
-          viewCard(context, 'videos', Icons.video_library,0),
+          viewCard(context, 'articles', Icons.lock,Constant.ARTICLES_ID),
+          viewCard(context, 'videos', Icons.lock,0),
+          SizedBox(
+            height: 200,
+          )
         ],
 
       ),
@@ -71,15 +74,13 @@ class CourseList extends StatelessWidget{
         elevation: 4,
         child: GestureDetector(
           onTap: (){
-            if(type==0){
-              print('in videos');
-              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
-                  ChangeNotifierProvider(
-                    create: (context)=>VideosViewModel(),
-                    child: Videos(title,courseName,materialId,type),
-                  )
-              )
-              );
+            if(type==0||type==1){
+              // Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
+              //     ChangeNotifierProvider(
+              //       create: (context)=>VideosViewModel(),
+              //       child: Videos(title,courseName,materialId,type),
+              //     )
+              // ));
             }
             else{
               Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
@@ -106,7 +107,7 @@ class CourseList extends StatelessWidget{
     return Container(
       margin: EdgeInsets.only(left: 8,right: 8),
       width: MediaQuery.of(context).size.width-16,
-          height: 50,
+          height: 70,
           child: RaisedButton(
             color: ColorProperties.AppColorHex,
             textColor: Colors.white,
@@ -124,7 +125,7 @@ class CourseList extends StatelessWidget{
               "start",
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 16,
                   fontFamily: "Cairo",
                   fontWeight: FontWeight.w700),
             ),
@@ -135,7 +136,7 @@ class CourseList extends StatelessWidget{
     return Container(
         margin: EdgeInsets.only(left: 8,right: 8),
         width: MediaQuery.of(context).size.width-16,
-        height: 50,
+        height: 70,
         child: RaisedButton(
           color: Colors.white,
           textColor: ColorProperties.AppColor,
@@ -156,7 +157,7 @@ class CourseList extends StatelessWidget{
             "qustions_answers",
             style: TextStyle(
                 color: ColorProperties.AppColor,
-                fontSize: 14,
+                fontSize: 16,
                 fontFamily: "Cairo",
                 fontWeight: FontWeight.w700),
           ),

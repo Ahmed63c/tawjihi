@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/NumberOfTestScreen.dart';
+import 'package:tawjihi/Screens/Course/NumberOfTestsViewModel.dart';
 import 'package:tawjihi/Screens/Course/QuestionSectionsViewModel.dart';
 import 'package:tawjihi/Screens/Course/QuestionsSections.dart';
 import 'package:tawjihi/Screens/Course/TestScreen.dart';
@@ -53,10 +55,16 @@ class _UnitsState extends State<Units> with BaseScreen {
     return GestureDetector(
       onTap: () {
            if(fromTest){
+             // Navigator.of(context)
+             //     .push(MaterialPageRoute(builder: (_) => ChangeNotifierProvider(
+             //   create: (context)=>TestViewModel(),
+             //   child: TestScreen(materialId,model.units.details[index].id),
+             // )));
+
              Navigator.of(context)
                  .push(MaterialPageRoute(builder: (_) => ChangeNotifierProvider(
-               create: (context)=>TestViewModel(),
-               child: TestScreen(materialId,model.units.details[index].id),
+               create: (context)=>NumberOfTestsViewModel(),
+               child: NumberOfTestsScreen(materialId,model.units.details[index].id),
              )));
            }
            else{

@@ -24,18 +24,40 @@ void postData(Map<String,dynamic> data) async{
     var parsedResponse=json.decode(response.data);
     userModel=UserModel.fromJson(parsedResponse);
     if(userModel.status=="01"){
-      StorageUtil.getInstance().then((storage){
-        StorageUtil.putString(Constant.TOKEN, userModel.details.access_token);
-        StorageUtil.putString(Constant.MAJOR, userModel.details.user.major);
-        StorageUtil.putBool(Constant.LOGGED_IN,true);
-      });
-      user=ApiResponse.completed(userModel);
-      notifyListeners();
+
+      if(userModel.details.appVersion==Constant.APP_VERSION){
+        StorageUtil.getInstance().then((storage){
+          StorageUtil.putBool(Constant.LOGGED_IN,true);
+          StorageUtil.putString(Constant.TOKEN, userModel.details.access_token);
+          StorageUtil.putString(Constant.MAJOR, userModel.details.user.major);
+          StorageUtil.putString(Constant.PHONE, userModel.details.configuration[0].value);
+          StorageUtil.putString(Constant.WHATS, userModel.details.configuration[1].value);
+          StorageUtil.putString(Constant.ABOUT, userModel.details.configuration[2].value);
+          StorageUtil.putString(Constant.GET_CODE, userModel.details.configuration[3].value);
+          StorageUtil.putString(Constant.FACE_BOOK, userModel.details.configuration[4].value);
+          StorageUtil.putString(Constant.YOUTUBE, userModel.details.configuration[5].value);
+          StorageUtil.putString(Constant.TWITTER, userModel.details.configuration[6].value);
+          StorageUtil.putString(Constant.LINKED_IN, userModel.details.configuration[7].value);
+          StorageUtil.putString(Constant.INSTGRAM, userModel.details.configuration[8].value);
+          StorageUtil.putString(Constant.EMAIL, userModel.details.configuration[9].value);
+        });
+        user=ApiResponse.completed(userModel);
+        notifyListeners();
+      }
+
+
+      else{
+        error="تم تحديث نسخه التطبيق من فضلك حمل النسخة الجديدة";
+        user=ApiResponse.error(error);
+        notifyListeners();
+      }
+
+
 
     }
     else{
       user=ApiResponse.error(userModel.message);
-      error="البريد الالكتروني او كلمة المرور غير صحيح";
+      error=userModel.message;
       notifyListeners();
     }
   }

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
+import 'package:tawjihi/Screens/Course/NumberOfTestScreen.dart';
+import 'package:tawjihi/Screens/Course/NumberOfTestsViewModel.dart';
 import 'package:tawjihi/Screens/Course/TestViewModel.dart';
 import 'package:tawjihi/Screens/Course/UnitsViewModel.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
@@ -139,8 +141,8 @@ class _TestResultsScreenState extends State<TestResultsScreen> {
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (_)=>
                 ChangeNotifierProvider(
-                  create: (context)=>TestViewModel(),
-                  child: TestScreen(materialId,unitId),
+                  create: (context)=>NumberOfTestsViewModel(),
+                  child: NumberOfTestsScreen(materialId,unitId),
                 )));
           },
           shape: RoundedRectangleBorder(

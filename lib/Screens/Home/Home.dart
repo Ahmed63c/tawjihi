@@ -100,7 +100,7 @@ class Home extends StatelessWidget {
             tile(
               context,
               "math",
-              Constant.MATH_ID,
+              Constant.MATH_ID_ALMY,
               Image.asset(
                 'assets/images/math.png',
                 fit: BoxFit.fill,
@@ -190,6 +190,24 @@ class Home extends StatelessWidget {
               Constant.GEOGRAPHIC_ID,
               Image.asset(
                 'assets/images/geography.png',
+                fit: BoxFit.fill,
+              ),
+            ),
+            tile(
+              context,
+              "englishAdby",
+              Constant.ENGLISH_ID_ADBY,
+              Image.asset(
+                'assets/images/english.png',
+                fit: BoxFit.fill,
+              ),
+            ),
+            tile(
+              context,
+              "arabicAdby",
+              Constant.ARABIC_ID_ADBY,
+              Image.asset(
+                'assets/images/arabic.png',
                 fit: BoxFit.fill,
               ),
             ),

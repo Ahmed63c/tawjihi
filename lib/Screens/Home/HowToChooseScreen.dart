@@ -127,7 +127,7 @@ class HowToChooseScreen extends StatelessWidget{
       },
       child:Stack(children: <Widget>[
         Container(
-            height: 130,
+            height: 140,
             width: MediaQuery.of(context).size.width,
             child: image),
         Positioned(

@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
-import 'package:tawjihi/Screens/Login/LoginView.dart';
 import 'package:tawjihi/Screens/Settings/About.dart';
 import 'package:tawjihi/Screens/Settings/ChangPassword.dart';
 import 'package:tawjihi/Screens/Settings/ChangeLanguage.dart';
 import 'package:tawjihi/Screens/Settings/ChangePasswordViewModel.dart';
 import 'package:tawjihi/SplashScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 
 class SettingsScreen extends StatelessWidget{
   @override
@@ -78,7 +79,11 @@ class SettingsScreen extends StatelessWidget{
 
                 break;
               case "about":
-                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>About()));
+                StorageUtil.getInstance().then((storage) {
+                  String about_String=StorageUtil.getString(Constant.ABOUT);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_)=>About(about_String)));
+
+                });
                 break;
 
               case "logout":

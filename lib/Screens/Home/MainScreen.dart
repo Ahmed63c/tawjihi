@@ -96,7 +96,7 @@ class _MainScreenState extends State<MainScreen>
             Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Home(isLiteral)));
             break;
           case "common":
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>CommonMaterials()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>CommonMaterials(isLiteral)));
             break;
           case "guidance":
             Navigator.of(context).push(MaterialPageRoute(builder: (_)=>GuidenessScreen()));

@@ -9,6 +9,8 @@ import 'package:tawjihi/Screens/BaseScreen.dart';
 import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Home/Home.dart';
 import 'package:tawjihi/Screens/Home/MainScreen.dart';
+import 'package:tawjihi/Screens/Login/ForgetPasswordView.dart';
+import 'package:tawjihi/Screens/Login/ForgetPasswordViewModel.dart';
 import 'package:tawjihi/Screens/Login/VerfiyScreen.dart';
 import 'package:tawjihi/Screens/Login/VerifyScreenViewModel.dart';
 import 'package:tawjihi/Screens/SignUp/SignUpFirst.dart';
@@ -18,6 +20,7 @@ import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
 import 'package:tawjihi/Utils/LocalStorage.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 
 import 'LoginViewModel.dart';
 
@@ -35,11 +38,13 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
   bool _validate = false;
   bool _validateEmail = false;
   var formKey = GlobalKey<FormState>();
+  String deviceId ;
 
   @override
   void initState() {
     super.initState();
     //  checkLoggedIn();
+     getDeviceID();
   }
 
   @override
@@ -62,6 +67,9 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
                 if (model.user.status == Status.COMPLETED) {
                   model.user.status = Status.empty;
                   if (model.userModel.details.user.status == "active") {
+                    StorageUtil.getInstance().then((storage){
+                      StorageUtil.putBool(Constant.ACTIVE,true);
+                    });
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (_) => MainScreen(
                             model.userModel.details.user.major == "scientific"
@@ -224,6 +232,8 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
               Map<String, dynamic> paramaters = new Map();
               paramaters.putIfAbsent("email", () => emailController.text);
               paramaters.putIfAbsent("password", () => passController.text);
+              paramaters.putIfAbsent("deviceId", () => deviceId);
+
               Provider.of<LoginViewModel>(context, listen: false)
                   .postData(paramaters);
             }
@@ -247,62 +257,95 @@ class _LoginViewState extends State<LoginView> with BaseScreen {
   Widget bottomSignUp() {
     return Align(
         alignment: Alignment.bottomCenter,
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 1, right: 1, bottom: 16),
-              child: MyText(
-                "dont_have_account",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontFamily: "Cairo",
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-            GestureDetector(
-              child: Padding(
-                padding: EdgeInsets.only(left: 1, right: 1, bottom: 16),
-                child: MyText(
-                  "register_new_user",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontFamily: "Cairo",
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline),
-                ),
-              ),
-              onTap: () {
+          children: [
+            GestureDetector(child: Center(child: MyText("Forgotten_password",style:
+            TextStyle(fontSize: 14,color:Colors.white,fontFamily: "Cairo",decoration: TextDecoration.underline ),)),
+              onTap:(){
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => ChangeNotifierProvider(
-                        create: (context) => SignUpViewModel(),
-                        child: SignUpFirst())));
-              //  Navigator.of(context).push(MaterialPageRoute(builder: (_)=>MainScreen(false)));
+                        create: (context) => ForgetPasswordViewModel(),
+                        child: ForgetPasswordView())));
+              } ,),
+            SizedBox(height: 4,),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 1, right: 1, bottom: 16),
+                  child: MyText(
+                    "dont_have_account",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: "Cairo",
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                GestureDetector(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 1, right: 1, bottom: 16),
+                    child: MyText(
+                      "register_new_user",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: "Cairo",
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => ChangeNotifierProvider(
+                            create: (context) => SignUpViewModel(),
+                            child: SignUpFirst())));
+                    //  Navigator.of(context).push(MaterialPageRoute(builder: (_)=>MainScreen(false)));
 
-              },
+                  },
+                )
+              ],
             )
           ],
-        ));
+        )
+        );
   }
 
   errorView() {
     return Consumer<LoginViewModel>(builder: (context, model, child) {
-      return Visibility(
+      return
+        Visibility(
         visible: model.user.status == Status.ERROR,
-        child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              model.error,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: "Cairo",
-                  color: Colors.red),
-            )),
+        child: errorWidgets(model)
       );
     });
   }
+
+  void getDeviceID() async{
+    deviceId= await PlatformDeviceId.getDeviceId;
+    print("deviceId ----------   "+deviceId);
+
+  }
+
+ Widget errorWidgets(LoginViewModel model) {
+    return model.error=="تم تحديث نسخه التطبيق من فضلك حمل النسخة الجديدة"?
+    AlertDialog(
+      title: Text(" تحديث جديد"),
+      content: const Text(
+          'تم تحديث نسخه التطبيق من فضلك حمل النسخة الجديدة'),)
+        :  Container(
+       margin: EdgeInsets.symmetric(horizontal: 20),
+       child: Text(
+         model.error,
+         style: TextStyle(
+             fontSize: 16,
+             fontWeight: FontWeight.w500,
+             fontFamily: "Cairo",
+             color: Colors.red),
+       ));
+ }
 }
+
+

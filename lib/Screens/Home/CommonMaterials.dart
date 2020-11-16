@@ -17,6 +17,8 @@ import 'package:tawjihi/Utils/Constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommonMaterials extends StatelessWidget {
+  bool isLiteral;
+  CommonMaterials(this.isLiteral);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,11 +50,14 @@ class CommonMaterials extends StatelessWidget {
   }
 
   Widget commonMaterials(BuildContext context) {
+    return common(context);
+  }
+
+  Widget common(BuildContext context){
     var size = MediaQuery.of(context).size;
     final double itemHeight = 220;
     final double itemWidth = 160;
-    return
-    ListView(
+    return  ListView(
       shrinkWrap: true,
       children: [
         GridView.count(
@@ -91,7 +96,7 @@ class CommonMaterials extends StatelessWidget {
             tile(
               context,
               "tech",
-              Constant.TECH_ID,
+              Constant.TECH_ID_ALMY,
               Image.asset(
                 'assets/images/technology.png',
                 fit: BoxFit.fill,

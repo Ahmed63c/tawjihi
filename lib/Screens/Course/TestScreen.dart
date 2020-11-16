@@ -10,18 +10,20 @@ import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/TestResultsScreen.dart';
 import 'package:tawjihi/Screens/Course/TestViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:flutter_tex/flutter_tex.dart';
 
 class TestScreen extends StatefulWidget {
   int materialId;
   int unitId;
+  int quizId;
 
-  TestScreen(this.materialId,this.unitId);
+  TestScreen(this.materialId,this.unitId,this.quizId);
   @override
-  _TestScreenState createState() => _TestScreenState(materialId,unitId);
+  _TestScreenState createState() => _TestScreenState(materialId,unitId,quizId);
 }
 
 class _TestScreenState extends State<TestScreen> with BaseScreen {
-
+  int quizId;
   int questionNum=0;
   int corrctResult=0;
   int wrongResult=0;
@@ -37,7 +39,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   String choose="";
   int materialId;
   int unitId;
-  _TestScreenState(this.materialId,this.unitId);
+  _TestScreenState(this.materialId,this.unitId,this.quizId);
 
   @override
   Widget build(BuildContext context) {
@@ -170,8 +172,9 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
                     "choose",
                     style: TextStyle(
                         fontFamily: "Cairo",
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
                         color: Colors.grey),
                   ),
                 ),
@@ -193,7 +196,6 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
 
   Widget nextButton(TestViewModel model) {
     return
-
       Consumer<TestViewModel>(builder: (context, model, child) {
         return Container(
             height: 40,
@@ -212,13 +214,15 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
                     if(verifyAnswer){
                       if((questionNum+1)==model.test.details.length){
                         Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (_) => TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
+                            .push(MaterialPageRoute(builder: (_) =>
+                            TestResultsScreen(corrctResult,wrongResult,materialId,unitId)));}
                       else{
                         questionNum++;
                         model.notifyListeners();
                       }
                       verifyAnswer=false;
                       verifyAnswerText=false;
+                      choose="";
 
                     }
 
@@ -334,28 +338,97 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
     if(model.test.details==null||model.test.details.isEmpty){
       return Container();
     }
-    else
-    return
-       GestureDetector(
-         onTap: (){
+    else {
+      return
+       Visibility(
+         visible:model.test.details[questionNum].pics!=null&&model.test.details[questionNum].pics!="",
+         child: GestureDetector(
+           onTap: (){
+             Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ImageDialog(
+                 model.test.details[questionNum].pics==null
+                 ? "" : model.test.details[questionNum].pics)
+             ));
+           },
+           child: Card(
+             elevation: 2,
+             child:Column(
+               children: [
+                 Container(
+                     margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                     child: Image(image: CachedNetworkImageProvider(model.test.details[questionNum].pics==null
+                         ? "" : model.test.details[questionNum].pics),fit: BoxFit.contain,)
+                 ),
+               ],
+             )
 
-           Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ImageDialog(model.test.details[questionNum].pics==null
-               ? "" : model.test.details[questionNum].pics)
-           ));
-         },
-         child: Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-            height: 80,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-            child: Image(image: CachedNetworkImageProvider(model.test.details[questionNum].pics==null
-                ? "" : model.test.details[questionNum].pics),fit: BoxFit.contain,)
-    ),
-       )
-    ;
+           ),
+         ),
+       );
+    }
   }
 
   Widget questionText(TestViewModel model) {
-    String test ="";
+
+
+    String teX = Uri.encodeComponent(r"""
+  <p>
+    A simple Example to render \( \rm\\TeX \) in flutter<br>
+
+    <style>
+      .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        width: 40%;
+      }
+
+      .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .container {
+        padding: 2px 16px;
+
+
+    </style>
+    <div class="card">
+      <div class="container">
+        <p>
+          \begin{align}
+          \dot{x} & = \sigma(y-x) \\
+          \dot{y} & = \rho x - y - xz \\
+          \dot{z} & = -\beta z + xy
+          \end{align}
+        </p>
+      </div>
+    </div>
+
+    <br>
+    <br>
+
+    When \(a \ne 0 \), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+
+    $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$<br>
+
+    $$ \oint_C {E \cdot d\ell = - \frac{d}{{dt}}} \int_S {B_n dA} $$<br>
+
+    Bohr Radius
+
+    \( a_0 = \frac{{\hbar ^2 }}{{m_e ke^2 }} \)<br>
+
+    Relationship between Energy and Principal Quantum Number
+
+    \( E_n = - R_H \left( {\frac{1}{{n^2 }}} \right) = \frac{{ - 2.178 \times 10^{ - 18} }}{{n^2 }}joule \)<br><br>
+
+    $$\ce{CO2 + C -> 2 CO}$$ <br><br>
+
+    $$\ce{Hg^2+ ->[I-] HgI2 ->[I-] [Hg^{II}I4]^2-}$$ <br><br>
+
+    $$\ce{x Na(NH4)HPO4 ->[\Delta] (NaPO3)_x + x NH3 ^ + x H2O}$$ <br><br>
+
+  </p>
+  """);
+    String test ="<p><span dir=\"RTL\" lang=\"AR-EG\" style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Arial&quot;,sans-serif\">كل الآتية صحيح فيما يتعلق بالذرة المهيجة عدا :</span></span></span></p>";
     if(model.test.details==null||model.test.details.isEmpty){
       return Container();
     }
@@ -363,15 +436,28 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
       return Directionality(
         textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
         child: Container(
-        margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-        child: Text(
-          model.test.details[questionNum].title,
-          style: TextStyle(
-              fontFamily: "Cairo",
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-              color: Colors.black),
-        ),
+        margin: EdgeInsets.only(left: 16, right: 16, top: 8,bottom: 8),
+        child:model.test.details[questionNum].title!=null?
+        TeXView(
+          loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
+          fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
+          style: TeXViewStyle(contentColor: Colors.black,fontStyle:
+          TeXViewFontStyle(fontSize: 18,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.bold ) ),
+          renderingEngine: TeXViewRenderingEngine.katex(),
+          child: TeXViewContainer(child: TeXViewDocument(
+              r""+model.test.details[questionNum].title,
+              style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
+          )),
+        ):Container(),
+
+        // Text(
+        //   model.test.details[questionNum].title,
+        //   style: TextStyle(
+        //       fontFamily: "Cairo",
+        //       fontWeight: FontWeight.w700,
+        //       fontSize: 16,
+        //       color: Colors.black),
+        // ),
     ),
       );
     }
@@ -426,17 +512,20 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(left: 16, right: 16),
                   width: 12,
                   height: 12,
-                  decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+                   decoration: BoxDecoration(shape: BoxShape.circle, color: getDotColor(answer, model.test.details[questionNum].correct_answer)),
+                  child: getIcon(answer, model.test.details[questionNum].correct_answer),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 16, right: 16),
-                  child: Text(
+                  width: 250,
+                  child:
+                  Text(
                   answer,
                     style: TextStyle(
                         fontFamily: "Cairo",
@@ -456,6 +545,7 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
     Map<String, dynamic> paramaters = new Map();
     paramaters.putIfAbsent("materialId", () => materialId);
     paramaters.putIfAbsent("unitId", () => unitId);
+    paramaters.putIfAbsent("quizId", () => quizId);
     Provider.of<TestViewModel>(context, listen: false).get(paramaters);
   }
 
@@ -473,7 +563,6 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
           return rightAnswer;
         }
     }
-
     else{
       if(answer==choose){
         return ColorProperties.AppColor;
@@ -483,9 +572,6 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
       }
 
     }
-
-
-
     }
 
   answerTextColor(String answer,String correctAnswer) {
@@ -509,8 +595,63 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
         return Colors.white;
       }
       else{
-        return Colors.grey;
+        return Colors.grey[800];
       }    }
 
+  }
+
+  getDotColor(String answer,String correctAnswer) {
+    if(!clicked&&verifyAnswer){
+      if(choose==correctAnswer&&answer==choose){
+        return Colors.green[900];
+      }
+      else if(answer!=correctAnswer&&answer==choose){
+        return Colors.red[900];
+      }
+      else if (answer==correctAnswer&&answer!=choose){
+        return Colors.green[900];
+      }
+    }
+    else{
+      if(answer==choose){
+        return Colors.blue;
+      }
+      else{
+        return Colors.grey;
+      }
+    }
+  }
+
+  Widget getIcon(String answer,String correctAnswer) {
+    if(!clicked&&verifyAnswer){
+      if(choose==correctAnswer&&answer==choose){
+        return CircleAvatar(
+            backgroundColor: Colors.green[900],
+            child: Icon(Icons.check,color: Colors.white,size: 12,));
+      }
+      else if(answer!=correctAnswer&&answer==choose){
+        return CircleAvatar(
+            backgroundColor: Colors.red[900],
+            child: Icon(Icons.close,color: Colors.white,size: 12,));
+      }
+      else if (answer==correctAnswer&&answer!=choose){
+        return CircleAvatar(
+            backgroundColor: Colors.green[900],
+            child: Icon(Icons.check,color: Colors.white,size: 12,));
+      }
+      else{
+        return Icon(Icons.fiber_manual_record,color: Colors.grey,size: 12,) ;
+      }
+    }
+    else{
+      if(answer==choose){
+        return CircleAvatar(
+          backgroundColor: Colors.blue,
+            child: Icon(Icons.check,color: Colors.white,size: 12,));
+      }
+      else{
+        return Icon(Icons.fiber_manual_record,color: Colors.grey,size: 12,) ;
+      }
+    }
   }
 }
