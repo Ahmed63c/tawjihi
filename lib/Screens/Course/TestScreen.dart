@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_html/style.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
@@ -10,7 +11,8 @@ import 'package:tawjihi/Screens/ComonWidget/Text.dart';
 import 'package:tawjihi/Screens/Course/TestResultsScreen.dart';
 import 'package:tawjihi/Screens/Course/TestViewModel.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
-import 'package:flutter_tex/flutter_tex.dart';
+import 'package:flutter_html/flutter_html.dart';
+
 
 class TestScreen extends StatefulWidget {
   int materialId;
@@ -369,66 +371,6 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
   }
 
   Widget questionText(TestViewModel model) {
-
-
-    String teX = Uri.encodeComponent(r"""
-  <p>
-    A simple Example to render \( \rm\\TeX \) in flutter<br>
-
-    <style>
-      .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        transition: 0.3s;
-        width: 40%;
-      }
-
-      .card:hover {
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-      }
-
-      .container {
-        padding: 2px 16px;
-
-
-    </style>
-    <div class="card">
-      <div class="container">
-        <p>
-          \begin{align}
-          \dot{x} & = \sigma(y-x) \\
-          \dot{y} & = \rho x - y - xz \\
-          \dot{z} & = -\beta z + xy
-          \end{align}
-        </p>
-      </div>
-    </div>
-
-    <br>
-    <br>
-
-    When \(a \ne 0 \), there are two solutions to \(ax^2 + bx + c = 0\) and they are
-
-    $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$<br>
-
-    $$ \oint_C {E \cdot d\ell = - \frac{d}{{dt}}} \int_S {B_n dA} $$<br>
-
-    Bohr Radius
-
-    \( a_0 = \frac{{\hbar ^2 }}{{m_e ke^2 }} \)<br>
-
-    Relationship between Energy and Principal Quantum Number
-
-    \( E_n = - R_H \left( {\frac{1}{{n^2 }}} \right) = \frac{{ - 2.178 \times 10^{ - 18} }}{{n^2 }}joule \)<br><br>
-
-    $$\ce{CO2 + C -> 2 CO}$$ <br><br>
-
-    $$\ce{Hg^2+ ->[I-] HgI2 ->[I-] [Hg^{II}I4]^2-}$$ <br><br>
-
-    $$\ce{x Na(NH4)HPO4 ->[\Delta] (NaPO3)_x + x NH3 ^ + x H2O}$$ <br><br>
-
-  </p>
-  """);
-    String test ="<p><span dir=\"RTL\" lang=\"AR-EG\" style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Arial&quot;,sans-serif\">كل الآتية صحيح فيما يتعلق بالذرة المهيجة عدا :</span></span></span></p>";
     if(model.test.details==null||model.test.details.isEmpty){
       return Container();
     }
@@ -436,20 +378,30 @@ class _TestScreenState extends State<TestScreen> with BaseScreen {
       return Directionality(
         textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
         child: Container(
-        margin: EdgeInsets.only(left: 16, right: 16, top: 8,bottom: 8),
+        margin: EdgeInsets.only(left: 84, right: 8, top: 8,bottom: 8),
         child:model.test.details[questionNum].title!=null?
-        TeXView(
-          loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
-          fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
-          style: TeXViewStyle(contentColor: Colors.black,fontStyle:
-          TeXViewFontStyle(fontSize: 18,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.bold ) ),
-          renderingEngine: TeXViewRenderingEngine.katex(),
-          child: TeXViewContainer(child: TeXViewDocument(
-              r""+model.test.details[questionNum].title,
-              style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
-          )),
-        ):Container(),
+        Html(data:model.test.details[questionNum].title,
+          style: {
+            "body": Style(
+              fontSize: FontSize(16.0),
+              fontWeight: FontWeight.bold,
+              fontFamily: "Cairo",
+            ),
+          },
+        )
+        :Container(),
 
+            // TeXView(
+            //   loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
+            //   fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
+            //   style: TeXViewStyle(contentColor: Colors.black,fontStyle:
+            //   TeXViewFontStyle(fontSize: 18,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.bold ) ),
+            //   renderingEngine: TeXViewRenderingEngine.katex(),
+            //   child: TeXViewContainer(child: TeXViewDocument(
+            //       r""+model.test.details[questionNum].title,
+            //       style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
+            //   )),
+            // ):
         // Text(
         //   model.test.details[questionNum].title,
         //   style: TextStyle(

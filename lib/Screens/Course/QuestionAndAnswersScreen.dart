@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tex/flutter_tex.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:provider/provider.dart';
 import 'package:tawjihi/Network/BaseApiResponse.dart';
 import 'package:tawjihi/Screens/BaseScreen.dart';
@@ -131,18 +132,29 @@ class _QAndAnswersState extends State<QAndAnswers> with BaseScreen {
         textDirection:materialId==2?TextDirection.ltr:TextDirection.rtl,
         child: Container(
           margin: EdgeInsets.only(left: 16,right: 16,top: 8),
-          child:model.QAndAnswers.details[index].title==null?Container(): TeXView(
-            fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
-            style: TeXViewStyle(contentColor: Colors.black,fontStyle:
-            TeXViewFontStyle(fontSize: 16,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.bold,),
-                backgroundColor: Colors.white ),
-            renderingEngine: TeXViewRenderingEngine.katex(),
-            loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
-            child: TeXViewContainer(child: TeXViewDocument(
-                model.QAndAnswers.details[index].title,
-                style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
-            )),
+          child:model.QAndAnswers.details[index].title==null?Container():
+          Html(data: model.QAndAnswers.details[index].title,
+            style: {
+              "body": Style(
+                  fontSize: FontSize(16.0),
+                  fontWeight: FontWeight.w600,
+                  fontFamily: "Cairo",
+                  color: Colors.black
+              ),
+            },
           ),
+          // TeXView(
+          //   fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
+          //   style: TeXViewStyle(contentColor: Colors.black,fontStyle:
+          //   TeXViewFontStyle(fontSize: 16,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.bold,),
+          //       backgroundColor: Colors.white ),
+          //   renderingEngine: TeXViewRenderingEngine.katex(),
+          //   loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
+          //   child: TeXViewContainer(child: TeXViewDocument(
+          //       model.QAndAnswers.details[index].title,
+          //       style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
+          //   )),
+          // ),
           // Text(model.QAndAnswers.details[index].title==null?"":
           // model.QAndAnswers.details[index].title,
           //   style: TextStyle(fontFamily: "Cairo",fontWeight: FontWeight.w700,
@@ -331,17 +343,27 @@ class ChildState extends State<Child> {
         child: Container(
           margin: EdgeInsets.only(left: 16,right: 16,top: 16),
           child: model.QAndAnswers.details[index].answer==null?Container():
-          TeXView(
-            loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
-            fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
-            style: TeXViewStyle(contentColor: Colors.black,fontStyle:
-            TeXViewFontStyle(fontSize: 18,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.w300 ) ),
-            renderingEngine: TeXViewRenderingEngine.katex(),
-            child: TeXViewContainer(child: TeXViewDocument(
-                r""+model.QAndAnswers.details[index].answer,
-                style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
-            )),
-          ),
+          Html(data: model.QAndAnswers.details[index].answer,
+            style: {
+              "body": Style(
+                  fontSize: FontSize(18.0),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Cairo",
+                  color: Colors.black
+              ),
+            },
+          )
+          // TeXView(
+          //   loadingWidgetBuilder:(context)=>Center(child: CupertinoActivityIndicator(radius: 10)),
+          //   fonts: [TeXViewFont(fontFamily: "Cairo",src: "assets/fonts")],
+          //   style: TeXViewStyle(contentColor: Colors.black,fontStyle:
+          //   TeXViewFontStyle(fontSize: 18,fontFamily: "Cairo",fontWeight:TeXViewFontWeight.w300 ) ),
+          //   renderingEngine: TeXViewRenderingEngine.katex(),
+          //   child: TeXViewContainer(child: TeXViewDocument(
+          //       r""+model.QAndAnswers.details[index].answer,
+          //       style: TeXViewStyle(textAlign: materialId==2?TeXViewTextAlign.Left:TeXViewTextAlign.Right)
+          //   )),
+          // ),
 
           // Text(model.QAndAnswers.details[index].answer==null?"":
           // model.QAndAnswers.details[index].answer,

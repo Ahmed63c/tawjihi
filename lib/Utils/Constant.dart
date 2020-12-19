@@ -60,7 +60,7 @@ class Constant{
 
 
 
-  static const String APP_VERSION="1";
+  static const String APP_VERSION="2";
 
 
 

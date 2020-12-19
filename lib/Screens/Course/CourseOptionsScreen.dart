@@ -40,12 +40,12 @@ class CourseList extends StatelessWidget{
     return  Stack(children: <Widget>[
       ListView(
         children: <Widget>[
-          viewCard(context, 'school_exams', Icons.content_paste,Constant.SCHOOL_EXAMS_ID),
-          viewCard(context, 'work_papers', Icons.assignment_ind,Constant.PAPERS_ID),
+       //   viewCard(context, 'school_exams', Icons.content_paste,Constant.SCHOOL_EXAMS_ID),
+        //  viewCard(context, 'work_papers', Icons.assignment_ind,Constant.PAPERS_ID),
           viewCard(context, 'previous_exams', Icons.question_answer,Constant.PREVIOUS_EXAMS_ID),
           viewCard(context, 'questions_topics', Icons.help,Constant.QUESTION_TOPICS_ID),
-          viewCard(context, 'articles', Icons.lock,Constant.ARTICLES_ID),
-          viewCard(context, 'videos', Icons.lock,0),
+          //viewCard(context, 'articles', Icons.lock,Constant.ARTICLES_ID),
+         // viewCard(context, 'videos', Icons.lock,0),
           SizedBox(
             height: 200,
           )
@@ -58,8 +58,10 @@ class CourseList extends StatelessWidget{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             startTestButton(context),
-            SizedBox(height: 8,),
-            questionsAndAnswrsButton(context)
+            SizedBox(height: 20,),
+            questionsAndAnswrsButton(context),
+            SizedBox(height: 50,)
+
 
           ],
         ),
@@ -107,7 +109,7 @@ class CourseList extends StatelessWidget{
     return Container(
       margin: EdgeInsets.only(left: 8,right: 8),
       width: MediaQuery.of(context).size.width-16,
-          height: 70,
+          height: 140,
           child: RaisedButton(
             color: ColorProperties.AppColorHex,
             textColor: Colors.white,
@@ -125,7 +127,7 @@ class CourseList extends StatelessWidget{
               "start",
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 18,
                   fontFamily: "Cairo",
                   fontWeight: FontWeight.w700),
             ),
@@ -136,7 +138,7 @@ class CourseList extends StatelessWidget{
     return Container(
         margin: EdgeInsets.only(left: 8,right: 8),
         width: MediaQuery.of(context).size.width-16,
-        height: 70,
+        height: 140,
         child: RaisedButton(
           color: Colors.white,
           textColor: ColorProperties.AppColor,
@@ -157,7 +159,7 @@ class CourseList extends StatelessWidget{
             "qustions_answers",
             style: TextStyle(
                 color: ColorProperties.AppColor,
-                fontSize: 16,
+                fontSize: 18,
                 fontFamily: "Cairo",
                 fontWeight: FontWeight.w700),
           ),
