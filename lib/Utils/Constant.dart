@@ -2,7 +2,7 @@ class Constant{
   static const String BASE_URL="http://tawjihiapp.com/api/";
   static const String TOKEN="token";
   static const String MAJOR="scientific";
-  static const String LOGGED_IN="logged";
+  static const String LOGGED_IN="2";
   static const String ACTIVE="active";
 
   static const String PHONE="PHONE";

@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
   handleNavigation() {
     StorageUtil.getInstance().then((storage){
       String major=StorageUtil.getString(Constant.MAJOR);
-      if(StorageUtil.getBool(Constant.LOGGED_IN)&&StorageUtil.getBool(Constant.ACTIVE)){
+      if(StorageUtil.getString(Constant.LOGGED_IN)==Constant.APP_VERSION&&StorageUtil.getBool(Constant.ACTIVE)){
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => MainScreen(major == "scientific"
                     ? false

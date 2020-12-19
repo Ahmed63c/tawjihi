@@ -27,7 +27,7 @@ void postData(Map<String,dynamic> data) async{
 
       if(userModel.details.appVersion==Constant.APP_VERSION){
         StorageUtil.getInstance().then((storage){
-          StorageUtil.putBool(Constant.LOGGED_IN,true);
+          StorageUtil.putString(Constant.LOGGED_IN,userModel.details.appVersion);
           StorageUtil.putString(Constant.TOKEN, userModel.details.access_token);
           StorageUtil.putString(Constant.MAJOR, userModel.details.user.major);
           StorageUtil.putString(Constant.PHONE, userModel.details.configuration[0].value);
