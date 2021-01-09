@@ -28,6 +28,11 @@ class VideosViewModel with ChangeNotifier{
         notifyListeners();
 
       }
+      else if(videos.status=="05"){
+        videosWrapper=ApiResponse.error(videos.message);
+        error="انت غيرمفعل لاستخدام التطبيق";
+        notifyListeners();
+      }
       else{
         videosWrapper=ApiResponse.error(videos.message);
         notifyListeners();

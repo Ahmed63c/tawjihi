@@ -10,6 +10,8 @@ import 'package:tawjihi/Screens/Home/Home.dart';
 import 'package:tawjihi/Screens/Settings/SettingsScreen.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'CommonMaterials.dart';
@@ -141,9 +143,9 @@ class _MainScreenState extends State<MainScreen>
   Widget speedDial(BuildContext context) {
     return SpeedDial(
       marginRight: 32,
-      marginBottom: 16,
+      marginBottom: 32,
       closeManually: false,
-      curve: Curves.ease,
+      curve: Curves.bounceIn,
       overlayColor: Colors.black,
       overlayOpacity: 0.0,
       onOpen: () => print('OPENING DIAL'),
@@ -160,12 +162,21 @@ class _MainScreenState extends State<MainScreen>
         SpeedDialChild(
             child: Icon(Icons.mail),
             backgroundColor: Colors.red,
-            onTap: () => _launchURL()
+            onTap: ()
+            {
+              StorageUtil.getInstance().then((storage){
+                String email=StorageUtil.getString(Constant.EMAIL);
+                _launchURL(email);
+              });}
         ),
         SpeedDialChild(
-          child: Icon(Icons.call,color: Colors.white,),
-          backgroundColor: Colors.green,
-          onTap: () => launchWhatsApp(phone: "+970 599955706", message: "مرحبا"),
+            child: Icon(Icons.call,color: Colors.white,),
+            backgroundColor: Colors.green,
+            onTap: () {
+              StorageUtil.getInstance().then((storage){
+                String phone=StorageUtil.getString(Constant.PHONE);
+                launchWhatsApp(phone: phone, message: "مرحبا");
+              });}
         ),
       ],
     );
@@ -191,10 +202,10 @@ class _MainScreenState extends State<MainScreen>
     }
   }
 
-  void _launchURL() async {
+  void _launchURL(String email) async {
     final Uri params = Uri(
       scheme: 'mailto',
-      path: 'Twjihi2021@gmail.com',
+      path: email,
     );
     String  url = params.toString();
     if (await canLaunch(url)) {

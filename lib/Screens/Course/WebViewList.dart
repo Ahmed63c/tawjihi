@@ -9,7 +9,9 @@ import 'package:tawjihi/Screens/Course/WebViewListViewModel.dart';
 import 'package:tawjihi/Screens/Course/WebView.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 
+import '../../SplashScreen.dart';
 import '../BaseScreen.dart';
 
 class WebViewList extends StatefulWidget {
@@ -56,6 +58,19 @@ class _WebViewListState extends State<WebViewList> with BaseScreen {
       children: <Widget>[
         Consumer<WebViewListViewModel>(
             builder: (context, model, child){
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (model.materials.status == Status.ERROR){
+                  if(model.error=="انت غيرمفعل لاستخدام التطبيق"){
+                    StorageUtil.getInstance().then((storage){
+                      StorageUtil.putString(Constant.LOGGED_IN,"-1");
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (_) => SplashScreen()));
+                    });
+
+                  }
+                }
+              });
               return  switchWidgets(model,context);
             })
 

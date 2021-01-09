@@ -11,7 +11,10 @@ import 'package:tawjihi/Screens/Course/QuestionsSections.dart';
 import 'package:tawjihi/Screens/Course/TestScreen.dart';
 import 'package:tawjihi/Screens/Course/TestViewModel.dart';
 import 'package:tawjihi/Screens/Course/UnitsViewModel.dart';
+import 'package:tawjihi/SplashScreen.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
+import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 
 class Units extends StatefulWidget {
 
@@ -44,6 +47,19 @@ class _UnitsState extends State<Units> with BaseScreen {
         body: Stack(
           children: <Widget>[
             Consumer<UnitsViewModel>(builder: (context, model, child) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (model.unitsResponseWraper.status == Status.ERROR){
+                  if(model.error=="انت غيرمفعل لاستخدام التطبيق"){
+                  StorageUtil.getInstance().then((storage){
+                    StorageUtil.putString(Constant.LOGGED_IN,"-1");
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (_) => SplashScreen()));
+                  });
+
+                  }
+                }
+              });
               return switchWidgets(model, context);
             })
           ],

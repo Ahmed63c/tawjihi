@@ -12,7 +12,9 @@ import 'package:tawjihi/Screens/Course/WebViewListViewModel.dart';
 import 'package:tawjihi/Screens/Course/WebView.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 import 'package:video_player/video_player.dart';
+import '../../SplashScreen.dart';
 import '../BaseScreen.dart';
 import 'PlayerItem.dart';
 
@@ -61,6 +63,19 @@ class _VideosState extends State<Videos> with BaseScreen {
     return Stack(
       children: <Widget>[
         Consumer<VideosViewModel>(builder: (context, model, child) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (model.videosWrapper.status == Status.ERROR){
+              if(model.error=="انت غيرمفعل لاستخدام التطبيق"){
+                StorageUtil.getInstance().then((storage){
+                  StorageUtil.putString(Constant.LOGGED_IN,"-1");
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => SplashScreen()));
+                });
+
+              }
+            }
+          });
           return switchWidgets(model, context);
         })
       ],

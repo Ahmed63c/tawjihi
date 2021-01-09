@@ -23,10 +23,13 @@ class WebViewListViewModel with ChangeNotifier{
       var parsedResponse=json.decode(response.data);
       materialList=DataList.fromJson(parsedResponse);
       if(materialList.status=="01"){
-
         materials=ApiResponse.completed(materialList);
         notifyListeners();
-
+      }
+      else if(materialList.status=="05"){
+        materials=ApiResponse.error(materialList.message);
+        error="انت غيرمفعل لاستخدام التطبيق";
+        notifyListeners();
       }
       else{
         materials=ApiResponse.error(materialList.message);

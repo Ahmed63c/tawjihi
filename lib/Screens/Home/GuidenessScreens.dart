@@ -14,6 +14,7 @@ import 'package:tawjihi/Screens/Settings/SettingsScreen.dart';
 import 'package:tawjihi/Utils/AppLocalization.dart';
 import 'package:tawjihi/Utils/ColorProperties.dart';
 import 'package:tawjihi/Utils/Constant.dart';
+import 'package:tawjihi/Utils/LocalStorage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GuidenessScreen extends StatelessWidget{
@@ -44,7 +45,7 @@ class GuidenessScreen extends StatelessWidget{
           ],
         ),
         body:guideMaterials(context) ,
-        floatingActionButton: speedDial()
+        floatingActionButton: speedDial(context)
     );
   }
 
@@ -91,7 +92,8 @@ class GuidenessScreen extends StatelessWidget{
       );
   }
 
-  Widget speedDial() {
+
+  Widget speedDial(BuildContext context) {
     return SpeedDial(
       marginRight: 32,
       marginBottom: 32,
@@ -113,15 +115,26 @@ class GuidenessScreen extends StatelessWidget{
         SpeedDialChild(
             child: Icon(Icons.mail),
             backgroundColor: Colors.red,
-            onTap: () => _launchURL()),
+            onTap: ()
+            {
+              StorageUtil.getInstance().then((storage){
+                String email=StorageUtil.getString(Constant.EMAIL);
+                _launchURL(email);
+              });}
+        ),
         SpeedDialChild(
-          child: Icon(Icons.call,color: Colors.white,),
-          backgroundColor: Colors.green,
-          onTap: () => launchWhatsApp(phone: "+970 599955706", message: "مرحبا"),
+            child: Icon(Icons.call,color: Colors.white,),
+            backgroundColor: Colors.green,
+            onTap: () {
+              StorageUtil.getInstance().then((storage){
+                String phone=StorageUtil.getString(Constant.PHONE);
+                launchWhatsApp(phone: phone, message: "مرحبا");
+              });}
         ),
       ],
     );
   }
+
 
   Widget tile(BuildContext context, String courseName,int materialId, Image image) {
     return Container(
@@ -236,11 +249,10 @@ class GuidenessScreen extends StatelessWidget{
       throw 'Could not launch ${url()}';
     }
   }
-
-  void _launchURL() async {
+  void _launchURL(String email) async {
     final Uri params = Uri(
       scheme: 'mailto',
-      path: 'Twjihi2021@gmail.com',
+      path: email,
     );
     String  url = params.toString();
     if (await canLaunch(url)) {

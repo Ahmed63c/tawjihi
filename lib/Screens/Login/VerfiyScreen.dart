@@ -34,9 +34,9 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
   void initState() {
     super.initState();
     _editingController = new TextEditingController();
-    //  StorageUtil.getInstance().then((storage) {
-    //    helpText=StorageUtil.getString(Constant.GET_CODE);
-    // });
+     StorageUtil.getInstance().then((storage) {
+       helpText=StorageUtil.getString(Constant.GET_CODE);
+    });
   }
 
   @override
@@ -188,8 +188,9 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
   }
 
   Widget help() {
-    helpText="يمكنكم شراء عضوية داخل التطبيق عن طريق احدى الطرق التاليةاما عن طريق تحويل المبلغ المطلوب لحسابنا على خدمة jawwal pay "
-           " ومن ثم سنقوم بارسال الكود التفعيل بشكل الكتروني.واما عن طريق شراء كرت يحتوي على كود التفعيل من خلال عدة مكتبات مشهورة في منطقتكم.";
+    StorageUtil.getInstance().then((storage) {
+      helpText=StorageUtil.getString(Constant.GET_CODE);
+    });
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -202,15 +203,17 @@ class _VerifyScreenState extends State<VerifyScreen> with BaseScreen {
       child: Container(
         child: Center(
             child: MyText(
-          'help',
-          style: TextStyle(
-            fontFamily: "Cairo",
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            decoration: TextDecoration.underline,
-          ),
-        )),
+              'help',
+              style: TextStyle(
+                fontFamily: "Cairo",
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.underline,
+              ),
+            )),
       ),
     );
+
+
   }
 }

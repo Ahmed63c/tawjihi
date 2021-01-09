@@ -29,6 +29,12 @@ class UnitsViewModel with ChangeNotifier{
         notifyListeners();
 
       }
+      else if(units.status=="05"){
+        unitsResponseWraper=ApiResponse.error(units.message);
+        error="انت غيرمفعل لاستخدام التطبيق";
+        notifyListeners();
+
+      }
       else{
         unitsResponseWraper=ApiResponse.error(units.message);
         notifyListeners();
