@@ -10,11 +10,11 @@ import Flutter
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
-  func applicationWillResignActive(_ application: UIApplication) {
-      window.hidden = true
+    override func applicationWillResignActive(_ application: UIApplication) {
+        window.isHidden = true
   }
 
-  func applicationDidBecomeActive(_ application: UIApplication) {
-      window.hidden = false
+    override func applicationDidBecomeActive(_ application: UIApplication) {
+        window.isHidden = false
   }
 }
