@@ -13,30 +13,16 @@ class PushNotificationsManager {
   static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool _initialized = false;
 
-  static  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
-    if (message.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message['data'];
-      String sender;
-      String parsedMessage;
-      sender = message['data']['title'];
-      parsedMessage = message['data']['body'];
-      _showNotificationWithDefaultSound(sender,parsedMessage);
-
-    }
-
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      String sender;
-      String parsedMessage;
-      sender = message['notification']['title'];
-      parsedMessage = message['notification']['body'];
-      _showNotificationWithDefaultSound(sender,parsedMessage);
-
-    }
-
-    // Or do other work.
-  }
+  // static  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  //
+  //   if (message.containsKey('notification')) {
+  //     String sender;
+  //     String parsedMessage;
+  //     sender = message['notification']['title'];
+  //     parsedMessage = message['notification']['body'];
+  //     _showNotificationWithDefaultSound(sender,parsedMessage);
+  //   }
+  // }
 
   Future<void> init() async {
 
@@ -55,6 +41,7 @@ class PushNotificationsManager {
   }
 
   configure(){
+    _firebaseMessaging.subscribeToTopic("general");
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
@@ -64,7 +51,6 @@ class PushNotificationsManager {
         parsedMessage = message['notification']['body'];
         _showNotificationWithDefaultSound(sender,parsedMessage);
       },
-     // onBackgroundMessage:myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         String sender;
