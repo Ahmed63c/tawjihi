@@ -11,10 +11,10 @@ import Flutter
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
     override func applicationWillResignActive(_ application: UIApplication) {
-        window.isHidden = true
+        self.window.isHidden = true
   }
 
     override func applicationDidBecomeActive(_ application: UIApplication) {
-        window.isHidden = false
+        self.window.isHidden = false
   }
 }
