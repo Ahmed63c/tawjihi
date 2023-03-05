@@ -1,0 +1,142 @@
+{
+  "app_title": "tawjihi",
+  "login":"Login",
+  "hint_email_login": "Email",
+  "hint_password_login": "Password",
+  "sign_in": "Sign in",
+  "dont_have_account": "Don't Have Account",
+  "already_have_acount": "Already Have Account",
+  "Forgotten_password": "Forgotten_password",
+  "verify": "Verify Account",
+  "verify_code": "Verify Code",
+  "verify_button": "Verify",
+  "confirm": "Confirm",
+"Forgotten_password_details": "email will sent to u with new password",
+
+  "register_new_user": "Register New User",
+  "full_name": "Full Name",
+  "region_name": "Region Name",
+  "school_name": "School Name",
+  "phone": "Phone",
+  "parent_phone": "Parent Phone",
+  "next": "Next",
+  "hint_password_confirm": "Confirm Password",
+  "literary": "literary",
+  "scientific": "scientific",
+  "Subscribe": "subscribe",
+  "previous":"previous",
+
+  "home": "Main Subjects",
+  "main": "Main Subjects",
+  "common": "Common Articles",
+  "guidance": "guidance",
+  "how_to": "how to choose the best Specialization",
+  "explore": "Explore",
+  "math": "Math",
+  "biology": "Biology",
+  "chemistry": "Chemistry",
+  "physics": "Physics",
+  "history": "History",
+  "sci": "Scientific Culture",
+  "geo": "Geographic",
+  "arabic": "Arabic",
+  "english": "English",
+  "arabicAdby": "Arabic",
+  "englishAdby": "English",
+  "articles": "Articles",
+  "islamic": "Islamic Education",
+  "tech": "Technology",
+  "videos": "Videos",
+  "school_order": "School ordering",
+  "exam_worry": "exam worries",
+  "problems": "Problems",
+  "skills": "Skills",
+  "schoolarShip": "univeristies gift",
+  "collegues": "international collage",
+  "specializatoin_how": "how  to choose",
+
+
+  "school_exams": "School Exams",
+  "work_papers": "Work Papers",
+  "previous_exams": "Previous Years Exams",
+  "questions_topics":"Questions And Topics",
+  "start": "Start Test",
+  "qustions_answers": "Questions And Answers",
+
+  "first_term": "First Term",
+  "first_unit": "First Unit",
+  "second_unit": "Second Unit",
+  "third_unit": "Third Unit",
+  "second_term": "Second Term",
+  "fourth_unit": "Fourth Unit",
+  "fifth_unit": "Fifth Unit",
+  "sixth_unit":"Sixth Unit",
+  "definitions_laws": "Definitions And Laws",
+  "reason": "Reason",
+  "mention_number": "Mention and number",
+  "explain": "Explain",
+  "clear_up": "Clear Up",
+  "interpret": "Interpret",
+  "units": "Units",
+  "Tests": "Tests",
+
+
+
+  "multi_choice": "Multiple Choice",
+  "question_number": "Question",
+  "choose": "Choose Correct Answer",
+
+  "test_results": "Test Result",
+  "correct_answers": "Correct Answers",
+  "wrong_answers": "wrong Answers",
+  "start_new": "Start New Test",
+
+
+  "settings": "Settings",
+  "language": "Language",
+  "change_language": "Change language",
+  "security": "Security",
+  "change_password": "Change Password",
+  "more": "More",
+  "about": "About Tawjihi",
+  "current_password": "Current Password",
+  "new_password": "New Password",
+  "confirm_password": "Confirm new Password",
+  "update": "Update",
+
+
+  "loading": "Loading...",
+  "error_field": "this field cant be empty",
+  "error": "Something went wrong check internet and try again",
+  "error_title": "error",
+  "error_empty": "no data available",
+  "error_match": "password did not match",
+
+
+
+  "show_answer": "Show Answer",
+  "hide_answer": "Hide Answer",
+
+
+  "verify_answer":"verify",
+
+  "error_email_validate": "Invalid email address",
+  "error_pass_validate_less": "password cannot be less than 9 numbers",
+  "error_pass_validate_more": "password cannot be more than 15 numbers",
+  "error_phone_validate": "phone number is invalid",
+  "error_phone_less": "phone number is less than 11 number",
+  "error_alphapet": "Only alphabets are allowed",
+  "error_less_character": "name is less than 3 characters",
+
+  "logout": "Logout",
+
+  "error_code": "code is not valid",
+  "danger": "danger area",
+
+  "help": "Need help to get code?"
+
+
+
+
+
+}
