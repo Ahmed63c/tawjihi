@@ -1,0 +1,26 @@
+{
+  "name": "system_shortcuts",
+  "version": "0.0.1",
+  "summary": "A flutter plugin to use system shortcuts",
+  "description": "A flutter plugin to use system shortcuts",
+  "homepage": "http://example.com",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Your Company": "email@example.com"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "public_header_files": "Classes/**/*.h",
+  "dependencies": {
+    "Flutter": [
+
+    ]
+  },
+  "platforms": {
+    "ios": "8.0"
+  }
+}

@@ -1,0 +1,6 @@
+framework module system_shortcuts {
+  umbrella header "system_shortcuts-umbrella.h"
+
+  export *
+  module * { export * }
+}
